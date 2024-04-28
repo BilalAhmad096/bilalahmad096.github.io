@@ -1465,12 +1465,12 @@ footer .footer-content .footer-right a.be img {
     position: relative;
     margin-right: 8px;
   }
-  .skills-stack .latest-work .horizontal-bars .skills-sections .service-stack li::after {
+/*   .skills-stack .latest-work .horizontal-bars .skills-sections .service-stack li::after {
     content: ",";
     position: absolute;
     bottom: 0;
     right: -4px;
-  }
+  } */
   .skills-stack .latest-work .horizontal-bars .skills-sections .service-stack li:last-child::after {
     display: none;
   }

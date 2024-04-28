@@ -1,0 +1,36 @@
+@mixin transform($property) {
+    -webkit-transform: $property;
+    -ms-transform: $property;
+    transform: $property;
+}
+
+.box {
+    @include transform(rotate(30deg));
+}
+
+@mixin wrapper {
+    padding: 100px 0px;
+    background: #fff;
+    margin: 0 0 50px 0px;
+    display: inline-block;
+    box-shadow: 0px 6px 7px -4px rgba(0, 0, 0, .2);
+    border-radius: 8px;
+    width: 100%;
+}
+
+@mixin section-title {
+    text-align: center;
+    font-size: 24px;
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+@mixin section-subtitle {
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 30px;
+    display: block;
+    width: 100%;
+    text-transform: uppercase;
+}

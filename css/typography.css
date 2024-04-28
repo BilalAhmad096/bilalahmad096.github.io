@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'PermanentMarkerRegular';
+    font-display: swap;
+    src: url('../fonts/permanent-marker-regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: LinetoLight;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-light.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: LinetoMedium;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-medium.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: LinetoBook;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-book.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: LinetoBold;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-bold.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: LinetoBlack;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-black.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: Handwritten;
+    font-display: swap;
+    src: url('../fonts/handwritten.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: cheltenham;
+    src: url('../fonts/cheltenham.woff2') format('woff2'),
+    url('../fonts/cheltenham.woff') format('woff');
+    font-display: swap;
+}

@@ -1,0 +1,190 @@
+//fonts
+$font-bold: LinetoBold;
+$font-medium: LinetoMedium;
+$font-book: LinetoBook;
+$font-black: LinetoBlack;
+$font-light: LinetoLight;
+$font-handwritten: Handwritten;
+$cursive: cursive;
+$sans-serif:sans-serif;
+$serif: serif;
+//font faces
+@font-face {
+    font-family: 'PermanentMarkerRegular';
+    font-display: swap;
+    src: url('../fonts/permanent-marker-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: $font-medium;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-medium.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: $font-book;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-book.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: $font-bold;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-bold.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: $font-black;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-black.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: $font-light;
+    font-display: swap;
+    src: url('../fonts/lineto-circular-light.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: $font-handwritten;
+    font-display: swap;
+    src: url('../fonts/handwritten.woff2') format('woff2')
+}
+
+//Colors
+$primary-color: #333;
+
+/*Official Fonts*/
+
+.font-bold {
+    font-family: $font-bold;
+}
+
+.font-medium {
+    font-family: $font-medium;
+}
+
+.font-book {
+    font-family: $font-book;
+}
+
+.font-black {
+    font-family: $font-black;
+}
+
+.font-light {
+    font-family: $font-light;
+}
+
+.font-handwritten {
+    font-family: $font-handwritten;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.lowercase {
+    text-transform: lowercase;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+    .strong {
+        font-family: $font-book;
+    }
+}
+
+.strong {
+    font-family: $font-bold;
+}
+
+p,
+span,
+i,
+ul,
+li {
+
+}
+
+// Font sizes
+.font-10 {
+    font-size: 10px;
+}
+
+.font-12 {
+    font-size: 12px;
+}
+
+.font-14 {
+    font-size: 14px;
+}
+
+.font-16 {
+    font-size: 16px;
+}
+
+.font-18 {
+    font-size: 18px;
+}
+
+.font-20 {
+    font-size: 20px;
+}
+
+.font-22 {
+    font-size: 22px;
+}
+
+.font-24 {
+    font-size: 24px;
+}
+
+.font-26 {
+    font-size: 26px;
+}
+
+.font-28 {
+    font-size: 28px;
+}
+
+.font-30 {
+    font-size: 30px;
+}
+
+.font-32 {
+    font-size: 32px;
+}
+
+.font-34 {
+    font-size: 34px;
+}
+
+.font-36 {
+    font-size: 36px;
+}
+
+.font-38 {
+    font-size: 38px;
+}
+
+.font-40 {
+    font-size: 40px;
+}
+
+.font-42 {
+    font-size: 42px;
+}
+
+.font-44 {
+    font-size: 44px;
+}

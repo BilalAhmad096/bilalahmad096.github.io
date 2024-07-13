@@ -1061,3 +1061,223 @@ footer {
     }
   }
 }
+
+
+.section-five {
+  background: #f7f7f7;
+  .educational-set {
+    @include wrapper;
+    background-color: transparent;
+    box-shadow: none;
+    .educational-title-wrapper {
+      .educational-title {
+        @include section-title;
+      }
+      .educational-subtitle {
+        @include section-subtitle;
+        margin-bottom: 70px;
+      }
+    }
+    .educational-set-wrapper {
+      display: flex;
+      .educational-left {
+        position: relative;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        .ctas {
+          padding: 20px;
+          background-color: #fff;
+          width: auto;
+          position: absolute;
+          bottom: 0;
+          margin: 0 auto;
+          border-radius: 40px;
+          box-shadow: 0px 6px 7px -4px rgba(0, 0, 0, 0.2);
+        }
+      }
+      .educational-right {
+        width: 50%;
+        .classes-edu {
+          background: #fff;
+          margin-bottom: 25px;
+          position: relative;
+          display: flex;
+          box-shadow: 0px 6px 7px -4px rgba(0, 0, 0, 0.2);
+          border: 2px solid rgba(44, 6, 82, .3);
+          border-radius: 10px;
+          &:last-child {
+            margin-bottom: 0px;
+          }
+          .left-edu {
+            width: 75px;
+            display: flex;
+            height: auto;
+            background: #efefef;
+            padding: 20px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            img {
+              max-width: 75px;
+              width: 100%;
+            }
+          }
+          .right-edu {
+            width: calc(100% - 75px);
+            padding: 15px;
+            .tag,
+            .degree,
+            .institution,
+            .duration {
+              position: relative;
+              z-index: 2;
+            }
+            .tag {
+              color: $tag;
+              font-size: 14px;
+              font-family: $font-light;
+            }
+            .degree {
+              font-family: $font-bold;
+              margin: 5px 0px;
+            }
+            .institution,
+            .duration {
+              font-family: $font-book;
+              margin: 5px 0px;
+              font-size: 14px;
+            }
+            .duration {
+              font-family: $font-medium;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.experience{
+  background-color: #fff;
+  .educational-set {
+    .educational-set-wrapper{
+      .educational-right{
+        width: 75%;
+        margin: 0 auto;
+        .classes-edu{
+          border: 0px;
+          box-shadow:0px 1px 8px -3px rgb(0 0 0 / 20%);
+          margin-bottom: 50px;
+          .left-edu{
+            width: 250px;
+            padding: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            img{
+              max-width: 100%;
+            }
+            &.rc{
+              background-color: #13256c;
+              img{
+                filter: brightness(0) invert(1);
+              }
+            }
+            &.ushyaku{
+              background-color: #23AAE1;
+              img{
+                height: 27px;
+                width: 111px;
+              }
+            }
+            &.mp{
+              background-color: #ed1e79;
+              img{
+                height: 23px;
+                width: 180px;
+              }
+            }
+          }
+          .right-edu{
+            width: calc(100% - 250px);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            .tag{
+              font-family: LinetoBook;
+              color: var(--btnblue);
+              span{
+                font-family: LinetoMedium;
+              }
+              a{
+                color: var(--btnblue);
+                text-decoration: none;
+                &:hover{
+                  text-decoration: underline;
+                }
+              }
+              span{
+                color: #1a1a1a;
+              }
+            }
+            .duration{
+              margin-top: 15px;
+              ul{
+                padding-left: 22px;
+                margin-top: 5px;
+                font-family: LinetoBook;
+                li{
+                  paddinn-left: 22px;
+                  line-height: 20px;
+                }
+              }
+            }
+            &.rc{
+              background-color: #13256c44;
+            }
+            &.mp{
+              background-color: #ed1e7944;
+            }
+            &.ushyaku{
+              background-color: #23AAE144;
+            }
+          }
+          &.ekk,
+          &.doo,
+          &.teen {
+            .right-edu{
+              position: relative;
+              &:after{
+                position: absolute;
+                right: 20%;
+                top: 5%;
+                font-size: 170px;
+                color: #f9f9f955;
+                font-family: LinetoBlack;
+              }
+            }
+          }
+          &.ekk{
+            .right-edu{
+              &:after{
+                content:'3';
+              }
+            }
+          }
+          &.doo{
+            .right-edu{
+              &:after{
+                content:'2';
+              }
+            }
+          }
+          &.teen{
+            .right-edu{
+              &:after{
+                content:'1';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

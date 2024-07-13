@@ -253,6 +253,7 @@ a {
 }
 .about .section-five .educational-set .educational-set-wrapper {
   display: flex;
+  justify-content: center;
 }
 .about .section-five .educational-set .educational-set-wrapper .educational-left {
   position: relative;
@@ -359,15 +360,15 @@ a {
   background-color: #23AAE1;
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.ushyaku img {
-  height: 27px;
-  width: 111px;
+  height: 147px;
+  width: auto;
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.mp {
   background-color: #ed1e79;
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.mp img {
-  height: 23px;
-  width: 180px;
+  height: 203px;
+  width: auto;
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .right-edu {
   width: calc(100% - 250px);

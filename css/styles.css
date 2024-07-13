@@ -272,7 +272,7 @@ a {
   box-shadow: 0px 6px 7px -4px rgba(0, 0, 0, 0.2);
 }
 .about .section-five .educational-set .educational-set-wrapper .educational-right {
-  width: 100%;
+  width: 50%;
 }
 .about .section-five .educational-set .educational-set-wrapper .educational-right .classes-edu {
   background: #fff;
@@ -1442,7 +1442,7 @@ footer .footer-content .footer-right a.be img {
   }
   .skills-stack .latest-work .horizontal-bars .skills-sections {
     text-align: center;
-    width: calc(100% - 40px);
+    width: 100%;
     border-bottom: 1px solid #eee;
     margin-bottom: 0px;
   }

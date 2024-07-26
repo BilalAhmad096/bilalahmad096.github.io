@@ -695,7 +695,8 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.24;
 }
 .about-content .about-details .about-more {
-  font-family: LinetoLight;
+  /* font-family: LinetoLight; */
+  font-family: "Edu AU VIC WA NT Hand", cursive;
   font-size: 22px;
   line-height: 30px;
   margin: 0px auto 40px auto;

@@ -18,7 +18,11 @@
 body {
     background-image: linear-gradient(to right, var(--lightblue) , var(--lightpink));
     font-family: LinetoBook;
+    /* font-family: "Edu AU VIC WA NT Hand", cursive;
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    font-family: "Edu AU VIC WA NT Hand", cursive; */
 }
+
 .times{
     font-family: "Times New Roman";
 }

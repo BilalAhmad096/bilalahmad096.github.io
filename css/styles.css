@@ -350,10 +350,15 @@ a {
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu img {
   max-width: 100%;
 }
-.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.rc {
-  background-color: #13256c;
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.hcl {
+  background-color: #0f5fdc;
 }
-.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.rc img {
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.rwth {
+  background-color: #00549F
+}
+
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.rwth img,
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.hcl img {
   filter: brightness(0) invert(1);
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .left-edu.ushyaku {
@@ -404,8 +409,11 @@ a {
   padding-left: 22px;
   line-height: 20px;
 }
-.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .right-edu.rc {
-  background-color: #13256c44;
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .right-edu.hcl {
+  background-color: #0f5fdc44;
+}
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .right-edu.rwth {
+  background-color: #00549F66;
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .right-edu.mp {
   background-color: #ed1e7944;

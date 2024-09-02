@@ -413,16 +413,25 @@ a {
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu .right-edu.ushyaku {
   background-color: #23AAE144;
 }
-.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.ekk .right-edu, .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.doo .right-edu, .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.teen .right-edu {
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.chaar .right-edu,
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.ekk .right-edu, 
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.doo .right-edu, 
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.teen .right-edu {
   position: relative;
 }
-.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.ekk .right-edu:after, .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.doo .right-edu:after, .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.teen .right-edu:after {
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.chaar .right-edu:after,
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.ekk .right-edu:after, 
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.doo .right-edu:after, 
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.teen .right-edu:after {
   position: absolute;
   right: 20%;
   top: 5%;
   font-size: 170px;
   color: #f9f9f955;
   font-family: LinetoBlack;
+}
+.about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.chaar .right-edu:after {
+  content: "4";
 }
 .about .experience .educational-set .educational-set-wrapper .educational-right .classes-edu.ekk .right-edu:after {
   content: "3";

@@ -279,3 +279,21 @@ section{ scroll-margin-top:84px; }
   .about-headshot img{ width: 300px; height: 300px; }
   .about-badges{ font-size: 17px; }
 }
+.site-footer { padding: 10px 0 15px; background:#091634; color:#fff; }
+.footer-right { display:flex; gap:24px; justify-content:center; align-items:center; }
+
+.footer-right .social { display:inline-flex; align-items:center; justify-content:center; }
+
+.footer-right .social-icon{
+  width:44px; height:44px; display:block;
+  /* If your source SVGs are dark, make them white */
+  filter: invert(1) brightness(1.1);
+  transition: transform .22s ease, opacity .22s ease;
+  opacity:.95;
+}
+.footer-right .social:hover .social-icon,
+.footer-right .social:focus-visible .social-icon{
+  transform: translateY(-2px) scale(1.08);
+  opacity:1;
+}
+

@@ -74,41 +74,43 @@
   </header>
 
   <main>
-    <section id="about" class="section-about">
-    <div class="container">
+    <section id="about" class="section-about"
+      data-aos="fade-up" data-aos-offset="20" data-aos-delay="30" data-aos-duration="1000">
+      <div class="container">
         <h2 class="section-title">About Me</h2>
 
         <div class="about-grid">
-        <div class="about-text">
+          <div class="about-text">
             <p>
-            I am joining the <strong>University of Bath</strong> for my <strong>PhD</strong>, building on my completed
-            <strong>MPhil at Royal Holloway, University of London</strong>. My work focuses on Power
-            Systems especially the integration of <strong>Battery Energy Storage Systems (BESS)</strong>, optimal
-            operation, and Machine Learning enabled decision support for distribution networks.
+              I am joining the <strong>University of Bath</strong> for my <strong>PhD</strong>, building on my completed
+              <strong>MPhil at Royal Holloway, University of London</strong>. My work focuses on Power
+              Systems especially the integration of <strong>Battery Energy Storage Systems (BESS)</strong>, optimal
+              operation, and Machine Learning enabled decision support for distribution networks.
             </p>
             <p>
-            Broadly, I’m interested in <strong>Power System Reliability</strong>, <strong>OPF/SCOPF</strong>, and
-            <strong>Explainable AI</strong> for contingency screening and planning. This research aligns with the
-            United Nations’ <strong>SDG&nbsp;7: Affordable and Clean Energy</strong> and contributes to resilient,
-            efficient, and low-carbon grids.
+              Broadly, I’m interested in <strong>Power System Reliability</strong>, <strong>OPF/SCOPF</strong>, and
+              <strong>Explainable AI</strong> for contingency screening and planning. This research aligns with the
+              United Nations’ <strong>SDG&nbsp;7: Affordable and Clean Energy</strong> and contributes to resilient,
+              efficient, and low-carbon grids.
             </p>
-        </div>
+          </div>
 
-        <figure class="about-headshot">
+          <figure class="about-headshot">
             <img src="image/android-chrome-512x512-old-bilal.png" alt="Bilal Ahmad headshot">
             <figcaption class="about-badges">
-            URSA Fellow • DAAD Fellow • LSC Fellow • MHRD Fellow
+              URSA Fellow • DAAD Fellow • LSC Fellow • MHRD Fellow
             </figcaption>
-        </figure>
+          </figure>
         </div>
-    </div>
+      </div>
     </section>
 
 
     <!-- ==============================
          SKILLS
     =============================== -->
-    <section id="skills" class="section-skills">
+    <section id="skills" class="section-skills"
+      data-aos="fade-up" data-aos-offset="20" data-aos-delay="30" data-aos-duration="1000">
       <div class="container">
         <h2 class="section-title">Skills Stack</h2>
 
@@ -159,7 +161,8 @@
     <!-- ==============================
          EDUCATION
     =============================== -->
-    <section id="education" class="section-education">
+    <section id="education" class="section-education"
+      data-aos="fade-up" data-aos-offset="20" data-aos-delay="30" data-aos-duration="1000">
       <div class="container">
         <h2 class="section-title">Education</h2>
 
@@ -217,7 +220,8 @@
     <!-- ==============================
          EXPERIENCE
     =============================== -->
-    <section id="experience" class="section-experience">
+    <section id="experience" class="section-experience"
+      data-aos="fade-up" data-aos-offset="20" data-aos-delay="30" data-aos-duration="1000">
       <div class="container">
         <h2 class="section-title">Work Experience</h2>
 
@@ -306,7 +310,8 @@
     <!-- ==============================
          RECEIVED (Recommendations)
     =============================== -->
-    <section id="received" class="section-received">
+    <section id="received" class="section-received"
+      data-aos="fade-up" data-aos-offset="20" data-aos-delay="30" data-aos-duration="1000">
       <div class="container">
         <h2 class="section-title">Recommendations</h2>
 
@@ -349,7 +354,7 @@
        FOOTER
   =============================== -->
   <!-- include the sprite once (ideally near the end of <body>) -->
-<?xml version="1.0" encoding="UTF-8"?> 
+<!-- <?xml version="1.0" encoding="UTF-8"?>  -->
 <!-- or simply paste the sprite markup here before the footer -->
 <footer class="site-footer">
   <div class="container">
@@ -381,10 +386,43 @@
 
 
 
-  <!-- Init AOS (optional) -->
-  <script>
-    if (window.AOS) AOS.init();
-  </script>
+<!-- AOS -->
+<link rel="stylesheet" href="css/aos.css">
+<script defer src="js/aos.js"></script>
+
+<!-- AOS init + fail-safe -->
+<script>
+  // Run after page load so sections aren't stuck invisible.
+  window.addEventListener('load', function () {
+    if (window.AOS && typeof AOS.init === 'function') {
+      AOS.init({
+        offset: 20,
+        delay: 30,
+        duration: 1000,
+        once: true
+      });
+    } else {
+      // FAIL-SAFE: if AOS didn't load, reveal anything with data-aos.
+      document.querySelectorAll('[data-aos]').forEach(function (el) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    }
+  });
+</script>
+
+<!-- Optional: CDN fallback if your local js/aos.js is missing -->
+<script>
+  if (!window.AOS) {
+    var s = document.createElement('script');
+    s.defer = true;
+    s.src = "https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js";
+    document.head.appendChild(s);
+  }
+</script>
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><style>[data-aos]{opacity:1!important;transform:none!important}</style></noscript>
+
   
 </body>
 </html>

@@ -297,3 +297,7 @@ section{ scroll-margin-top:84px; }
   opacity:1;
 }
 
+.nav-link.active {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}

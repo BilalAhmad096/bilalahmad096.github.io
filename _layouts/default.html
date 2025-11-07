@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title | default: "Bilal Ahmad" }}</title>
+
+  <link rel="stylesheet" href="/css/typography.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" type="image/png" href="/image/webicon.ico" />
+</head>
+
+<body>
+  {% include header.html %}
+
+  <main>
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+</body>
+</html>

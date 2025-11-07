@@ -301,3 +301,32 @@ section{ scroll-margin-top:84px; }
   color: var(--accent);
   border-bottom: 2px solid var(--accent);
 }
+
+/* Framed image on Updates page */
+.framed-image{
+  margin: 28px auto 8px;        /* centers + spacing */
+  max-width: 900px;             /* responsive cap */
+  display: grid;
+  place-items: center;
+}
+
+.framed-image img{
+  width: 100%;
+  height: auto;
+  display: block;
+
+  /* frame look */
+  border-radius: 16px;
+  border: 10px solid #ffffff;                     /* inner white mat */
+  outline: 1px solid rgba(10, 26, 59, 0.10);      /* thin edge line */
+  box-shadow: 0 12px 30px rgba(12,18,28,.12);     /* soft drop shadow */
+
+  /* subtle polish */
+  transition: transform .2s ease, box-shadow .2s ease;
+  background: #fff;
+}
+
+.framed-image img:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(12,18,28,.18);
+}

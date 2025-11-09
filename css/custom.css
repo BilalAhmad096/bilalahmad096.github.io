@@ -348,3 +348,80 @@ section{ scroll-margin-top:84px; }
   transform: translateY(-2px);
   box-shadow: 0 16px 40px rgba(12,18,28,.18);
 }
+/* Footer split into two sections */
+.site-footer { padding: 0; background:#091634; color:#fff; }
+
+/* Top logos row */
+.footer-top{
+  padding: 10px 0 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.footer-logos{
+  /* brand-logos already sets display:flex/gap; ensure wrap + centering */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer-logos img{
+  height: 36px;                 /* match header, but tweakable */
+  border-radius: 8px;
+  background: #fff;             /* keep logos crisp on dark bg */
+  box-shadow: var(--shadow-sm);
+}
+
+/* Bottom social row (you already have these, keep them) */
+.footer-bottom{ padding: 12px 0 16px; }
+.footer-right{
+  display:flex;
+  gap:24px;
+  justify-content:center;
+  align-items:center;
+}
+
+/* Responsive tweak */
+@media (max-width: 900px){
+  .footer-logos img{ height:30px; }
+}
+/* Collaborators row (top half of footer) */
+.footer-top{
+  padding: 10px 0 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.footer-collab-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;       /* center overall group horizontally */
+  flex-wrap: wrap;               /* allow wrapping on smaller screens */
+  gap: 16px;
+}
+
+/* Label */
+.footer-label{
+  font-family: linetoBold, system-ui, sans-serif;
+  font-size: 18px;
+  color: #fff;
+  margin-right: 6px;
+}
+
+/* Logos (inherits your .brand-logos look) */
+.footer-logos{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+.footer-logos img{
+  height: 36px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive tweak */
+@media (max-width: 900px){
+  .footer-label{ font-size: 16px; }
+  .footer-logos img{ height: 30px; }
+}

@@ -8,9 +8,9 @@
     <nav class="primary-nav" aria-label="Primary">
       <ul class="nav-list">
         <li><a href="${base}/index.html" class="nav-link" data-nav="home">Home</a></li>
-        <li><a href="${base}/pages/education.html" class="nav-link" data-nav="education">Education</a></li>
-        <li><a href="${base}/pages/publications.html" class="nav-link" data-nav="publications">Publications</a></li>
         <li><a href="${base}/pages/experience.html" class="nav-link" data-nav="experience">Experience</a></li>
+        <li><a href="${base}/pages/publications.html" class="nav-link" data-nav="publications">Publications</a></li>
+        <li><a href="${base}/pages/researchgroup.html" class="nav-link" data-nav="researchgroup">Research Group</a></li>
         <li><a href="${base}/pages/updates.html" class="nav-link" data-nav="updates">Updates</a></li>
       </ul>
 

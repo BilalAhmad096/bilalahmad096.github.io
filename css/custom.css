@@ -111,7 +111,7 @@ section{ scroll-margin-top:84px; }
 /* =====================================================
    About Section
 ===================================================== */
-.section-about{ padding:40px 0; }
+.section-about{ padding:20px 0; }
 .about-grid{
   display:grid; grid-template-columns:1.2fr .8fr; gap:36px; align-items:center;
 }
@@ -122,7 +122,10 @@ section{ scroll-margin-top:84px; }
   box-shadow:var(--shadow-md);
 }
 .about-badges{
-  margin-top:10px; font-size:14px; color:var(--ink-muted);
+  margin-top:10px; margin-bottom: 0; font-size:15px; color:var(--ink-muted);
+}
+.about-badges-name{
+  margin-top:2px; margin-bottom: 0; font-size:32px; color:var(--ink-muted);
 }
 
 /* =====================================================
@@ -259,9 +262,18 @@ section{ scroll-margin-top:84px; }
 }
 
 /* Badges under the photo (bigger + bolder) */
+.about-badges-name{
+  margin-top: 5px;
+  margin-bottom: 0px;
+  font-size: 32px;       /* was ~14px */
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: .2px;
+  text-align: center;
+}
 .about-badges{
-  margin-top: 14px;
-  font-size: 18px;       /* was ~14px */
+  margin-top: 5px;
+  font-size: 15px;       /* was ~14px */
   font-weight: 600;
   color: var(--ink);
   letter-spacing: .2px;
@@ -271,13 +283,13 @@ section{ scroll-margin-top:84px; }
 /* Optional: slightly bigger on very large screens */
 @media (min-width: 1200px){
   .about-headshot img{ width: 360px; height: 360px; }
-  .about-badges{ font-size: 19px; }
+  .about-badges{ font-size: 15px; }
 }
 
 /* Mobile: keep it nicely large but not too big */
 @media (max-width: 640px){
   .about-headshot img{ width: 300px; height: 300px; }
-  .about-badges{ font-size: 17px; }
+  .about-badges{ font-size: 15px; }
 }
 .site-footer { padding: 10px 0 15px; background:#091634; color:#fff; }
 .footer-right { display:flex; gap:24px; justify-content:center; align-items:center; }

@@ -29,9 +29,9 @@
 
   // highlight active page
   const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-  const key = file.includes('education') ? 'education'
+  const key = file.includes('experience') ? 'experience'
            : file.includes('publications') ? 'publications'
-           : file.includes('experience') ? 'experience'
+           : file.includes('researchgroup') ? 'researchgroup'
            : file.includes('updates') ? 'updates'
            : 'home';
   document.querySelectorAll('.nav-link').forEach(a => {

@@ -1,5 +1,5 @@
 /* =====================================================
-   Design Tokens
+   0) Design Tokens
 ===================================================== */
 :root{
   --bg-start:#ebfaff;          /* soft blue */
@@ -21,13 +21,17 @@
   --shadow-md:0 10px 30px rgba(12,18,28,.09);
 }
 
+/* =====================================================
+   1) Resets / Base
+===================================================== */
 *{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
-/* Reserve space for the scrollbar on every page to prevent header shift */
-html { scrollbar-gutter: stable; }
-
-/* Fallback for older browsers 
-// html { overflow-y: scroll; }   uncomment if needed*/
+html{
+  scroll-behavior:smooth;
+  /* Reserve space for the scrollbar on every page to prevent header shift */
+  scrollbar-gutter: stable;
+}
+/* Fallback: uncomment if needed */
+/* html { overflow-y: scroll; } */
 
 body{
   margin:0;
@@ -36,17 +40,14 @@ body{
   background:linear-gradient(90deg, var(--bg-start), var(--bg-end));
 }
 
-/* Spacing helpers */
 .container{ max-width:var(--container); margin-inline:auto; padding:28px 20px; }
 .container-wide{ max-width:var(--container-wide); margin-inline:auto; padding:12px 20px; }
 .section-title{ font-family:linetoBlack, system-ui; font-size:34px; margin:6px 0 18px; }
 .muted{ color:var(--ink-muted); }
-
-/* Ensure anchor scrolling accounts for sticky header */
-section{ scroll-margin-top:84px; }
+section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 
 /* =====================================================
-   Header / Primary Nav
+   2) Layout: Header / Nav
 ===================================================== */
 .site-header{
   position:sticky; top:0; z-index:1000;
@@ -54,12 +55,11 @@ section{ scroll-margin-top:84px; }
   background:linear-gradient(90deg, var(--bg-start), var(--bg-end)/90%);
   border-bottom:1px solid rgba(0,0,0,.05);
 }
-
 .primary-nav{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
 }
 
-/* LEFT: nav links (flush-left) */
+/* LEFT: nav links */
 .nav-list{
   display:flex; gap:28px; list-style:none; padding:0; margin:0;
 }
@@ -69,8 +69,9 @@ section{ scroll-margin-top:84px; }
   transition:color .2s ease;
 }
 .nav-link:hover, .nav-link:focus{ color:var(--accent); }
+.nav-link.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-/* RIGHT: five partner logos */
+/* RIGHT: partner logos (header) */
 .brand-logos{
   display:flex; align-items:center; gap:14px; list-style:none; padding:0; margin:0;
 }
@@ -82,75 +83,59 @@ section{ scroll-margin-top:84px; }
 .brand-logos a:hover img{ transform:translateY(-2px) scale(1.03); box-shadow:var(--shadow-md); }
 
 /* =====================================================
-   Hero Section
+   3) Hero
 ===================================================== */
 .section-hero{ padding:64px 0 40px; }
-.hero-grid{
-  display:grid; grid-template-columns:1fr 420px; gap:36px; align-items:center;
-}
-.hero-kicker{
-  margin:0 0 4px;
-  font-size:18px; line-height:1.3;
-}
-.hero-title{
-  font-family:linetoBlack; font-size:58px; line-height:1.05; margin:8px 0 14px;
-}
-.hero-lead{
-  font-size:18px; color:var(--ink-muted); line-height:1.7; margin:0;
-  max-width:60ch;
-}
+.hero-grid{ display:grid; grid-template-columns:1fr 420px; gap:36px; align-items:center; }
+.hero-kicker{ margin:0 0 4px; font-size:18px; line-height:1.3; }
+.hero-title{ font-family:linetoBlack; font-size:58px; line-height:1.05; margin:8px 0 14px; }
+.hero-lead{ font-size:18px; color:var(--ink-muted); line-height:1.7; margin:0; max-width:60ch; }
 
-.hero-portrait{
-  position:relative; min-height:360px; display:grid; place-items:center;
-}
+.hero-portrait{ position:relative; min-height:360px; display:grid; place-items:center; }
 .portrait-img{
   width:280px; height:280px; object-fit:cover; border-radius:50%;
-  box-shadow:var(--shadow-md); position:relative; z-index:2;
-  background:#fff;
+  box-shadow:var(--shadow-md); position:relative; z-index:2; background:#fff;
 }
 .portrait-ring{
   position:absolute; inset:auto; width:400px; height:400px;
-  border:10px solid var(--ring); border-radius:50%;
-  z-index:1; opacity:.9;
+  border:10px solid var(--ring); border-radius:50%; z-index:1; opacity:.9;
 }
 
 /* =====================================================
-   About Section
+   4) About
 ===================================================== */
 .section-about{ padding:20px 0; }
-.about-grid{
-  display:grid; grid-template-columns:1.2fr .8fr; gap:36px; align-items:center;
-}
+.about-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:36px; align-items:center; }
 .about-text{ font-size:18px; line-height:1.8; color:var(--ink); }
+
 .about-headshot{ margin:0; text-align:center; }
 .about-headshot img{
-  width:220px; height:220px; border-radius:50%; object-fit:cover;
-  box-shadow:var(--shadow-md);
-}
-.about-badges{
-  margin-top:10px; margin-bottom: 0; font-size:15px; color:var(--ink-muted);
+  width:340px; height:340px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-md);
 }
 .about-badges-name{
-  margin-top:2px; margin-bottom: 0; font-size:32px; color:var(--ink-muted);
+  margin-top:5px; margin-bottom:0;
+  font-size:32px; font-weight:600; color:var(--ink);
+  letter-spacing:.2px; text-align:center;
+}
+.about-badges{
+  margin-top:5px; margin-bottom:0;
+  font-size:15px; font-weight:600; color:var(--ink);
+  letter-spacing:.2px; text-align:center;
 }
 
 /* =====================================================
-   Skills Section
+   5) Skills
 ===================================================== */
 .section-skills{ padding:40px 0; }
-.skills-cards{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
-}
-.skill-card{
-  background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm);
-}
+.skills-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.skill-card{ background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); }
 .skill-icon{ width:42px; height:auto; }
 .skill-title{ margin:10px 0 8px; font-family:linetoBold; font-size:22px; }
 .skill-subtitle{ margin:10px 0 6px; font-family:linetoBold; color:var(--ink); }
 .skill-list{ margin:6px 0 0 18px; padding:0; }
 
 /* =====================================================
-   Education Section
+   6) Education
 ===================================================== */
 .section-education{ padding:40px 0; }
 .edu-list{ display:grid; gap:14px; }
@@ -165,7 +150,7 @@ section{ scroll-margin-top:84px; }
 .edu-detail span{ font-family:linetoBold; }
 
 /* =====================================================
-   Experience Section
+   7) Experience
 ===================================================== */
 .section-experience{ padding:40px 0; }
 .xp-list{ display:grid; gap:16px; }
@@ -179,13 +164,11 @@ section{ scroll-margin-top:84px; }
 .xp-bullets{ margin:0; padding-left:18px; }
 
 /* =====================================================
-   Received / Recommendations
+   8) Recommendations
 ===================================================== */
 .section-received{ padding:40px 0; }
 .rec-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-.rec-card{
-  background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm);
-}
+.rec-card{ background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); }
 .rec-quote{ margin:0 0 14px; font-size:16px; line-height:1.7; color:var(--ink); }
 .rec-author{ display:flex; gap:12px; align-items:center; }
 .rec-avatar{ width:48px; height:48px; border-radius:50%; object-fit:cover; }
@@ -193,118 +176,36 @@ section{ scroll-margin-top:84px; }
 .rec-meta{ font-size:14px; color:var(--ink-muted); }
 
 /* =====================================================
-   Footer  (bigger, centered, unified animation)
+   9) Footer (two horizontal sections)
 ===================================================== */
-.site-footer{
-  padding:10px 0 15px;
+.site-footer{ padding:0; background:#091634; color:#fff; }
+
+.footer-top{
+  padding:10px 0 12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.footer-collab-row{
+  display:flex; align-items:center; justify-content:center;
+  flex-wrap:wrap; gap:16px;
+}
+.footer-label{
+  font-family:linetoBold, system-ui, sans-serif;
+  font-size:18px; color:#fff; margin-right:6px;
+}
+.footer-logos{
+  display:flex; align-items:center; gap:14px; list-style:none; padding:0; margin:0; flex-wrap:wrap;
+}
+.footer-logos img{
+  height:36px; border-radius:8px; background:#fff; box-shadow:var(--shadow-sm);
 }
 
+.footer-bottom{ padding:12px 0 16px; }
 .footer-right{
-  display:flex;
-  gap:20px;                     /* a bit more breathing room */
-  justify-content:center;       /* centered row */
-  align-items:center;
+  display:flex; gap:24px; justify-content:center; align-items:center;
 }
-
-/* each link behaves the same, animation applied to the <img> */
-.footer-right .social{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  line-height:0;
-  padding:4px;                  /* small click target padding */
-  border-radius:10px;           /* subtle rounding for consistency */
-}
-
-/* unify size + make white */
-.footer-right .social img{
-  height:40px;                  /* ⬅️ bigger icons (tweak 34–40px if you like) */
-  width:auto;
-  display:block;
-  filter: brightness(0) invert(1);   /* force white */
-  opacity:.92;
-  transition: transform .22s ease, opacity .22s ease;
-  will-change: transform;
-}
-
-/* same hover for all */
-.footer-right .social:hover img,
-.footer-right .social:focus-visible img{
-  transform: translateY(-2px) scale(1.08);
-  opacity:1;
-}
-
-
-/* =====================================================
-   Responsive
-===================================================== */
-@media (max-width: 1100px){
-  .hero-grid{ grid-template-columns:1fr 360px; }
-  .portrait-ring{ width:360px; height:360px; }
-  .portrait-img{ width:240px; height:240px; }
-}
-
-@media (max-width: 900px){
-  .brand-logos img{ height:30px; }
-  .hero-grid{ grid-template-columns:1fr; }
-  .hero-portrait{ order:-1; min-height:320px; margin-bottom:8px; }
-  .hero-title{ font-size:44px; }
-  .skills-cards{ grid-template-columns:1fr; }
-  .about-grid{ grid-template-columns:1fr; }
-  .rec-grid{ grid-template-columns:1fr; }
-}
-
-@media (max-width: 640px){
-  .nav-list{ gap:16px; flex-wrap:wrap; }
-  .brand-logos{ display:none; } /* hide logos on tiny screens to save space */
-}
-/* About headshot (bigger) */
-.about-headshot img{
-  width: 340px;          /* was ~220–280px */
-  height: 340px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: var(--shadow-md);
-}
-
-/* Badges under the photo (bigger + bolder) */
-.about-badges-name{
-  margin-top: 5px;
-  margin-bottom: 0px;
-  font-size: 32px;       /* was ~14px */
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: .2px;
-  text-align: center;
-}
-.about-badges{
-  margin-top: 5px;
-  font-size: 15px;       /* was ~14px */
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: .2px;
-  text-align: center;
-}
-
-/* Optional: slightly bigger on very large screens */
-@media (min-width: 1200px){
-  .about-headshot img{ width: 360px; height: 360px; }
-  .about-badges{ font-size: 15px; }
-}
-
-/* Mobile: keep it nicely large but not too big */
-@media (max-width: 640px){
-  .about-headshot img{ width: 300px; height: 300px; }
-  .about-badges{ font-size: 15px; }
-}
-.site-footer { padding: 10px 0 15px; background:#091634; color:#fff; }
-.footer-right { display:flex; gap:24px; justify-content:center; align-items:center; }
-
-.footer-right .social { display:inline-flex; align-items:center; justify-content:center; }
-
+.footer-right .social{ display:inline-flex; align-items:center; justify-content:center; }
 .footer-right .social-icon{
   width:44px; height:44px; display:block;
-  /* If your source SVGs are dark, make them white */
   filter: invert(1) brightness(1.1);
   transition: transform .22s ease, opacity .22s ease;
   opacity:.95;
@@ -315,113 +216,138 @@ section{ scroll-margin-top:84px; }
   opacity:1;
 }
 
-.nav-link.active {
-  color: var(--accent);
-  border-bottom: 2px solid var(--accent);
+/* =====================================================
+   10) Page-Specific Sections (scoped by body class)
+===================================================== */
+/* Home */
+.page-home .section-hero{ padding-top:72px; }
+.page-home .section-about{ padding-top:24px; }
+
+/* Education */
+.page-education .section-education .section-title{ margin-bottom:12px; }
+
+/* Publications */
+.page-publications .section-publications{ padding:40px 0 80px; }
+.page-publications .framed-image{ margin:28px auto 8px; max-width:900px; display:grid; place-items:center; }
+.page-publications .framed-image img{
+  width:100%; height:auto; display:block;
+  border-radius:16px; border:10px solid #fff;
+  outline:1px solid rgba(10,26,59,0.10);
+  box-shadow:0 12px 30px rgba(12,18,28,.12);
+  transition:transform .2s ease, box-shadow .2s ease; background:#fff;
+}
+.page-publications .framed-image img:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 40px rgba(12,18,28,.18);
 }
 
-/* Framed image on Updates page */
-.framed-image{
-  margin: 28px auto 8px;        /* centers + spacing */
-  max-width: 900px;             /* responsive cap */
-  display: grid;
-  place-items: center;
+/* Experience */
+.page-experience .section-experience .section-title{ margin-bottom:14px; }
+
+/* Updates */
+.page-updates .section-title{ margin-bottom:10px; }
+
+/* =====================================================
+   11) Responsive
+===================================================== */
+@media (max-width:1100px){
+  .hero-grid{ grid-template-columns:1fr 360px; }
+  .portrait-ring{ width:360px; height:360px; }
+  .portrait-img{ width:240px; height:240px; }
 }
 
-.framed-image img{
-  width: 100%;
-  height: auto;
-  display: block;
-
-  /* frame look */
-  border-radius: 16px;
-  border: 10px solid #ffffff;                     /* inner white mat */
-  outline: 1px solid rgba(10, 26, 59, 0.10);      /* thin edge line */
-  box-shadow: 0 12px 30px rgba(12,18,28,.12);     /* soft drop shadow */
-
-  /* subtle polish */
-  transition: transform .2s ease, box-shadow .2s ease;
-  background: #fff;
-}
-
-.framed-image img:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 16px 40px rgba(12,18,28,.18);
-}
-/* Footer split into two sections */
-.site-footer { padding: 0; background:#091634; color:#fff; }
-
-/* Top logos row */
-.footer-top{
-  padding: 10px 0 12px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.footer-logos{
-  /* brand-logos already sets display:flex/gap; ensure wrap + centering */
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.footer-logos img{
-  height: 36px;                 /* match header, but tweakable */
-  border-radius: 8px;
-  background: #fff;             /* keep logos crisp on dark bg */
-  box-shadow: var(--shadow-sm);
-}
-
-/* Bottom social row (you already have these, keep them) */
-.footer-bottom{ padding: 12px 0 16px; }
-.footer-right{
-  display:flex;
-  gap:24px;
-  justify-content:center;
-  align-items:center;
-}
-
-/* Responsive tweak */
-@media (max-width: 900px){
+@media (max-width:900px){
+  .brand-logos img{ height:30px; }
+  .hero-grid{ grid-template-columns:1fr; }
+  .hero-portrait{ order:-1; min-height:320px; margin-bottom:8px; }
+  .hero-title{ font-size:44px; }
+  .skills-cards{ grid-template-columns:1fr; }
+  .about-grid{ grid-template-columns:1fr; }
+  .rec-grid{ grid-template-columns:1fr; }
+  .footer-label{ font-size:16px; }
   .footer-logos img{ height:30px; }
 }
-/* Collaborators row (top half of footer) */
-.footer-top{
-  padding: 10px 0 12px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+
+@media (max-width:640px){
+  .nav-list{ gap:16px; flex-wrap:wrap; }
+  .brand-logos{ display:none; } /* hide header logos on tiny screens to save space */
+  .about-headshot img{ width:300px; height:300px; }
+  .about-badges, .about-badges-name{ font-size:15px; }
+}
+/* Keep logos visible and tidy on mobile */
+@media (max-width: 640px){
+  /* Stack nav and logos vertically so nothing gets squished */
+  .primary-nav{
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Nav stays readable */
+  .nav-list{
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Logos: show them, allow wrapping, center them */
+  .brand-logos{
+    display: flex;            /* ensure visible on mobile */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Smaller logo size on phones so everything fits */
+  .brand-logos img,
+  .footer-logos img{
+    height: 26px;             /* tweak 22–30px if needed */
+  }
 }
 
-.footer-collab-row{
-  display: flex;
-  align-items: center;
-  justify-content: center;       /* center overall group horizontally */
-  flex-wrap: wrap;               /* allow wrapping on smaller screens */
-  gap: 16px;
+/* Extra-small devices: tighten a bit more */
+@media (max-width: 360px){
+  .brand-logos img,
+  .footer-logos img{
+    height: 22px;
+  }
 }
+/* ================================
+   Footer link overflow fixes (mobile)
+   Place at END of custom.css
+================================ */
 
-/* Label */
-.footer-label{
-  font-family: linetoBold, system-ui, sans-serif;
-  font-size: 18px;
-  color: #fff;
-  margin-right: 6px;
-}
-
-/* Logos (inherits your .brand-logos look) */
-.footer-logos{
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Let the footer links wrap instead of forcing one long row */
+.footer-bottom .footer-right{
   flex-wrap: wrap;
-}
-.footer-logos img{
-  height: 36px;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: var(--shadow-sm);
+  row-gap: 10px;         /* vertical spacing between wrapped rows */
+  column-gap: 16px;      /* a bit tighter on mobile */
+  max-width: 100%;
 }
 
-/* Responsive tweak */
-@media (max-width: 900px){
-  .footer-label{ font-size: 16px; }
-  .footer-logos img{ height: 30px; }
+/* Ensure each link can shrink and never forces horizontal scroll */
+.footer-right .social{
+  flex: 0 1 auto;        /* allow shrinking */
+  min-width: 0;          /* allow text to wrap/ellipsize if any */
+}
+
+/* If any footer links have text (email, label), allow wrapping */
+.footer-right a{
+  max-width: 100%;
+  overflow-wrap: anywhere;   /* wrap long addresses/URLs */
+  word-break: break-word;    /* fallback */
+  text-align: center;
+}
+
+/* Slightly smaller icons on small screens so everything fits */
+@media (max-width: 640px){
+  .footer-right .social-icon{ width: 32px; height: 32px; }
+  .footer-bottom{ padding: 10px 0 14px; }  /* snugger padding */
+  .footer-right{ column-gap: 14px; row-gap: 8px; }
+}
+
+/* Extra-tight for very small phones */
+@media (max-width: 360px){
+  .footer-right .social-icon{ width: 28px; height: 28px; }
+  .footer-right{ column-gap: 12px; }
 }

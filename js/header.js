@@ -34,6 +34,10 @@
            : file.includes('researchgroup') ? 'researchgroup'
            : file.includes('updates') ? 'updates'
            : 'home';
+
+  // ✅ add page class to <body> here
+  document.body.classList.add(`page-${key}`);
+
   document.querySelectorAll('.nav-link').forEach(a => {
     if (a.dataset.nav === key) a.classList.add('active');
   });

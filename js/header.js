@@ -30,6 +30,7 @@
   // highlight active page
   const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   const key = file.includes('education') ? 'education'
+           : file.includes('publications') ? 'publications'
            : file.includes('experience') ? 'experience'
            : file.includes('updates') ? 'updates'
            : 'home';

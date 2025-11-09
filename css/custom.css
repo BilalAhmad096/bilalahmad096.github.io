@@ -23,6 +23,12 @@
 
 *{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
+/* Reserve space for the scrollbar on every page to prevent header shift */
+html { scrollbar-gutter: stable; }
+
+/* Fallback for older browsers 
+// html { overflow-y: scroll; }   uncomment if needed*/
+
 body{
   margin:0;
   font-family:LinetoBook, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;

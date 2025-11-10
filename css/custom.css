@@ -357,6 +357,83 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
    Publications Section
 ===================================================== */
 .section-publications { padding: 40px 0; }
+
+.pub-list {
+  display: grid;
+  gap: 16px;
+}
+
+.pub-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.pub-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.pub-title {
+  font-family: linetoBold, system-ui;
+  font-size: 18px;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.pub-authors {
+  color: var(--ink-muted);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.pub-type {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.pub-publisher {
+  font-size: 15px;
+  color: var(--ink-muted);
+}
+
+/* Responsive tweak */
+@media (max-width: 640px) {
+  .pub-item {
+    grid-template-columns: 48px 1fr;
+    padding: 12px;
+  }
+  .pub-icon { width: 48px; height: 48px; }
+  .pub-title { font-size: 16px; }
+  .pub-authors, .pub-type, .pub-publisher { font-size: 14px; }
+}
+
+/* Very small phones */
+@media (max-width: 480px){
+  .pub-item{
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    padding: 10px;
+  }
+  .pub-icon{ width: 40px; height: 40px; }
+}
+
+
+/*
+
+End
+
+/* =====================================================
+   Publications Section
+===================================================== */
+.section-publications { padding: 40px 0; }
 /*
 .pub-list {
   display: grid;

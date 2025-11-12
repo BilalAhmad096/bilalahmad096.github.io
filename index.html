@@ -5,24 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bilal Ahmad | Electrical Engineer</title>
 
-  <!-- Favicon / App Icons -->
+  <!-- ===============================
+       Favicon / App Icons
+  =============================== -->
   <link rel="icon" type="image/png" sizes="32x32" href="./image/webpage-icon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./image/webpage-icon.png">
   <link rel="apple-touch-icon" href="./image/webpage-icon.png">
+  <!-- optional extras for PWA or older browsers -->
   <!-- <link rel="manifest" href="image/site.webmanifest">
   <link rel="shortcut icon" href="image/favicon.ico"> -->
 
-
+  <!-- ===============================
+       Styles
+  =============================== -->
   <link rel="stylesheet" href="css/typography.css">
-  <link rel="stylesheet" href="css/custom.css">
   <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+  <link rel="stylesheet" href="css/custom.css">
+  
 
+  <!-- AOS (Animate On Scroll) CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+</head>
+
+<body>
+  <!-- Header will be loaded via JS -->
   <div id="header"></div>
 
   <main>
-    <!-- === About === -->
+    <!-- ===============================
+         About Section
+    =============================== -->
     <section id="about" class="section-about">
       <div class="container">
         <h2 class="section-title">About Me</h2>
@@ -34,10 +46,10 @@
               and <strong>Machine Learning</strong>-enabled decision support for energy system operations 
               and planning. 
             </p>
-            <p>I’m particularly interested in <strong>Power System Reliability</strong>, <strong>Optimal 
-              Power Flow (OPF/SCOPF)</strong>, and <strong>Explainable AI (XAI)</strong> for intelligent 
-              contingency screening. My work aims to combine data-driven learning with physically 
-              interpretable models to enhance grid resilience, flexibility, and transparency. 
+            <p>I’m particularly interested in <strong>Power System Reliability</strong>, 
+              <strong>Optimal Power Flow (OPF/SCOPF)</strong>, and <strong>Explainable AI (XAI)</strong> 
+              for intelligent contingency screening. My work aims to combine data-driven learning with 
+              physically interpretable models to enhance grid resilience, flexibility, and transparency. 
             </p>
             <p>This research aligns with <strong>UN Sustainable Development Goal 7: Affordable and Clean 
               Energy</strong>, contributing to the global transition toward smarter, more efficient, and 
@@ -45,15 +57,21 @@
               to support reliable and clean power networks of the future.
             </p>
           </div>
+
           <figure class="about-headshot">
             <img src="image/android-chrome-512x512-old-bilal.png" alt="Bilal Ahmad headshot">
             <p class="about-badges-name">Bilal Ahmad</p>
-            <figcaption class="about-badges">URSA Fellow | DAAD Fellow | LSC Fellow | MHRD Fellow</figcaption>
+            <figcaption class="about-badges">
+              URSA Fellow | DAAD Fellow | LSC Fellow | MHRD Fellow
+            </figcaption>
           </figure>
         </div>
       </div>
     </section>
 
+    <!-- ===============================
+         Education Section
+    =============================== -->
     <section id="education" class="section-education">
       <div class="container">
         <h2 class="section-title">Education</h2>
@@ -81,7 +99,7 @@
             <div>
               <div class="edu-degree">M.Tech Thesis</div>
               <div class="edu-institution">RWTH Aachen University</div>
-              <div class="edu-detail">System Level Control of Inverters in DC Microgrid</div>
+              <div class="edu-detail"><span>Topic:</span>System Level Control of Inverters in DC Microgrid</div>
             </div>
           </article>
 
@@ -90,7 +108,8 @@
             <div>
               <div class="edu-degree">Master of Technology (M.Tech)</div>
               <div class="edu-institution">IIT Roorkee</div>
-              <div class="edu-detail">Electrical Power Systems — First Division with Distinction</div>
+              <div class="edu-detail">Electrical Power Systems</div>
+              <div class="edu-detail">First Division with Distinction</div>
             </div>
           </article>
 
@@ -99,21 +118,21 @@
             <div>
               <div class="edu-degree">Bachelor of Technology (B.Tech)</div>
               <div class="edu-institution">Aligarh Muslim University</div>
-              <div class="edu-detail">
-                Electrical Engineering — Thesis: Design and Analysis of Multilevel Inverter Topologies — First Division
-              </div>
+              <div class="edu-detail">Electrical Engineering</div>
+              <div class="edu-detail">First Division</div>
+              
             </div>
           </article>
         </div>
-        <!-- copy your edu-list block here -->
       </div>
     </section>
 
-    <!-- === Skills === -->
+    <!-- ===============================
+         Skills Section
+    =============================== -->
     <section id="skills" class="section-skills">
       <div class="container">
         <h2 class="section-title">Skills Stack</h2>
-
         <div class="skills-cards">
           <article class="skill-card">
             <img src="image/designer.svg" alt="" class="skill-icon">
@@ -154,16 +173,30 @@
               <li>Multilevel Inverter with MPP Tracking (MHRD Fellowship)</li>
             </ul>
           </article>
-          <!-- copy your three skill-card blocks from your old page -->
-          <!-- Development / Coding / Publications -->
         </div>
       </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <div id="footer"></div>
 
+  <!-- ===============================
+       Scripts
+  =============================== -->
   <script src="js/header.js"></script>
   <script src="js/footer.js"></script>
+
+  <!-- AOS (scroll animation) -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="js/aos-setup.js" defer></script>
+
+  <!-- Apply AOS to Skills + Education + Publications -->
+  <script src="js/aos-setup.js" defer></script>
+
+  <!-- Make cards focusable so hover effect works with keyboard too -->
+  <script src="js/card-accessibility.js" defer></script>
+
+  
 </body>
 </html>

@@ -426,67 +426,190 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 }
 
 
-/*
 
-End
 
-/* =====================================================
-   Publications Section
-===================================================== */
-.section-publications { padding: 40px 0; }
-/*
-.pub-list {
-  display: grid;
-  gap: 16px;
-}
 
-.pub-item {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 16px;
+/* ==========================================
+   Match logo hover effect on cards
+   (Education, Skills, Publications)
+   ========================================== */
+
+/* Baseline transitions (same snappy feel as logos) */
+.edu-item,
+.skill-card,
+.pub-item{
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background-color .22s ease,
+    border-color .22s ease;
+  will-change: transform, box-shadow;
   background: var(--card);
   border-radius: var(--radius-md);
-  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover/focus: same lift + zoom as brand logos */
+.edu-item:hover,
+.edu-item:focus-visible,
+.skill-card:hover,
+.skill-card:focus-visible,
+.pub-item:hover,
+.pub-item:focus-visible{
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  outline: none;
+}
+
+/* Optional: title tint & tiny icon nudge (subtle) */
+.edu-item:hover .edu-degree,
+.edu-item:focus-visible .edu-degree,
+.skill-card:hover .skill-title,
+.skill-card:focus-visible .skill-title{
+  color: var(--accent);
+  transition: color .18s ease;
+}
+
+.edu-item:hover .edu-icon,
+.skill-card:hover .skill-icon,
+.pub-item:hover .pub-icon{
+  transform: scale(1.04);
+  transition: transform .22s ease;
+  transform-origin: center;
+}
+
+/* Active press (click) feedback */
+.edu-item:active,
+.skill-card:active,
+.pub-item:active{
+  transform: translateY(-1px) scale(1.01);
   box-shadow: var(--shadow-sm);
 }
 
-.pub-icon {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-}
-
-.pub-title {
-  font-family: linetoBold, system-ui;
-  font-size: 18px;
-  margin-bottom: 4px;
-  color: var(--ink);
-}
-
-.pub-authors {
-  color: var(--ink-muted);
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.pub-type {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 2px;
-}
-
-.pub-publisher {
-  font-size: 15px;
-  color: var(--ink-muted);
-}
-
-/* Responsive tweak 
-@media (max-width: 640px) {
-  .pub-item {
-    grid-template-columns: 48px 1fr;
-    padding: 12px;
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .edu-item,
+  .skill-card,
+  .pub-item{
+    transition: box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
   }
-  .pub-title { font-size: 16px; }
-  .pub-authors, .pub-type, .pub-publisher { font-size: 14px; }
+  .edu-item:hover,
+  .skill-card:hover,
+  .pub-item:hover{
+    transform: none;
+  }
 }
+/* Make card hover match logos — force for Education & Skills */
+.section-skills .skill-card,
+.section-education .edu-item{
+  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
+  will-change: transform, box-shadow;
+}
+
+.section-skills .skill-card:hover,
+.section-skills .skill-card:focus-visible,
+.section-education .edu-item:hover,
+.section-education .edu-item:focus-visible{
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  outline: none;
+}
+
+/* subtle extras to match the vibe */
+.section-skills .skill-card:hover .skill-title,
+.section-education .edu-item:hover .edu-degree{
+  color: var(--accent);
+  transition: color .18s ease;
+}
+
+.section-skills .skill-card:hover .skill-icon,
+.section-education .edu-item:hover .edu-icon{
+  transform: scale(1.04);
+  transition: transform .22s ease;
+  transform-origin: center;
+}
+/* ==========================================
+   Match logo hover effect on cards
+   (Education, Skills, Publications)
+   ========================================== */
+
+.section-skills .skill-card,
+.section-education .edu-item,
+.section-publications .pub-item{
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background-color .22s ease,
+    border-color .22s ease;
+  will-change: transform, box-shadow;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover/focus: same lift + zoom as header/footer logos */
+.section-skills .skill-card:hover,
+.section-skills .skill-card:focus-visible,
+.section-education .edu-item:hover,
+.section-education .edu-item:focus-visible,
+.section-publications .pub-item:hover,
+.section-publications .pub-item:focus-visible{
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  outline: none;
+}
+
+/* Optional: title tint & tiny icon nudge for polish */
+.section-skills .skill-card:hover .skill-title,
+.section-skills .skill-card:focus-visible .skill-title,
+.section-education .edu-item:hover .edu-degree,
+.section-education .edu-item:focus-visible .edu-degree{
+  color: var(--accent);
+  transition: color .18s ease;
+}
+
+.section-skills .skill-card:hover .skill-icon,
+.section-skills .skill-card:focus-visible .skill-icon,
+.section-education .edu-item:hover .edu-icon,
+.section-education .edu-item:focus-visible .edu-icon,
+.section-publications .pub-item:hover .pub-icon,
+.section-publications .pub-item:focus-visible .pub-icon{
+  transform: scale(1.04);
+  transition: transform .22s ease;
+  transform-origin: center;
+}
+
+/* Press feedback */
+.section-skills .skill-card:active,
+.section-education .edu-item:active,
+.section-publications .pub-item:active{
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .section-skills .skill-card,
+  .section-education .edu-item,
+  .section-publications .pub-item{
+    transition: box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
+  }
+  .section-skills .skill-card:hover,
+  .section-education .edu-item:hover,
+  .section-publications .pub-item:hover{
+    transform: none;
+  }
+}
+
+/* Let AOS control transform/opacity during reveal */
+.xp-list .xp-item[data-aos] {
+  will-change: transform, opacity;
+}
+

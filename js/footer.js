@@ -12,6 +12,7 @@
         <ul class="brand-logos footer-logos">
           <li><a href="https://www.bath.ac.uk/" target="_blank"><img src="${base}/image/Bath Logo.gif" alt="University of Bath"></a></li>
           <li><a href="https://www.manchester.ac.uk/" target="_blank"><img src="${base}/image/manchester.png" alt="University of Manchester"></a></li>
+          <li><a href="https://www.ukpowernetworks.co.uk/" target="_blank"><img src="${base}/image/ukpn.png" alt="UK Power Networks"></a></li>
           <li><a href="https://www.tneigroup.com/" target="_blank"><img src="${base}/image/TNEI-logo.jpg" alt="TNEI Consultancy"></a></li>
           <li><a href="https://www.royalholloway.ac.uk/" target="_blank"><img src="${base}/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
           <li><a href="https://www.iitr.ac.in/" target="_blank"><img src="${base}/image/iitr.png" alt="IIT Roorkee"></a></li>

@@ -2,8 +2,8 @@
    0) Design Tokens
 ===================================================== */
 :root{
-  --bg-start:#ebfaff;          /* soft blue */
-  --bg-end:#f2f2ff;            /* soft pink-lavender */
+  --bg-start: #f2f4f7;
+  --bg-end:   #f8f9fb;
   --ink:#0a1a3b;               /* main text */
   --ink-muted:#5b6b7b;
   --accent:#0f66ff;            /* links / hover */
@@ -19,7 +19,24 @@
 
   --shadow-sm:0 6px 20px rgba(12,18,28,.06);
   --shadow-md:0 10px 30px rgba(12,18,28,.09);
+
+    /* Section-specific backgrounds */
+  --section-hero:        #ffffff;  /* crisp white for impact */
+  --section-about:       #f5f6fa;  /* very light bluish-gray */
+  --section-skills:      #eef1f6;  /* cooler gray-blue */
+  --section-education:   #f7f9fc;  /* pale gray with hint of blue */
+  --section-experience:  #f1f3f6;  /* slightly darker gray for contrast */
+  --section-publications:#eceff3;  /* clearly distinct light slate */
+  --section-footer:      #0a1638;  /* your existing dark navy footer */
 }
+
+.section-hero        { background: var(--section-hero); }
+.section-about       { background: var(--section-about); }
+.section-skills      { background: var(--section-skills); }
+.section-education   { background: var(--section-education); }
+.section-experience  { background: var(--section-experience); }
+.section-publications{ background: var(--section-publications); }
+.site-footer         { background: var(--section-footer); color: #fff; }
 
 /* =====================================================
    1) Resets / Base
@@ -49,12 +66,17 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 /* =====================================================
    2) Layout: Header / Nav
 ===================================================== */
-.site-header{
-  position:sticky; top:0; z-index:1000;
-  backdrop-filter:saturate(180%) blur(10px);
+/* .site-header{
+  /* position:sticky; top:0; z-index:1000;
+  backdrop-filter:saturate(180%) blur(10px); 
+  background: #0a1638;                /* same as footer 
+  color: #fff;                        /* ensure text/icons stay readable 
   background:linear-gradient(90deg, var(--bg-start), var(--bg-end)/90%);
   border-bottom:1px solid rgba(0,0,0,.05);
-}
+} */
+
+
+
 .primary-nav{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
 }
@@ -612,4 +634,128 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 .xp-list .xp-item[data-aos] {
   will-change: transform, opacity;
 }
+/* === LIGHT BLUE HEADER === */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(90deg, #cfe5ff 0%, #dbe9ff 100%);
+  color: var(--ink);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
 
+
+
+
+/* Navigation links on light header */
+.nav-link {
+  color: var(--ink);  /* dark navy text from your design tokens */
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link.active {
+  color: var(--accent);               /* your bright blue hover accent */
+  border-bottom-color: var(--accent);
+}
+
+/* Logos look better with soft shadows on light blue */
+.brand-logos img {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ============================
+   Scroll Ribbon (Back to Top)
+   ============================ */
+.scroll-ribbon{
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+  background: var(--accent);
+  color: #fff;
+  font-family: linetoBold, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(12,18,28,.18);
+
+  /* start hidden; fade/slide in when .show is added */
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+
+  transition:
+    opacity .25s ease,
+    transform .25s ease,
+    box-shadow .2s ease,
+    background-color .2s ease;
+}
+
+/* ribbon tail */
+.scroll-ribbon::after{
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: -8px;
+  width: 0; height: 0;
+  border-left: 10px solid transparent;
+  border-top: 8px solid rgba(15,102,255,.9); /* slightly darker tail */
+  filter: drop-shadow(0 2px 2px rgba(12,18,28,.15));
+}
+
+/* visible state */
+.scroll-ribbon.show{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* hover/focus micro interaction */
+.scroll-ribbon:hover,
+.scroll-ribbon:focus-visible{
+  box-shadow: 0 14px 30px rgba(12,18,28,.26);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* icon + label */
+.scroll-ribbon .sr-icon{
+  font-size: 18px;
+  transform: translateY(-1px);
+}
+.scroll-ribbon .sr-label{
+  letter-spacing: .2px;
+}
+
+/* compact on small screens */
+@media (max-width: 480px){
+  .scroll-ribbon{
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .scroll-ribbon .sr-label{
+    display: none; /* keep just the arrow on tiny screens */
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .scroll-ribbon{
+    transition: none;
+  }
+}

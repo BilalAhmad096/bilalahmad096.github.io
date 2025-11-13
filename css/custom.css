@@ -759,3 +759,80 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
     transition: none;
   }
 }
+
+
+/* ================================
+   Research Group (page-specific)
+   ================================ */
+
+/* Add a dedicated background color token (near your other section tokens) */
+:root{
+  /* ...existing tokens... */
+  --section-researchgroup: #eef2f8; /* soft, distinct from publications */
+}
+
+/* Section wrapper */
+.section-researchgroup{
+  background: var(--section-researchgroup);
+  padding: 40px 0 100px;
+}
+
+/* Optional: if you want slightly different spacing/layout on this page */
+.rg-container{
+  max-width: var(--container);
+}
+
+/* Header area */
+.rg-header{
+  margin-bottom: 16px;
+}
+.rg-title{
+  margin-bottom: 6px;              /* tighten under the h2 */
+}
+.rg-subtitle{
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+/* Content area (messages/notes) */
+.rg-content{
+  display: grid;
+  gap: 12px;
+}
+
+/* Reusable notice card with variants */
+.rg-notice{
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  border-left: 4px solid var(--ring);
+  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease;
+}
+
+/* Hover/focus to match your card interactions elsewhere */
+.rg-notice:hover,
+.rg-notice:focus-visible{
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-md);
+  outline: none;
+  background: #fff;
+}
+
+/* Variants */
+.rg-notice.is-info{
+  border-left-color: var(--accent);
+}
+.rg-notice.is-pending{
+  /* border-left-color: #ffb020; warm amber edge */
+   border-left-color: #3146af; /* warm amber edge */
+}
+
+/* Responsive tweak */
+@media (max-width: 640px){
+  .rg-subtitle{ font-size: 18px; }
+  .rg-notice{ padding: 12px 14px; }
+}

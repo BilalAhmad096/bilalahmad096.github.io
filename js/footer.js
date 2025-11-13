@@ -11,13 +11,19 @@
         <span class="footer-label">Collaborators:</span>
         <ul class="brand-logos footer-logos">
           <li><a href="https://www.bath.ac.uk/" target="_blank"><img src="${base}/image/Bath Logo.gif" alt="University of Bath"></a></li>
+          <li><a href="https://www.sandia.gov/" target="_blank"><img src="${base}/image/Sandia.svg" alt="Sandia National Laboratories"></a></li>
           <li><a href="https://www.manchester.ac.uk/" target="_blank"><img src="${base}/image/manchester.png" alt="University of Manchester"></a></li>
+          <li><a href="https://www.ed.ac.uk/" target="_blank"><img src="${base}/image/Edinburgh.png" alt="University of Edinburgh"></a></li>
           <li><a href="https://www.ukpowernetworks.co.uk/" target="_blank"><img src="${base}/image/ukpn.png" alt="UK Power Networks"></a></li>
           <li><a href="https://www.tneigroup.com/" target="_blank"><img src="${base}/image/TNEI-logo.jpg" alt="TNEI Consultancy"></a></li>
           <li><a href="https://www.royalholloway.ac.uk/" target="_blank"><img src="${base}/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
           <li><a href="https://www.iitr.ac.in/" target="_blank"><img src="${base}/image/iitr.png" alt="IIT Roorkee"></a></li>
           <li><a href="https://www.rwth-aachen.de/" target="_blank"><img src="${base}/image/rwth.png" alt="RWTH Aachen University"></a></li>
           <li><a href="https://www.amu.ac.in/" target="_blank"><img src="${base}/image/amu.jpg" alt="Aligarh Muslim University"></a></li>
+
+
+          
+
         </ul>
       </div>
     </div>

@@ -836,3 +836,45 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   .rg-subtitle{ font-size: 18px; }
   .rg-notice{ padding: 12px 14px; }
 }
+
+
+/* Never let images/videos overflow the viewport */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;      /* removes inline-gap + respects container width */
+  box-sizing: border-box;
+}
+
+/* Belt-and-suspenders: no horizontal scrollbars if something misbehaves */
+html, body { overflow-x: hidden; }
+
+
+
+/* Updates page image wrapper */
+.section-updates .framed-image{
+  width: 100%;
+  max-width: 900px;     /* cap on large screens; tweak if you like */
+  margin: 16px auto;
+  padding: 0 12px;      /* tiny side padding so borders don’t touch edges on phones */
+}
+
+/* The image itself */
+.section-updates .framed-image img{
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  border-radius: 16px;
+  border: 10px solid #fff;
+  outline: 1px solid rgba(10,26,59,0.10);
+  box-shadow: 0 12px 30px rgba(12,18,28,.12);
+}
+
+/* On very small phones, relax the border so it still fits comfortably */
+@media (max-width: 480px){
+  .section-updates .framed-image img{
+    border-width: 8px;
+    border-radius: 12px;
+  }
+}

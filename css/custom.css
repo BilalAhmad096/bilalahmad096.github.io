@@ -177,8 +177,15 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 .section-experience{ padding:40px 0; }
 .xp-list{ display:grid; gap:16px; }
 .xp-item{
+  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
   display:grid; grid-template-columns:72px 1fr; gap:16px;
   background:var(--card); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-sm);
+}
+.xp-item:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  outline: none;
 }
 .xp-logo{ width:72px; height:72px; object-fit:contain; }
 .xp-role{ margin:0 0 6px; font-family:linetoBold; }
@@ -502,7 +509,12 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   transition: transform .22s ease;
   transform-origin: center;
 }
-
+.section-education .edu-item:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  outline: none;
+}
 /* Active press (click) feedback */
 .edu-item:active,
 .skill-card:active,
@@ -527,7 +539,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 /* Make card hover match logos — force for Education & Skills */
 .section-skills .skill-card,
 .section-education .edu-item{
-  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
+  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
   will-change: transform, box-shadow;
 }
 
@@ -535,7 +547,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 .section-skills .skill-card:focus-visible,
 .section-education .edu-item:hover,
 .section-education .edu-item:focus-visible{
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-2px) scale(1.03) !important;
   box-shadow: var(--shadow-md);
   background: #fff;
   outline: none;

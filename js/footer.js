@@ -9,7 +9,7 @@
     <div class="footer-top">
       <div class="footer-collab-row">
         <span class="footer-label">Collaborators:</span>
-        <ul class="brand-logos footer-logos">
+        <ul class=" footer-logos">
           <li><a href="https://www.bath.ac.uk/" target="_blank"><img src="${base}/image/Bath Logo.gif" alt="University of Bath"></a></li>
           <li><a href="https://www.sandia.gov/" target="_blank"><img src="${base}/image/Sandia.svg" alt="Sandia National Laboratories"></a></li>
           <li><a href="https://www.manchester.ac.uk/" target="_blank"><img src="${base}/image/manchester.png" alt="University of Manchester"></a></li>

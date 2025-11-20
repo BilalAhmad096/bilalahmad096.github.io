@@ -5,7 +5,15 @@
   const html = `
 <header class="site-header">
   <div class="container-wide">
-    <nav class="primary-nav" aria-label="Primary">
+    <nav class="primary-nav" id="mainNav" aria-label="Primary">
+      <div class="nav-left">
+
+        <!-- Mobile Hamburger -->
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
       <ul class="nav-list">
         <li><a href="${base}/index.html" class="nav-link" data-nav="home">Home</a></li>
         <li><a href="${base}/pages/experience.html" class="nav-link" data-nav="experience">Experience</a></li>
@@ -24,6 +32,7 @@
     </nav>
   </div>
 </header>`;
+  
   const mount = document.getElementById('header');
   if (mount) mount.innerHTML = html;
 
@@ -35,10 +44,16 @@
            : file.includes('updates') ? 'updates'
            : 'home';
 
-  // ✅ add page class to <body> here
   document.body.classList.add(`page-${key}`);
 
   document.querySelectorAll('.nav-link').forEach(a => {
     if (a.dataset.nav === key) a.classList.add('active');
+  });
+
+  // Mobile toggle
+  document.addEventListener("click", e => {
+    if (e.target.id === "navToggle" || e.target.closest("#navToggle")) {
+      document.getElementById("mainNav").classList.toggle("open");
+    }
   });
 })();

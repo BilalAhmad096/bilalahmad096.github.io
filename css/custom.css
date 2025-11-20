@@ -130,7 +130,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 .about-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:36px; align-items:center; }
 .about-text{ font-size:18px; line-height:1.8; color:var(--ink); }
 
-.about-headshot{ margin:0; text-align:center; }
+.about-headshot{ display: flex; flex-direction: column; align-items: center; margin:0 auto; text-align:center; }
 .about-headshot img{
   width:340px; height:340px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-md);
 }
@@ -222,7 +222,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   font-size:18px; color:#fff; margin-right:6px;
 }
 .footer-logos{
-  display:flex; align-items:center; gap:14px; list-style:none; padding:0; margin:0; flex-wrap:wrap;
+  display:flex; align-items:center;justify-content: center; gap:14px; list-style:none; padding:0; margin:0; flex-wrap:wrap;
 }
 .footer-logos img{
   height:36px; border-radius:8px; background:#fff; box-shadow:var(--shadow-sm);
@@ -679,6 +679,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   background: #ffffff;
   border-radius: 8px;
   box-shadow: var(--shadow-sm);
+  object-fit: contain;
 }
 
 
@@ -888,5 +889,146 @@ html, body { overflow-x: hidden; }
   .section-updates .framed-image img{
     border-width: 8px;
     border-radius: 12px;
+  }
+}
+
+
+
+/* ===========================
+   HEADER BASE STYLE
+   =========================== */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.container-wide {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.primary-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  gap: 20px;
+}
+
+/* Left side: logo + toggle */
+.nav-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Fake logo text (you can replace with an image if needed) */
+.site-logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  text-decoration: none;
+}
+
+/* ===========================
+   NAV ITEMS
+   =========================== */
+.nav-list,
+.brand-logos {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  padding: 6px 10px;
+  color: #222;
+  font-weight: 500;
+}
+
+.nav-link.active {
+  color: #0057ff;
+  border-bottom: 2px solid #0057ff;
+}
+
+/* Logo images */
+.brand-logos img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+/* ===========================
+   MOBILE MENU TOGGLE
+   =========================== */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  width: 22px;
+  height: 2px;
+  background: #222;
+  display: block;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 900px) {
+
+  /* Show hamburger */
+  .nav-toggle {
+    display: flex;
+  }
+
+  /* Stack content */
+  .primary-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Hide menus initially */
+  .nav-list,
+  .brand-logos {
+    flex-direction: column;
+    width: 100%;
+    display: none;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  /* Show when menu opened */
+  .primary-nav.open .nav-list,
+  .primary-nav.open .brand-logos {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  /* Logo size smaller */
+  .brand-logos img {
+    height: 28px;
+  }
+}
+
+@media (max-width: 500px) {
+  .nav-link {
+    font-size: 16px;
+  }
+
+  .brand-logos img {
+    height: 24px;
   }
 }

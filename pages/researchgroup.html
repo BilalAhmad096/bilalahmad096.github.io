@@ -20,6 +20,10 @@
   <link rel="stylesheet" href="../css/typography.css">
   <link rel="stylesheet" href="../css/custom.css">
   <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- AOS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  
 </head>
 <body>
 
@@ -29,14 +33,15 @@
     <!-- Research Group -->
     <section id="research-group" class="section-researchgroup">
       <div class="container rg-container">
-        <header class="rg-header">
-          <h2 class="section-title rg-title">Flexible Future Power Networks Group</h2>
-          <h3 class="rg-subtitle">University of Bath</h3>
-        </header>
+        <h2 class="section-title rg-title">Flexible Future Power Networks Group</h2>
+        <h3 class="rg-subtitle">University of Bath</h3>
 
-        <div class="rg-content">
-          <p class="rg-notice is-info">Coming soon...</p>
-          <p class="rg-notice is-pending">Pending Supervisor Approval...</p>
+        <div class="rg-list">
+
+          <div class="rg-content rg-item">
+            <p class="rg-notice is-info">Coming soon...</p>
+            <p class="rg-notice is-pending">Pending Supervisor Approval...</p>
+          </div>
         </div>
       </div>
     </section>
@@ -47,7 +52,18 @@
 
   <script src="../js/header.js"></script>
   <script src="../js/footer.js"></script>
+
+    <!-- AOS core -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- Your setup (must be ../ on pages/) -->
+  <script src="../js/aos-setup.js" defer></script>
+
+  <!-- Apply AOS to Skills + Education + Publications -->
+  <!-- Make cards focusable so hover effect works with keyboard too -->
+  <script src="../js/card-accessibility.js" defer></script>
   <script src="../js/backtotop.js" defer></script>
+
 
 </body>
 </html>

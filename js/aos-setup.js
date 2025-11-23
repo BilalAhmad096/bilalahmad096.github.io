@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mirror = true,
     once = false
   } = {}) => {
+    console.log(selector)
     document.querySelectorAll(selector).forEach((el, i) => {
       el.setAttribute('data-aos', effect);
       el.setAttribute('data-aos-offset', offset);
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyAOS('.pub-list .pub-item', { delayStep: 120 }); // Publications page
   applyAOS('.xp-list .xp-item',   { delayStep: 120 }); // Experience page
   applyAOS('.rec-grid .rec-card', { delayStep: 120 }); // ⬅️ NEW: Recommendations
+  applyAOS('.rg-list .rg-item', { delayStep: 120 }); // ⬅️ NEW: Research Group
 
 
 

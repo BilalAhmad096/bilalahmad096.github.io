@@ -657,9 +657,6 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-
-
-
 /* Navigation links on light header */
 .nav-link {
   color: var(--ink);  /* dark navy text from your design tokens */

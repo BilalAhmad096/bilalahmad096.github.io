@@ -18,6 +18,7 @@
         </ul>
       </div>
     </div>
+    <!-- Bottom row: Social Profiles -->
     <div class="footer-bottom">
       <div class="footer-right">
         <a class="social" href="https://www.linkedin.com/in/mintorian" target="_blank" rel="noopener">

@@ -1029,3 +1029,14 @@ html, body { overflow-x: hidden; }
     height: 24px;
   }
 }
+/* Add transition for collaborator logos */
+.footer-logos img {
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+/* Hover effect: match social icons (lift + zoom) */
+.footer-logos li:hover img,
+.footer-logos a:hover img {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: var(--shadow-md);
+}

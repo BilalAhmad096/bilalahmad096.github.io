@@ -75,7 +75,20 @@
           </div>
 
           <figure class="about-headshot">
-            <img src="image/android-chrome-512x512-old-bilal.png" alt="Bilal Ahmad headshot">
+            <div class="slideshow-container">
+              <img src="image/Website Image 1.png" class="slide-img active" alt="Bilal Ahmad">
+              <img src="image/Website Image 2.jpg" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 3.png" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 4.JPG" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 5.jpeg" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 6.JPG" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 7.jpeg" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 8.jpeg" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 9.JPG" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 10.jpeg" class="slide-img" alt="Bilal Ahmad">
+              <img src="image/Website Image 11.JPG" class="slide-img" alt="Bilal Ahmad">
+            </div>
+            
             <p class="about-badges-name"><strong>Bilal Ahmad</strong></p>
             <figcaption class="about-badges">
               URSA Fellow | DAAD Fellow | LSC Fellow | MHRD Fellow
@@ -208,6 +221,27 @@
       </div>
     </section>
   </main>
+
+  <script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll(".slide-img");
+
+    function showSlides() {
+      slides.forEach((slide, i) => {
+        slide.classList.remove("active");
+      });
+
+      slideIndex = (slideIndex + 1) % slides.length;
+      slides[slideIndex].classList.add("active");
+    }
+
+    // initial image visible
+    slides[0].classList.add("active");
+
+    // change every 3 seconds
+    setInterval(showSlides, 3000);
+  </script>
+
 
   <!-- Footer -->
   <div id="footer"></div>

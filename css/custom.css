@@ -1173,3 +1173,14 @@ figcaption.caption-below[lang="ar"] {
   font-size: 0.95rem;
   color: #555;
 }
+
+.updates-subtitle{
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+/* Responsive tweak */
+@media (max-width: 640px){
+  .updates-subtitle{ font-size: 18px; }
+}

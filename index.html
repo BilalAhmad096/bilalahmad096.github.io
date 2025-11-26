@@ -239,25 +239,33 @@
   </main>
 
   <script>
-    let slideIndex = 0;
+    let currentIndex = 0;
     const slides = document.querySelectorAll(".slide-img");
 
     function showSlides() {
-      slides.forEach((slide, i) => {
-        slide.classList.remove("active");
-      });
+      if (slides.length === 0) return;
 
-      slideIndex = (slideIndex + 1) % slides.length;
-      slides[slideIndex].classList.add("active");
+      // remove current
+      slides[currentIndex].classList.remove("active");
+
+      // pick a new random index different from current
+      let nextIndex = currentIndex;
+      if (slides.length > 1) {
+        while (nextIndex === currentIndex) {
+          nextIndex = Math.floor(Math.random() * slides.length);
+        }
+      }
+
+      currentIndex = nextIndex;
+      slides[currentIndex].classList.add("active");
     }
 
-    // initial image visible
-    slides[0].classList.add("active");
+    if (slides.length > 0) {
+      slides[0].classList.add("active");
+    }
 
-    // change every 3 seconds
     setInterval(showSlides, 3000);
   </script>
-
 
   <!-- Footer -->
   <div id="footer"></div>

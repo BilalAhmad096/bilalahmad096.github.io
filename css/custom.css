@@ -594,7 +594,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 .section-education .edu-item:focus-visible,
 .section-publications .pub-item:hover,
 .section-publications .pub-item:focus-visible{
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-2px) scale(1.03) !important;
   box-shadow: var(--shadow-md);
   background: #fff;
   outline: none;
@@ -1128,4 +1128,8 @@ html, body { overflow-x: hidden; }
 
 .slide-img.active {
   opacity: 1;
+}
+/* Fix publication hover speed to match education & experience */
+.section-publications .pub-item{
+  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
 }

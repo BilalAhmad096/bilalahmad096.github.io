@@ -1040,3 +1040,63 @@ html, body { overflow-x: hidden; }
   transform: translateY(-2px) scale(1.08);
   box-shadow: var(--shadow-md);
 }
+/* Countdown styles */
+.countdown-wrapper {
+  margin-top: 2.5rem;
+  text-align: center;
+}
+
+.countdown-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.03em;
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.countdown-item {
+  min-width: 90px;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(4px);
+}
+
+.count-num {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.count-label {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+/* Mobile tweaks */
+@media (max-width: 600px) {
+  .countdown-grid {
+    gap: 1rem;
+  }
+
+  .count-num {
+    font-size: 1.6rem;
+  }
+
+  .countdown-item {
+    padding: 0.75rem 1rem;
+  }
+}

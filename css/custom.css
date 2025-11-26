@@ -1133,3 +1133,43 @@ html, body { overflow-x: hidden; }
 .section-publications .pub-item{
   transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
 }
+
+
+figcaption.caption-below[lang="ar"] {
+  text-align: center;      /* Center the caption text */
+  display: block;          /* Ensures full-width alignment */
+  margin: 1.5em 0 0;       /* Optional: spacing above/below */
+  font-style: italic;      /* Optional: styling */
+  direction: rtl;          /* Arabic text direction */
+  font-size: 1.2em;    /* Increase text size */
+  color: #422a7f; /* Soft, elegant dark gray */
+}
+
+
+
+.updates-list {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.update-item {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  padding: 1.2rem 1.4rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.update-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #2b2b2b;
+}
+
+.update-desc {
+  font-size: 0.95rem;
+  color: #555;
+}

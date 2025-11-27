@@ -28,6 +28,9 @@
   --section-experience:  #f1f3f6;  /* slightly darker gray for contrast */
   --section-publications:#eceff3;  /* clearly distinct light slate */
   --section-footer:      #0a1638;  /* your existing dark navy footer */
+  --section-updates-pro:    #f5f6fa;  /* soft gray-blue */
+  --section-updates-person: #f1f3f6;  /* soft lilac/blue */
+
 }
 
 .section-hero        { background: var(--section-hero); }
@@ -1050,6 +1053,7 @@ body {
 /* Countdown styles */
 .countdown-wrapper {
   margin-top: 2.5rem;
+  margin-bottom: 2.5rem;   /* ⬅️ Added space AFTER the countdown */
   text-align: center;
 }
 
@@ -1167,6 +1171,8 @@ figcaption.caption-below[lang="ar"] {
   padding: 1.2rem 1.4rem;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem; /* Adds space after each item */
+
 }
 
 .update-title {
@@ -1190,4 +1196,12 @@ figcaption.caption-below[lang="ar"] {
 /* Responsive tweak */
 @media (max-width: 640px){
   .updates-subtitle{ font-size: 18px; }
+}
+/* Updates page sections: different backgrounds */
+.page-updates .section-updates--pro {
+  background: var(--section-updates-pro);
+}
+
+.page-updates .section-updates--person {
+  background: var(--section-updates-person);
 }

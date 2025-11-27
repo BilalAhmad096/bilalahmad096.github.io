@@ -857,7 +857,14 @@ img, video {
 }
 
 /* Belt-and-suspenders: no horizontal scrollbars if something misbehaves */
-html, body { overflow-x: hidden; }
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: clip;   /* prevents scroll layer duplication */
+}
+
 
 
 

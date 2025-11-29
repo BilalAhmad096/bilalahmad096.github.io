@@ -138,9 +138,13 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   width:440px; height:440px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-md);
 }
 .about-badges-name{
-  margin-top:5px; margin-bottom:0;
-  font-size:32px; font-weight:600; color:var(--ink);
-  letter-spacing:.2px; text-align:center;
+  margin-top:5px;
+  margin-bottom:0;
+  font-size:32px;
+  font-weight:600;
+  color:var(--ink);
+  letter-spacing:.2px;
+  text-align:center;
 }
 .about-badges{
   margin-top:5px; margin-bottom:0;
@@ -304,8 +308,19 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   .nav-list{ gap:16px; flex-wrap:wrap; }
   .brand-logos{ display:none; } /* hide header logos on tiny screens to save space */
   .about-headshot img{ width:300px; height:300px; }
-  .about-badges, .about-badges-name{ font-size:15px; }
 }
+
+@media (max-width:640px){
+  .about-badges, .about-badges-name{
+    font-size:15px;
+    font-weight:600; /* keep bold on mobile */
+  }
+}
+
+.about-badges-name strong{
+  font-weight:700; /* extra bold if needed */
+}
+
 /* Keep logos visible and tidy on mobile */
 @media (max-width: 640px){
   /* Stack nav and logos vertically so nothing gets squished */

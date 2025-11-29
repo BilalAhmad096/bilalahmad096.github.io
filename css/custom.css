@@ -135,7 +135,7 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
 
 .about-headshot{ display: flex; flex-direction: column; align-items: center; margin:0 auto; text-align:center; }
 .about-headshot img{
-  width:340px; height:340px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-md);
+  width:440px; height:440px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-md);
 }
 .about-badges-name{
   margin-top:5px; margin-bottom:0;
@@ -1113,8 +1113,8 @@ body {
 }
 .slideshow-container {
   position: relative;
-  width: 320px;            /* increase these two */
-  height: 320px;
+  width: 420px;            /* increase these two */
+  height: 420px;
   max-width: 80vw;         /* stay responsive on small screens */
   max-height: 80vw;
   overflow: hidden;
@@ -1204,4 +1204,79 @@ figcaption.caption-below[lang="ar"] {
 
 .page-updates .section-updates--person {
   background: var(--section-updates-person);
+}
+
+
+/* ==========================================
+   Make Professional Updates match XP items
+========================================== */
+
+.section-updates--pro .update-item {
+  background: var(--card);                       /* Solid card background */
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .22s ease,
+              box-shadow .22s ease,
+              background-color .22s ease,
+              border-color .22s ease;
+}
+
+/* Hover effect identical to Work Experience cards */
+.section-updates--pro .update-item:hover,
+.section-updates--pro .update-item:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  outline: none;
+}
+
+/* Title + text styling to match */
+.section-updates--pro .update-title {
+  margin: 0 0 6px;
+  font-family: linetoBold;
+  font-size: 18px;          /* match xp-role size */
+  color: var(--ink);
+}
+
+.section-updates--pro .update-desc {
+  margin: 0 0 4px;
+  color: var(--ink-muted);
+  font-size: 15px;
+}
+
+/* ==========================================
+   Fix spacing for Professional Updates
+========================================== */
+
+/* Reduce spacing BETWEEN professional updates */
+.section-updates--pro .updates-list {
+  gap: 10px;              /* Tight spacing between items */
+  margin-bottom: 40px;    /* Clear space AFTER the professional section */
+}
+
+/* Remove unwanted margin inside each update item */
+.section-updates--pro .update-item {
+  margin-bottom: 0;
+}
+
+
+/* ==========================================
+   Hover Effect for Countdown Items
+   Matches card hover across the site
+========================================== */
+
+.countdown-item {
+  transition: transform .22s ease, 
+              box-shadow .22s ease, 
+              background-color .22s ease;
+  cursor: default; /* or pointer if you want clickable effect */
+}
+
+.countdown-item:hover,
+.countdown-item:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  background: #ffffff;
+  outline: none;
 }

@@ -1293,29 +1293,50 @@ figcaption.caption-below[lang="ar"]{
   }
 
   /* Mobile nav layout */
+
+  /* show hamburger on mobile */
   .nav-toggle{
     display:flex;
   }
 
+  /* center hamburger in the header row */
+  .nav-left{
+    width:100%;
+    justify-content:center;
+  }
+
+  /* stack rows: [hamburger] on top, then nav-list, then logos */
   .primary-nav{
     flex-direction:column;
-    align-items:stretch;
+    align-items:center;
+    justify-content:flex-start;
   }
 
+  /* hide links + logos by default on mobile */
   .nav-list,
   .brand-logos{
-    flex-direction:column;
-    width:100%;
     display:none;
-    text-align:center;
-    padding:10px 0;
+    width:100%;
   }
 
-  .primary-nav.open .nav-list,
-  .primary-nav.open .brand-logos{
+  /* when hamburger is clicked → show row 1: links */
+  .primary-nav.open .nav-list{
     display:flex;
     flex-direction:row;
+    flex-wrap:wrap;
     justify-content:center;
+    gap:16px;
+    margin-top:10px;
+  }
+
+  /* row 2: logos */
+  .primary-nav.open .brand-logos{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    margin-top:8px;
+    padding-bottom:10px;
   }
 
   .brand-logos img{
@@ -1331,8 +1352,9 @@ figcaption.caption-below[lang="ar"]{
     justify-content:center;
   }
 
-  .brand-logos{
-    display:flex;
+  /* Only show logos when menu is open */
+  /* only style logos when menu is open; visibility handled in 900px block */
+  .primary-nav.open .brand-logos{
     flex-wrap:wrap;
     justify-content:center;
     gap:10px;

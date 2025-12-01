@@ -20,123 +20,318 @@
   --shadow-sm:0 6px 20px rgba(12,18,28,.06);
   --shadow-md:0 10px 30px rgba(12,18,28,.09);
 
-    /* Section-specific backgrounds */
-  --section-hero:        #ffffff;  /* crisp white for impact */
-  --section-about:       #f5f6fa;  /* very light bluish-gray */
-  --section-skills:      #eef1f6;  /* cooler gray-blue */
-  --section-education:   #f7f9fc;  /* pale gray with hint of blue */
-  --section-experience:  #f1f3f6;  /* slightly darker gray for contrast */
-  --section-publications:#eceff3;  /* clearly distinct light slate */
-  --section-footer:      #0a1638;  /* your existing dark navy footer */
+  /* Section-specific backgrounds */
+  --section-hero:         #ffffff;  /* crisp white for impact */
+  --section-about:        #f5f6fa;  /* very light bluish-gray */
+  --section-skills:       #eef1f6;  /* cooler gray-blue */
+  --section-education:    #f7f9fc;  /* pale gray with hint of blue */
+  --section-experience:   #f1f3f6;  /* slightly darker gray for contrast */
+  --section-publications: #eceff3;  /* clearly distinct light slate */
+  --section-footer:       #0a1638;  /* existing dark navy footer */
   --section-updates-pro:    #f5f6fa;  /* soft gray-blue */
   --section-updates-person: #f1f3f6;  /* soft lilac/blue */
-
+  --section-researchgroup:  #eef2f8;  /* soft, distinct from publications */
 }
 
+/* Section background helpers */
 .section-hero        { background: var(--section-hero); }
 .section-about       { background: var(--section-about); }
 .section-skills      { background: var(--section-skills); }
 .section-education   { background: var(--section-education); }
 .section-experience  { background: var(--section-experience); }
 .section-publications{ background: var(--section-publications); }
-.site-footer         { background: var(--section-footer); color: #fff; }
+.site-footer         { background: var(--section-footer); color:#fff; }
 
 /* =====================================================
-   1) Resets / Base
+   1) Base / Resets / Layout Helpers
 ===================================================== */
-*{ box-sizing:border-box; }
+*{
+  box-sizing:border-box;
+}
+
 html{
   scroll-behavior:smooth;
-  /* Reserve space for the scrollbar on every page to prevent header shift */
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable;   /* reserve space for scrollbar */
+  overflow-x:hidden;
 }
-/* Fallback: uncomment if needed */
-/* html { overflow-y: scroll; } */
 
 body{
   margin:0;
   font-family:LinetoBook, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:var(--ink);
   background:linear-gradient(90deg, var(--bg-start), var(--bg-end));
+  overflow-x:clip;
 }
 
-.container{ max-width:var(--container); margin-inline:auto; padding:28px 20px; }
-.container-wide{ max-width:var(--container-wide); margin-inline:auto; padding:12px 20px; }
-.section-title{ font-family:linetoBlack, system-ui; font-size:34px; margin:6px 0 18px; }
+img, video{
+  max-width:100%;
+  height:auto;
+  display:block;
+  box-sizing:border-box;
+}
+
+.container{
+  max-width:var(--container);
+  margin-inline:auto;
+  padding:28px 10px;
+}
+
+.container-wide{
+  max-width:var(--container-wide);
+  margin-inline:auto;
+  padding:12px 12px;
+}
+
+.section-title{
+  font-family:linetoBlack, system-ui;
+  font-size:34px;
+  margin:6px 0 18px;
+}
+
 .muted{ color:var(--ink-muted); }
-section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
+
+section{
+  scroll-margin-top:84px;  /* anchor offset for sticky header */
+}
 
 /* =====================================================
-   2) Layout: Header / Nav
+   2) Header / Nav
 ===================================================== */
-/* .site-header{
-  /* position:sticky; top:0; z-index:1000;
-  backdrop-filter:saturate(180%) blur(10px); 
-  background: #0a1638;                /* same as footer 
-  color: #fff;                        /* ensure text/icons stay readable 
-  background:linear-gradient(90deg, var(--bg-start), var(--bg-end)/90%);
-  border-bottom:1px solid rgba(0,0,0,.05);
-} */
 
+/* Sticky header (final behaviour: white, shadow) */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:#fff;
+  color:var(--ink);
+  border-bottom:1px solid #ddd;
+  box-shadow:0 2px 8px rgba(0,0,0,0.12);
+}
 
-
+/* Main nav layout */
 .primary-nav{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:1px 0;
 }
 
-/* LEFT: nav links */
-.nav-list{
-  display:flex; gap:28px; list-style:none; padding:0; margin:0;
+.nav-left{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
 }
-.nav-link{
-  display:inline-block; padding:12px 8px;
-  font-family:linetoBold; text-decoration:none; color:var(--ink);
-  transition:color .2s ease;
-}
-.nav-link:hover, .nav-link:focus{ color:var(--accent); }
-.nav-link.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-/* RIGHT: partner logos (header) */
+.site-logo{
+  font-size:20px;
+  font-weight:700;
+  color:#222;
+  text-decoration:none;
+}
+
+/* Nav lists */
+.nav-list,
 .brand-logos{
-  display:flex; align-items:center; gap:14px; list-style:none; padding:0; margin:0;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  list-style:none;
+  margin:0;
+  padding:0;
 }
+
+/* Final nav-link behaviour (merged) */
+.nav-link{
+  display:inline-block;
+  padding:6px 10px;
+  font-family:linetoBold, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight:500;
+  text-decoration:none;
+  color:#222;
+  border-bottom:2px solid transparent;
+  transition:color .2s ease, border-color .2s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+.nav-link.active{
+  color:#0057ff;
+  border-bottom-color:#0057ff;
+}
+
+/* Header logos */
 .brand-logos img{
-  height:36px; width:auto; display:block; border-radius:8px;
+  height:32px;
+  width:auto;
+  display:block;
+  border-radius:8px;
+  background:#ffffff;
   box-shadow:var(--shadow-sm);
+  object-fit:contain;
   transition:transform .2s ease, box-shadow .2s ease;
 }
-.brand-logos a:hover img{ transform:translateY(-2px) scale(1.03); box-shadow:var(--shadow-md); }
+
+.brand-logos a:hover img{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:var(--shadow-md);
+}
+
+/* Mobile nav toggle */
+.nav-toggle{
+  display:none;
+  flex-direction:column;
+  gap:4px;
+  border:none;
+  background:none;
+  cursor:pointer;
+}
+
+.nav-toggle span{
+  width:22px;
+  height:2px;
+  background:#222;
+  display:block;
+}
 
 /* =====================================================
    3) Hero
 ===================================================== */
-.section-hero{ padding:64px 0 40px; }
-.hero-grid{ display:grid; grid-template-columns:1fr 420px; gap:36px; align-items:center; }
-.hero-kicker{ margin:0 0 4px; font-size:18px; line-height:1.3; }
-.hero-title{ font-family:linetoBlack; font-size:58px; line-height:1.05; margin:8px 0 14px; }
-.hero-lead{ font-size:18px; color:var(--ink-muted); line-height:1.7; margin:0; max-width:60ch; }
-
-.hero-portrait{ position:relative; min-height:360px; display:grid; place-items:center; }
-.portrait-img{
-  width:280px; height:280px; object-fit:cover; border-radius:50%;
-  box-shadow:var(--shadow-md); position:relative; z-index:2; background:#fff;
+.section-hero{
+  padding:64px 0 40px;
 }
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr 420px;
+  gap:36px;
+  align-items:center;
+}
+
+.hero-kicker{
+  margin:0 0 4px;
+  font-size:18px;
+  line-height:1.3;
+}
+
+.hero-title{
+  font-family:linetoBlack;
+  font-size:58px;
+  line-height:1.05;
+  margin:8px 0 14px;
+}
+
+.hero-lead{
+  font-size:18px;
+  color:var(--ink-muted);
+  line-height:1.7;
+  margin:0;
+  max-width:60ch;
+}
+
+/* Portrait / slideshow wrapper */
+.hero-portrait{
+  position:relative;
+  min-height:360px;
+  display:grid;
+  place-items:center;
+}
+
+/* Circular slideshow container */
+.slideshow-container{
+  position:relative;
+  width:420px;
+  height:420px;
+  max-width:80vw;
+  max-height:80vw;
+  overflow:hidden;
+  border-radius:50%;
+  margin:0 auto;
+  border:4px solid #e8e8e8;
+  background:#fff;
+}
+
+/* Individual slide image */
+.slide-img{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:110%;
+  height:auto;
+  transform:translate(-50%, -50%);
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1s ease-in-out;
+}
+
+.slide-img.active{
+  opacity:1;
+}
+
+.portrait-img{
+  width:280px;
+  height:280px;
+  object-fit:cover;
+  border-radius:50%;
+  box-shadow:var(--shadow-md);
+  position:relative;
+  z-index:2;
+  background:#fff;
+}
+
 .portrait-ring{
-  position:absolute; inset:auto; width:400px; height:400px;
-  border:10px solid var(--ring); border-radius:50%; z-index:1; opacity:.9;
+  position:absolute;
+  inset:auto;
+  width:400px;
+  height:400px;
+  border:10px solid var(--ring);
+  border-radius:50%;
+  z-index:1;
+  opacity:.9;
 }
 
 /* =====================================================
    4) About
 ===================================================== */
-.section-about{ padding:20px 0; }
-.about-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:36px; align-items:center; }
-.about-text{ font-size:18px; line-height:1.8; color:var(--ink); }
-
-.about-headshot{ display: flex; flex-direction: column; align-items: center; margin:0 auto; text-align:center; }
-.about-headshot img{
-  width:440px; height:440px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-md);
+.section-about{
+  padding:20px 0;
 }
+
+.about-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:36px;
+  align-items:center;
+}
+
+.about-text{
+  font-size:18px;
+  line-height:1.8;
+  color:var(--ink);
+}
+
+.about-headshot{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin:0 auto;
+  text-align:center;
+}
+
+.about-headshot img{
+  width:440px;
+  height:440px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:var(--shadow-md);
+}
+
 .about-badges-name{
   margin-top:5px;
   margin-bottom:0;
@@ -146,1156 +341,503 @@ section{ scroll-margin-top:84px; }  /* anchor offset for sticky header */
   letter-spacing:.2px;
   text-align:center;
 }
+
+.about-badges-name strong{
+  font-weight:700;
+}
+
 .about-badges{
-  margin-top:5px; margin-bottom:0;
-  font-size:15px; font-weight:600; color:var(--ink);
-  letter-spacing:.2px; text-align:center;
+  margin-top:5px;
+  margin-bottom:0;
+  font-size:15px;
+  font-weight:600;
+  color:var(--ink);
+  letter-spacing:.2px;
+  text-align:center;
 }
 
 /* =====================================================
    5) Skills
 ===================================================== */
-.section-skills{ padding:40px 0; }
-.skills-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-.skill-card{ background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); }
-.skill-icon{ width:42px; height:auto; }
-.skill-title{ margin:10px 0 8px; font-family:linetoBold; font-size:22px; }
-.skill-subtitle{ margin:10px 0 6px; font-family:linetoBold; color:var(--ink); }
-.skill-list{ margin:6px 0 0 18px; padding:0; }
+.section-skills{
+  padding:40px 0;
+}
+
+.skills-cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.skill-card{
+  background:var(--card);
+  border-radius:var(--radius-lg);
+  padding:20px;
+  box-shadow:var(--shadow-sm);
+}
+
+.skill-icon{
+  width:42px;
+  height:auto;
+}
+
+.skill-title{
+  margin:10px 0 8px;
+  font-family:linetoBold;
+  font-size:22px;
+}
+
+.skill-subtitle{
+  margin:10px 0 6px;
+  font-family:linetoBold;
+  color:var(--ink);
+}
+
+.skill-list{
+  margin:6px 0 0 18px;
+  padding:0;
+}
 
 /* =====================================================
    6) Education
 ===================================================== */
-.section-education{ padding:40px 0; }
-.edu-list{ display:grid; gap:14px; }
-.edu-item{
-  display:grid; grid-template-columns:56px 1fr; gap:16px;
-  background:var(--card); border-radius:var(--radius-md); padding:14px; box-shadow:var(--shadow-sm);
+.section-education{
+  padding:40px 0;
 }
-.edu-icon{ width:56px; height:56px; }
-.edu-degree{ font-family:linetoBold; }
-.edu-institution{ color:var(--ink-muted); margin-top:2px; }
-.edu-detail{ margin-top:4px; color:var(--ink); }
-.edu-detail span{ font-family:linetoBold; }
+
+.edu-list{
+  display:grid;
+  gap:14px;
+}
+
+.edu-item{
+  display:grid;
+  grid-template-columns:56px 1fr;
+  gap:16px;
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:14px;
+  box-shadow:var(--shadow-sm);
+}
+
+.edu-icon{
+  width:56px;
+  height:56px;
+}
+
+.edu-degree{
+  font-family:linetoBold;
+}
+
+.edu-institution{
+  color:var(--ink-muted);
+  margin-top:2px;
+}
+
+.edu-detail{
+  margin-top:4px;
+  color:var(--ink);
+}
+
+.edu-detail span{
+  font-family:linetoBold;
+}
 
 /* =====================================================
    7) Experience
 ===================================================== */
-.section-experience{ padding:40px 0; }
-.xp-list{ display:grid; gap:16px; }
+.section-experience{
+  padding:40px 0;
+}
+
+.xp-list{
+  display:grid;
+  gap:16px;
+}
+
+/* Base xp-item; hover behaviour is handled by global card system */
 .xp-item{
-  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
-  display:grid; grid-template-columns:72px 1fr; gap:16px;
-  background:var(--card); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-sm);
+  display:grid;
+  grid-template-columns:72px 1fr;
+  gap:16px;
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:16px;
+  box-shadow:var(--shadow-sm);
+  transition:transform .22s ease,
+             box-shadow .22s ease,
+             background-color .22s ease,
+             border-color .22s ease !important;
 }
-.xp-item:hover {
-  transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: var(--shadow-md);
-  background: #fff;
-  outline: none;
+
+.xp-logo{
+  width:72px;
+  height:72px;
+  object-fit:contain;
 }
-.xp-logo{ width:72px; height:72px; object-fit:contain; }
-.xp-role{ margin:0 0 6px; font-family:linetoBold; }
-.xp-company{ margin:0 0 8px; color:var(--ink-muted); }
-.xp-bullets{ margin:0; padding-left:18px; }
+
+.xp-role{
+  margin:0 0 6px;
+  font-family:linetoBold;
+}
+
+.xp-company{
+  margin:0 0 8px;
+  color:var(--ink-muted);
+}
+
+.xp-bullets{
+  margin:0;
+  padding-left:18px;
+}
+
+/* AOS integration: let AOS control transform/opacity */
+.xp-list .xp-item[data-aos]{
+  will-change:transform, opacity;
+}
 
 /* =====================================================
    8) Recommendations
 ===================================================== */
-.section-received{ padding:40px 0; }
-.rec-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-.rec-card{ background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); }
-.rec-quote{ margin:0 0 14px; font-size:16px; line-height:1.7; color:var(--ink); }
-.rec-author{ display:flex; gap:12px; align-items:center; }
-.rec-avatar{ width:48px; height:48px; border-radius:50%; object-fit:cover; }
-.rec-name{ font-family:linetoBold; }
-.rec-meta{ font-size:14px; color:var(--ink-muted); }
+.section-received{
+  padding:40px 0;
+}
+
+.rec-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.rec-card{
+  background:var(--card);
+  border-radius:var(--radius-md); /* final behaviour after global hover system */
+  padding:20px;
+  box-shadow:var(--shadow-sm);
+  position:relative;
+  overflow:hidden;
+}
+
+.rec-quote{
+  margin:0 0 14px;
+  font-size:16px;
+  line-height:1.7;
+  color:var(--ink);
+}
+
+.rec-author{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.rec-avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.rec-name{
+  font-family:linetoBold;
+}
+
+.rec-meta{
+  font-size:14px;
+  color:var(--ink-muted);
+}
 
 /* =====================================================
-   9) Footer (two horizontal sections)
+   9) Publications
 ===================================================== */
-.site-footer{ padding:0; background:#091634; color:#fff; }
-
-.footer-top{
-  padding:10px 0 10px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.footer-collab-row{
-  display:flex; align-items:center; justify-content:center;
-  flex-wrap:wrap; gap:16px;
-}
-.footer-label{
-  font-family:linetoBold, system-ui, sans-serif;
-  font-size:18px; color:#fff; margin-right:6px;
-}
-.footer-logos{
-  display:flex; align-items:center;justify-content: center; gap:14px; list-style:none; padding:0; margin:0; flex-wrap:wrap;
-}
-.footer-logos img{
-  height:36px; border-radius:8px; background:#fff; box-shadow:var(--shadow-sm);
+.section-publications{
+  padding:40px 0;
 }
 
-.footer-bottom{ padding:12px 0 12px; }
-.footer-right{
-  display:flex; gap:24px; justify-content:center; align-items:center;
-}
-.footer-right .social{ display:inline-flex; align-items:center; justify-content:center; }
-.footer-right .social-icon{
-  width:44px; height:44px; display:block;
-  filter: invert(1) brightness(1.1);
-  transition: transform .22s ease, opacity .22s ease;
-  opacity:.95;
-}
-.footer-right .social:hover .social-icon,
-.footer-right .social:focus-visible .social-icon{
-  transform: translateY(-2px) scale(1.08);
-  opacity:1;
+.pub-list{
+  display:grid;
+  gap:16px;
 }
 
-/* =====================================================
-   10) Page-Specific Sections (scoped by body class)
-===================================================== */
-/* Home */
-.page-home .section-hero{ padding-top:72px; }
-.page-home .section-about{ padding-top:24px; }
+.pub-item{
+  display:grid;
+  grid-template-columns:56px 1fr;
+  gap:16px;
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:14px;
+  box-shadow:var(--shadow-sm);
+}
 
-/* Education */
-.page-education .section-education .section-title{ margin-bottom:12px; }
+.pub-icon{
+  width:56px;
+  height:56px;
+  object-fit:contain;
+}
 
-/* Publications */
-.page-publications .section-publications{ padding:40px 0 80px; }
-.page-publications .framed-image{ margin:28px auto 8px; max-width:900px; display:grid; place-items:center; }
+.pub-title{
+  font-family:linetoBold, system-ui;
+  font-size:18px;
+  margin-bottom:4px;
+  color:var(--ink);
+}
+
+.pub-authors{
+  color:var(--ink-muted);
+  font-size:15px;
+  margin-bottom:4px;
+}
+
+.pub-type{
+  font-size:15px;
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:2px;
+}
+
+.pub-publisher{
+  font-size:15px;
+  color:var(--ink-muted);
+}
+
+/* Framed image block on publications page */
+.page-publications .section-publications{
+  padding:40px 0 80px;
+}
+
+.page-publications .framed-image{
+  margin:28px auto 8px;
+  max-width:900px;
+  display:grid;
+  place-items:center;
+}
+
 .page-publications .framed-image img{
-  width:100%; height:auto; display:block;
-  border-radius:16px; border:10px solid #fff;
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:16px;
+  border:10px solid #fff;
   outline:1px solid rgba(10,26,59,0.10);
   box-shadow:0 12px 30px rgba(12,18,28,.12);
-  transition:transform .2s ease, box-shadow .2s ease; background:#fff;
+  transition:transform .2s ease, box-shadow .2s ease;
+  background:#fff;
 }
+
 .page-publications .framed-image img:hover{
   transform:translateY(-2px);
   box-shadow:0 16px 40px rgba(12,18,28,.18);
 }
 
-/* Experience */
-.page-experience .section-experience .section-title{ margin-bottom:14px; }
-
-/* Updates */
-.page-updates .section-title{ margin-bottom:10px; }
-
-/* =====================================================
-   11) Responsive
-===================================================== */
-@media (max-width:1100px){
-  .hero-grid{ grid-template-columns:1fr 360px; }
-  .portrait-ring{ width:360px; height:360px; }
-  .portrait-img{ width:240px; height:240px; }
-}
-
-@media (max-width:900px){
-  .brand-logos img{ height:30px; }
-  .hero-grid{ grid-template-columns:1fr; }
-  .hero-portrait{ order:-1; min-height:320px; margin-bottom:8px; }
-  .hero-title{ font-size:44px; }
-  .skills-cards{ grid-template-columns:1fr; }
-  .about-grid{ grid-template-columns:1fr; }
-  .rec-grid{ grid-template-columns:1fr; }
-  .footer-label{ font-size:16px; }
-  .footer-logos img{ height:30px; }
-}
-
-@media (max-width:640px){
-  .nav-list{ gap:16px; flex-wrap:wrap; }
-  .brand-logos{ display:none; } /* hide header logos on tiny screens to save space */
-  .about-headshot img{ width:300px; height:300px; }
-}
-
-@media (max-width:640px){
-  .about-badges, .about-badges-name{
-    font-size:15px;
-    font-weight:600; /* keep bold on mobile */
-  }
-}
-
-.about-badges-name strong{
-  font-weight:700; /* extra bold if needed */
-}
-
-/* Keep logos visible and tidy on mobile */
-@media (max-width: 640px){
-  /* Stack nav and logos vertically so nothing gets squished */
-  .primary-nav{
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* Nav stays readable */
-  .nav-list{
-    gap: 14px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* Logos: show them, allow wrapping, center them */
-  .brand-logos{
-    display: flex;            /* ensure visible on mobile */
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  /* Smaller logo size on phones so everything fits */
-  .brand-logos img,
-  .footer-logos img{
-    height: 26px;             /* tweak 22–30px if needed */
-  }
-}
-
-/* Extra-small devices: tighten a bit more */
-@media (max-width: 360px){
-  .brand-logos img,
-  .footer-logos img{
-    height: 22px;
-  }
-}
-/* ================================
-   Footer link overflow fixes (mobile)
-   Place at END of custom.css
-================================ */
-
-/* Let the footer links wrap instead of forcing one long row */
-.footer-bottom .footer-right{
-  flex-wrap: wrap;
-  row-gap: 10px;         /* vertical spacing between wrapped rows */
-  column-gap: 16px;      /* a bit tighter on mobile */
-  max-width: 100%;
-}
-
-/* Ensure each link can shrink and never forces horizontal scroll */
-.footer-right .social{
-  flex: 0 1 auto;        /* allow shrinking */
-  min-width: 0;          /* allow text to wrap/ellipsize if any */
-}
-
-/* If any footer links have text (email, label), allow wrapping */
-.footer-right a{
-  max-width: 100%;
-  overflow-wrap: anywhere;   /* wrap long addresses/URLs */
-  word-break: break-word;    /* fallback */
-  text-align: center;
-}
-
-/* Slightly smaller icons on small screens so everything fits */
-@media (max-width: 640px){
-  .footer-right .social-icon{ width: 32px; height: 32px; }
-  .footer-bottom{ padding: 10px 0 14px; }  /* snugger padding */
-  .footer-right{ column-gap: 14px; row-gap: 8px; }
-}
-
-/* Extra-tight for very small phones */
-@media (max-width: 360px){
-  .footer-right .social-icon{ width: 28px; height: 28px; }
-  .footer-right{ column-gap: 12px; }
-}
-
-
-/* =====================================================
-   Publications Section
-===================================================== */
-.section-publications { padding: 40px 0; }
-
-.pub-list {
-  display: grid;
-  gap: 16px;
-}
-
-.pub-item {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 16px;
-  background: var(--card);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  box-shadow: var(--shadow-sm);
-}
-
-.pub-icon {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-}
-
-.pub-title {
-  font-family: linetoBold, system-ui;
-  font-size: 18px;
-  margin-bottom: 4px;
-  color: var(--ink);
-}
-
-.pub-authors {
-  color: var(--ink-muted);
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.pub-type {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 2px;
-}
-
-.pub-publisher {
-  font-size: 15px;
-  color: var(--ink-muted);
-}
-
-/* Responsive tweak */
-@media (max-width: 640px) {
-  .pub-item {
-    grid-template-columns: 48px 1fr;
-    padding: 12px;
-  }
-  .pub-icon { width: 48px; height: 48px; }
-  .pub-title { font-size: 16px; }
-  .pub-authors, .pub-type, .pub-publisher { font-size: 14px; }
-}
-
-/* Very small phones */
-@media (max-width: 480px){
-  .pub-item{
-    grid-template-columns: 40px 1fr;
-    gap: 12px;
-    padding: 10px;
-  }
-  .pub-icon{ width: 40px; height: 40px; }
-}
-
-
-
-
-
-/* ==========================================
-   Match logo hover effect on cards
-   (Education, Skills, Publications)
-   ========================================== */
-
-/* Baseline transitions (same snappy feel as logos) */
-.edu-item,
-.skill-card,
-.pub-item{
-  transition:
-    transform .22s ease,
-    box-shadow .22s ease,
-    background-color .22s ease,
-    border-color .22s ease;
-  will-change: transform, box-shadow;
-  background: var(--card);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Hover/focus: same lift + zoom as brand logos */
-.edu-item:hover,
-.edu-item:focus-visible,
-.skill-card:hover,
-.skill-card:focus-visible,
-.pub-item:hover,
-.pub-item:focus-visible{
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: var(--shadow-md);
-  background: #fff;
-  outline: none;
-}
-
-/* Optional: title tint & tiny icon nudge (subtle) */
-.edu-item:hover .edu-degree,
-.edu-item:focus-visible .edu-degree,
-.skill-card:hover .skill-title,
-.skill-card:focus-visible .skill-title{
-  color: var(--accent);
-  transition: color .18s ease;
-}
-
-.edu-item:hover .edu-icon,
-.skill-card:hover .skill-icon,
-.pub-item:hover .pub-icon{
-  transform: scale(1.04);
-  transition: transform .22s ease;
-  transform-origin: center;
-}
-.section-education .edu-item:hover {
-  transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: var(--shadow-md);
-  background: #fff;
-  outline: none;
-}
-/* Active press (click) feedback */
-.edu-item:active,
-.skill-card:active,
-.pub-item:active{
-  transform: translateY(-1px) scale(1.01);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Accessibility: respect reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .edu-item,
-  .skill-card,
-  .pub-item{
-    transition: box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
-  }
-  .edu-item:hover,
-  .skill-card:hover,
-  .pub-item:hover{
-    transform: none;
-  }
-}
-/* Make card hover match logos — force for Education & Skills */
-.section-skills .skill-card,
-.section-education .edu-item{
-  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
-  will-change: transform, box-shadow;
-}
-
-.section-skills .skill-card:hover,
-.section-skills .skill-card:focus-visible,
-.section-education .edu-item:hover,
-.section-education .edu-item:focus-visible{
-  transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: var(--shadow-md);
-  background: #fff;
-  outline: none;
-}
-
-/* subtle extras to match the vibe */
-.section-skills .skill-card:hover .skill-title,
-.section-education .edu-item:hover .edu-degree{
-  color: var(--accent);
-  transition: color .18s ease;
-}
-
-.section-skills .skill-card:hover .skill-icon,
-.section-education .edu-item:hover .edu-icon{
-  transform: scale(1.04);
-  transition: transform .22s ease;
-  transform-origin: center;
-}
-/* ==========================================
-   Match logo hover effect on cards
-   (Education, Skills, Publications)
-   ========================================== */
-
-.section-skills .skill-card,
-.section-education .edu-item,
+/* Fix publication hover speed = cards (already .22s in globals, keep this for enforcement) */
 .section-publications .pub-item{
-  transition:
-    transform .22s ease,
-    box-shadow .22s ease,
-    background-color .22s ease,
-    border-color .22s ease;
-  will-change: transform, box-shadow;
-  background: var(--card);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
+  transition:transform .22s ease,
+             box-shadow .22s ease,
+             background-color .22s ease,
+             border-color .22s ease !important;
 }
 
-/* Hover/focus: same lift + zoom as header/footer logos */
-.section-skills .skill-card:hover,
-.section-skills .skill-card:focus-visible,
-.section-education .edu-item:hover,
-.section-education .edu-item:focus-visible,
-.section-publications .pub-item:hover,
-.section-publications .pub-item:focus-visible{
-  transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: var(--shadow-md);
-  background: #fff;
-  outline: none;
-}
-
-/* Optional: title tint & tiny icon nudge for polish */
-.section-skills .skill-card:hover .skill-title,
-.section-skills .skill-card:focus-visible .skill-title,
-.section-education .edu-item:hover .edu-degree,
-.section-education .edu-item:focus-visible .edu-degree{
-  color: var(--accent);
-  transition: color .18s ease;
-}
-
-.section-skills .skill-card:hover .skill-icon,
-.section-skills .skill-card:focus-visible .skill-icon,
-.section-education .edu-item:hover .edu-icon,
-.section-education .edu-item:focus-visible .edu-icon,
-.section-publications .pub-item:hover .pub-icon,
-.section-publications .pub-item:focus-visible .pub-icon{
-  transform: scale(1.04);
-  transition: transform .22s ease;
-  transform-origin: center;
-}
-
-/* Press feedback */
-.section-skills .skill-card:active,
-.section-education .edu-item:active,
-.section-publications .pub-item:active{
-  transform: translateY(-1px) scale(1.01);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .section-skills .skill-card,
-  .section-education .edu-item,
-  .section-publications .pub-item{
-    transition: box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
-  }
-  .section-skills .skill-card:hover,
-  .section-education .edu-item:hover,
-  .section-publications .pub-item:hover{
-    transform: none;
-  }
-}
-
-/* Let AOS control transform/opacity during reveal */
-.xp-list .xp-item[data-aos] {
-  will-change: transform, opacity;
-}
-/* === LIGHT BLUE HEADER === */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: linear-gradient(90deg, #cfe5ff 0%, #dbe9ff 100%);
-  color: var(--ink);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-/* Navigation links on light header */
-.nav-link {
-  color: var(--ink);  /* dark navy text from your design tokens */
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.nav-link:hover,
-.nav-link:focus,
-.nav-link.active {
-  color: var(--accent);               /* your bright blue hover accent */
-  border-bottom-color: var(--accent);
-}
-
-/* Logos look better with soft shadows on light blue */
-.brand-logos img {
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
-  object-fit: contain;
-}
-
-
-/* ============================
-   Scroll Ribbon (Back to Top)
-   ============================ */
-.scroll-ribbon{
-  position: fixed;
-  right: max(16px, env(safe-area-inset-right));
-  bottom: calc(16px + env(safe-area-inset-bottom));
-  z-index: 9999;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 10px 14px;
-  background: var(--accent);
-  color: #fff;
-  font-family: linetoBold, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1;
-  border: 0;
-  border-radius: 14px;
-  cursor: pointer;
-  box-shadow: 0 10px 24px rgba(12,18,28,.18);
-
-  /* start hidden; fade/slide in when .show is added */
-  opacity: 0;
-  transform: translateY(12px);
-  pointer-events: none;
-
-  transition:
-    opacity .25s ease,
-    transform .25s ease,
-    box-shadow .2s ease,
-    background-color .2s ease;
-}
-
-/* ribbon tail */
-.scroll-ribbon::after{
-  content: "";
-  position: absolute;
-  right: 10px;
-  bottom: -8px;
-  width: 0; height: 0;
-  border-left: 10px solid transparent;
-  border-top: 8px solid rgba(15,102,255,.9); /* slightly darker tail */
-  filter: drop-shadow(0 2px 2px rgba(12,18,28,.15));
-}
-
-/* visible state */
-.scroll-ribbon.show{
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-/* hover/focus micro interaction */
-.scroll-ribbon:hover,
-.scroll-ribbon:focus-visible{
-  box-shadow: 0 14px 30px rgba(12,18,28,.26);
-  transform: translateY(-2px);
-  outline: none;
-}
-
-/* icon + label */
-.scroll-ribbon .sr-icon{
-  font-size: 18px;
-  transform: translateY(-1px);
-}
-.scroll-ribbon .sr-label{
-  letter-spacing: .2px;
-}
-
-/* compact on small screens */
-@media (max-width: 480px){
-  .scroll-ribbon{
-    padding: 10px 12px;
-    gap: 6px;
-  }
-  .scroll-ribbon .sr-label{
-    display: none; /* keep just the arrow on tiny screens */
-  }
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .scroll-ribbon{
-    transition: none;
-  }
-}
-
-
-/* ================================
-   Research Group (page-specific)
-   ================================ */
-
-/* Add a dedicated background color token (near your other section tokens) */
-:root{
-  /* ...existing tokens... */
-  --section-researchgroup: #eef2f8; /* soft, distinct from publications */
-}
-
-/* Section wrapper */
+/* =====================================================
+   10) Research Group Section
+===================================================== */
 .section-researchgroup{
-  background: var(--section-researchgroup);
-  padding: 40px 0 100px;
+  background:var(--section-researchgroup);
+  padding:40px 0 100px;
 }
 
-/* Optional: if you want slightly different spacing/layout on this page */
 .rg-container{
-  max-width: var(--container);
+  max-width:var(--container);
 }
 
-/* Header area */
 .rg-header{
-  margin-bottom: 16px;
+  margin-bottom:16px;
 }
+
 .rg-title{
-  margin-bottom: 6px;              /* tighten under the h2 */
+  margin-bottom:6px;
 }
+
 .rg-subtitle{
-  margin: 0 0 16px;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--ink-muted);
+  margin:0 0 16px;
+  font-size:20px;
+  font-weight:600;
+  color:var(--ink-muted);
 }
 
-/* Content area (messages/notes) */
 .rg-content{
-  display: grid;
-  gap: 12px;
+  display:grid;
+  gap:12px;
 }
 
-/* Reusable notice card with variants */
 .rg-notice{
-  background: var(--card);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-  color: var(--ink);
-  border-left: 4px solid var(--ring);
-  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease;
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:14px 16px;
+  box-shadow:var(--shadow-sm);
+  color:var(--ink);
+  border-left:4px solid var(--ring);
+  transition:transform .22s ease,
+             box-shadow .22s ease,
+             background-color .22s ease;
 }
 
-/* Hover/focus to match your card interactions elsewhere */
 .rg-notice:hover,
 .rg-notice:focus-visible{
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--shadow-md);
-  outline: none;
-  background: #fff;
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:var(--shadow-md);
+  outline:none;
+  background:#fff;
 }
 
-/* Variants */
 .rg-notice.is-info{
-  border-left-color: var(--accent);
+  border-left-color:var(--accent);
 }
+
 .rg-notice.is-pending{
-  /* border-left-color: #ffb020; warm amber edge */
-   border-left-color: #3146af; /* warm amber edge */
+  border-left-color:#3146af;
 }
 
-/* Responsive tweak */
-@media (max-width: 640px){
-  .rg-subtitle{ font-size: 18px; }
-  .rg-notice{ padding: 12px 14px; }
+/* =====================================================
+   11) Updates Section
+===================================================== */
+.page-updates .section-updates--pro{
+  background:var(--section-updates-pro);
 }
 
-
-/* Never let images/videos overflow the viewport */
-img, video {
-  max-width: 100%;
-  height: auto;
-  display: block;      /* removes inline-gap + respects container width */
-  box-sizing: border-box;
+.page-updates .section-updates--person{
+  background:var(--section-updates-person);
 }
 
-/* Belt-and-suspenders: no horizontal scrollbars if something misbehaves */
-html {
-  overflow-x: hidden;
+/* Shared list */
+.updates-list{
+  margin-top:2rem;
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
 }
 
-body {
-  overflow-x: clip;   /* prevents scroll layer duplication */
+/* Base update card */
+.update-item{
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(6px);
+  padding:1.2rem 1.4rem;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.05);
+  margin-bottom:1.5rem;
 }
 
-
-
-
-/* Updates page image wrapper */
-.section-updates .framed-image{
-  width: 100%;
-  max-width: 900px;     /* cap on large screens; tweak if you like */
-  margin: 16px auto;
-  padding: 0 12px;      /* tiny side padding so borders don’t touch edges on phones */
+/* Professional updates: match xp-item styling */
+.section-updates--pro .update-item{
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:16px;
+  box-shadow:var(--shadow-sm);
+  margin-bottom:0;
+  transition:transform .22s ease,
+             box-shadow .22s ease,
+             background-color .22s ease,
+             border-color .22s ease;
 }
 
-/* The image itself */
-.section-updates .framed-image img{
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  display: block;
-  border-radius: 16px;
-  border: 10px solid #fff;
-  outline: 1px solid rgba(10,26,59,0.10);
-  box-shadow: 0 12px 30px rgba(12,18,28,.12);
+.section-updates--pro .updates-list{
+  gap:10px;
+  margin-bottom:40px;
 }
 
-/* On very small phones, relax the border so it still fits comfortably */
-@media (max-width: 480px){
-  .section-updates .framed-image img{
-    border-width: 8px;
-    border-radius: 12px;
-  }
+/* Titles, copy */
+.update-title{
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:0.25rem;
+  color:#2b2b2b;
 }
 
-
-
-/* ===========================
-   HEADER BASE STYLE
-   =========================== */
-.site-header {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+.section-updates--pro .update-title{
+  margin:0 0 6px;
+  font-family:linetoBold;
+  font-size:18px;
+  color:var(--ink);
 }
 
-.container-wide {
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 20px;
+.update-desc{
+  font-size:.95rem;
+  color:#555;
 }
 
-.primary-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 0;
-  gap: 20px;
-}
-
-/* Left side: logo + toggle */
-.nav-left {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-}
-
-/* Fake logo text (you can replace with an image if needed) */
-.site-logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: #222;
-  text-decoration: none;
-}
-
-/* ===========================
-   NAV ITEMS
-   =========================== */
-.nav-list,
-.brand-logos {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-link {
-  text-decoration: none;
-  padding: 6px 10px;
-  color: #222;
-  font-weight: 500;
-}
-
-.nav-link.active {
-  color: #0057ff;
-  border-bottom: 2px solid #0057ff;
-}
-
-/* Logo images */
-.brand-logos img {
-  height: 32px;
-  width: auto;
-  display: block;
-}
-
-/* ===========================
-   MOBILE MENU TOGGLE
-   =========================== */
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.nav-toggle span {
-  width: 22px;
-  height: 2px;
-  background: #222;
-  display: block;
-}
-
-/* ===========================
-   RESPONSIVE DESIGN
-   =========================== */
-@media (max-width: 900px) {
-
-  /* Show hamburger */
-  .nav-toggle {
-    display: flex;
-  }
-
-  /* Stack content */
-  .primary-nav {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  /* Hide menus initially */
-  .nav-list,
-  .brand-logos {
-    flex-direction: column;
-    width: 100%;
-    display: none;
-    text-align: center;
-    padding: 10px 0;
-  }
-
-  /* Show when menu opened */
-  .primary-nav.open .nav-list,
-  .primary-nav.open .brand-logos {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  /* Logo size smaller */
-  .brand-logos img {
-    height: 28px;
-  }
-}
-
-@media (max-width: 500px) {
-  .nav-link {
-    font-size: 16px;
-  }
-
-  .brand-logos img {
-    height: 24px;
-  }
-}
-/* Add transition for collaborator logos */
-.footer-logos img {
-  transition: transform .22s ease, box-shadow .22s ease;
-}
-
-/* Hover effect: match social icons (lift + zoom) */
-.footer-logos li:hover img,
-.footer-logos a:hover img {
-  transform: translateY(-2px) scale(1.08);
-  box-shadow: var(--shadow-md);
-}
-/* Countdown styles */
-.countdown-wrapper {
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;   /* ⬅️ Added space AFTER the countdown */
-  text-align: center;
-}
-
-.countdown-title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.03em;
-}
-
-.countdown-grid {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.countdown-item {
-  min-width: 90px;
-  padding: 1rem 1.25rem;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(4px);
-}
-
-.count-num {
-  display: block;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.count-label {
-  display: block;
-  margin-top: 0.25rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.7;
-}
-
-/* Mobile tweaks */
-@media (max-width: 600px) {
-  .countdown-grid {
-    gap: 1rem;
-  }
-
-  .count-num {
-    font-size: 1.6rem;
-  }
-
-  .countdown-item {
-    padding: 0.75rem 1rem;
-  }
-}
-.slideshow-container {
-  position: relative;
-  width: 420px;            /* increase these two */
-  height: 420px;
-  max-width: 80vw;         /* stay responsive on small screens */
-  max-height: 80vw;
-  overflow: hidden;
-  border-radius: 50%;
-  margin: 0 auto;
-  border: 4px solid #e8e8e8;
-  background: #fff;
-}
-
-/* Image fills the circle nicely */
-.slide-img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 110%;             /* slight zoom so face fills the circle */
-  height: auto;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-
-.slide-img.active {
-  opacity: 1;
-}
-/* Fix publication hover speed to match education & experience */
-.section-publications .pub-item{
-  transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
-}
-
-
-figcaption.caption-below[lang="ar"] {
-  text-align: center;      /* Center the caption text */
-  display: block;          /* Ensures full-width alignment */
-  margin: 1.5em 0 0;       /* Optional: spacing above/below */
-  font-style: italic;      /* Optional: styling */
-  direction: rtl;          /* Arabic text direction */
-  font-size: 1.2em;    /* Increase text size */
-  color: #422a7f; /* Soft, elegant dark gray */
-}
-
-
-
-.updates-list {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.update-item {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
-  padding: 1.2rem 1.4rem;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.05);
-  margin-bottom: 1.5rem; /* Adds space after each item */
-
-}
-
-.update-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: #2b2b2b;
-}
-
-.update-desc {
-  font-size: 0.95rem;
-  color: #555;
+.section-updates--pro .update-desc{
+  margin:0 0 4px;
+  color:var(--ink-muted);
+  font-size:15px;
 }
 
 .updates-subtitle{
-  margin: 0 0 16px;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--ink-muted);
-}
-/* Responsive tweak */
-@media (max-width: 640px){
-  .updates-subtitle{ font-size: 18px; }
-}
-/* Updates page sections: different backgrounds */
-.page-updates .section-updates--pro {
-  background: var(--section-updates-pro);
+  margin:0 0 16px;
+  font-size:20px;
+  font-weight:600;
+  color:var(--ink-muted);
 }
 
-.page-updates .section-updates--person {
-  background: var(--section-updates-person);
+/* Speed-match updates with xp-item (global hover will apply too) */
+.update-item{
+  transition:transform .22s ease,
+             box-shadow .22s ease,
+             background-color .22s ease,
+             border-color .22s ease !important;
 }
 
-
-/* ==========================================
-   Make Professional Updates match XP items
-========================================== */
-
-.section-updates--pro .update-item {
-  background: var(--card);                       /* Solid card background */
-  border-radius: var(--radius-md);
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
-  transition: transform .22s ease,
-              box-shadow .22s ease,
-              background-color .22s ease,
-              border-color .22s ease;
+/* =====================================================
+   12) Countdown
+===================================================== */
+.countdown-wrapper{
+  margin-top:2.5rem;
+  margin-bottom:2.5rem;
+  text-align:center;
 }
 
-/* Hover effect identical to Work Experience cards */
-.section-updates--pro .update-item:hover,
-.section-updates--pro .update-item:focus-visible {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: var(--shadow-md);
-  background: #fff;
-  outline: none;
+.countdown-title{
+  font-size:1.6rem;
+  font-weight:600;
+  margin-bottom:1.5rem;
+  letter-spacing:0.03em;
 }
 
-/* Title + text styling to match */
-.section-updates--pro .update-title {
-  margin: 0 0 6px;
-  font-family: linetoBold;
-  font-size: 18px;          /* match xp-role size */
-  color: var(--ink);
+.countdown-grid{
+  display:flex;
+  justify-content:center;
+  gap:1.5rem;
+  flex-wrap:wrap;
 }
 
-.section-updates--pro .update-desc {
-  margin: 0 0 4px;
-  color: var(--ink-muted);
-  font-size: 15px;
+.countdown-item{
+  min-width:90px;
+  padding:1rem 1.25rem;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,0.06);
+  background:rgba(255,255,255,0.85);
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  backdrop-filter:blur(4px);
+  cursor:default;
 }
 
-/* ==========================================
-   Fix spacing for Professional Updates
-========================================== */
-
-/* Reduce spacing BETWEEN professional updates */
-.section-updates--pro .updates-list {
-  gap: 10px;              /* Tight spacing between items */
-  margin-bottom: 40px;    /* Clear space AFTER the professional section */
+.count-num{
+  display:block;
+  font-size:2rem;
+  font-weight:700;
+  line-height:1.1;
 }
 
-/* Remove unwanted margin inside each update item */
-.section-updates--pro .update-item {
-  margin-bottom: 0;
+.count-label{
+  display:block;
+  margin-top:0.25rem;
+  font-size:0.85rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  opacity:0.7;
 }
 
-
-/* ==========================================
-   Hover Effect for Countdown Items
-   Matches card hover across the site
-========================================== */
-
-.countdown-item {
-  transition: transform .22s ease, 
-              box-shadow .22s ease, 
-              background-color .22s ease;
-  cursor: default; /* or pointer if you want clickable effect */
-}
-
-.countdown-item:hover,
-.countdown-item:focus-visible {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: var(--shadow-md);
-  background: #ffffff;
-  outline: none;
-}
-
+/* =====================================================
+   13) Hadith Card
+===================================================== */
 .hadith-section{
   max-width:750px;
   margin:50px auto;
@@ -1309,7 +851,6 @@ figcaption.caption-below[lang="ar"] {
   color:var(--ink);
 }
 
-/* Islamic Border Card */
 .hadith-card{
   padding:30px;
   border-radius:18px;
@@ -1367,4 +908,604 @@ figcaption.caption-below[lang="ar"] {
   font-size:16px;
   font-weight:500;
   color:#666;
+}
+
+/* Arabic figure caption */
+figcaption.caption-below[lang="ar"]{
+  text-align:center;
+  display:block;
+  margin:1.5em 0 0;
+  font-style:italic;
+  direction:rtl;
+  font-size:1.2em;
+  color:#422a7f;
+}
+
+/* =====================================================
+   14) Scroll Ribbon (Back to Top)
+===================================================== */
+.scroll-ribbon{
+  position:fixed;
+  right:max(16px, env(safe-area-inset-right));
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  z-index:9999;
+
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:10px 14px;
+  background:var(--accent);
+  color:#fff;
+  font-family:linetoBold, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size:14px;
+  line-height:1;
+  border:0;
+  border-radius:14px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(12,18,28,.18);
+
+  opacity:0;
+  transform:translateY(12px);
+  pointer-events:none;
+
+  transition:
+    opacity .25s ease,
+    transform .25s ease,
+    box-shadow .2s ease,
+    background-color .2s ease;
+}
+
+.scroll-ribbon::after{
+  content:"";
+  position:absolute;
+  right:10px;
+  bottom:-8px;
+  width:0;
+  height:0;
+  border-left:10px solid transparent;
+  border-top:8px solid rgba(15,102,255,.9);
+  filter:drop-shadow(0 2px 2px rgba(12,18,28,.15));
+}
+
+.scroll-ribbon.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+.scroll-ribbon:hover,
+.scroll-ribbon:focus-visible{
+  box-shadow:0 14px 30px rgba(12,18,28,.26);
+  transform:translateY(-2px);
+  outline:none;
+}
+
+.scroll-ribbon .sr-icon{
+  font-size:18px;
+  transform:translateY(-1px);
+}
+
+.scroll-ribbon .sr-label{
+  letter-spacing:.2px;
+}
+
+/* =====================================================
+   15) Updates Page: Framed Image
+===================================================== */
+.section-updates .framed-image{
+  width:100%;
+  max-width:900px;
+  margin:16px auto;
+  padding:0 12px;
+}
+
+.section-updates .framed-image img{
+  width:100%;
+  height:auto;
+  max-width:100%;
+  display:block;
+  border-radius:16px;
+  border:10px solid #fff;
+  outline:1px solid rgba(10,26,59,0.10);
+  box-shadow:0 12px 30px rgba(12,18,28,.12);
+}
+
+/* =====================================================
+   16) Footer
+===================================================== */
+.site-footer{
+  padding:0;
+  background:#091634;
+  color:#fff;
+}
+
+.footer-top{
+  padding:10px 0 10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.footer-collab-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:16px;
+}
+
+.footer-label{
+  font-family:linetoBold, system-ui, sans-serif;
+  font-size:18px;
+  color:#fff;
+  margin-right:6px;
+}
+
+.footer-logos{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  list-style:none;
+  padding:0;
+  margin:0;
+  flex-wrap:wrap;
+}
+
+.footer-logos img{
+  height:36px;
+  border-radius:8px;
+  background:#fff;
+  box-shadow:var(--shadow-sm);
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+
+/* Hover effect: footer logos lift + zoom */
+.footer-logos li:hover img,
+.footer-logos a:hover img{
+  transform:translateY(-2px) scale(1.08);
+  box-shadow:var(--shadow-md);
+}
+
+.footer-bottom{
+  padding:12px 0 12px;
+}
+
+.footer-right{
+  display:flex;
+  gap:24px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  row-gap:10px;
+  column-gap:16px;
+  max-width:100%;
+}
+
+.footer-right .social{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 1 auto;
+  min-width:0;
+}
+
+.footer-right .social-icon{
+  width:44px;
+  height:44px;
+  display:block;
+  filter:invert(1) brightness(1.1);
+  transition:transform .22s ease, opacity .22s ease;
+  opacity:.95;
+}
+
+.footer-right .social:hover .social-icon,
+.footer-right .social:focus-visible .social-icon{
+  transform:translateY(-2px) scale(1.08);
+  opacity:1;
+}
+
+/* Allow footer links to wrap nicely */
+.footer-right a{
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  text-align:center;
+}
+
+/* =====================================================
+   17) Page-Specific Spacing
+===================================================== */
+
+/* Home */
+.page-home .section-hero{
+  padding-top:72px;
+}
+.page-home .section-about{
+  padding-top:24px;
+}
+
+/* Education */
+.page-education .section-education .section-title{
+  margin-bottom:12px;
+}
+
+/* Experience */
+.page-experience .section-experience .section-title{
+  margin-bottom:14px;
+}
+
+/* Updates */
+.page-updates .section-title{
+  margin-bottom:10px;
+}
+
+/* =====================================================
+   18) GLOBAL CARD HOVER SYSTEM
+   (Identical to edu-item hover)
+===================================================== */
+/* Applies to:
+   - .hover-card (generic)
+   - .edu-item (Education)
+   - .xp-item (Experience)
+   - .skill-card (Skills)
+   - .pub-item (Publications)
+   - .rec-card (Recommendations)
+   - .update-item (Updates)
+   - .countdown-item (Countdown boxes)
+*/
+
+.hover-card,
+.edu-item,
+.xp-item,
+.skill-card,
+.pub-item,
+.rec-card,
+.update-item,
+.countdown-item{
+  background:var(--card);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background-color .22s ease,
+    border-color .22s ease !important;
+  will-change:transform, box-shadow;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Hover + focus */
+.hover-card:hover,
+.hover-card:focus-visible,
+.edu-item:hover,
+.edu-item:focus-visible,
+.xp-item:hover,
+.xp-item:focus-visible,
+.skill-card:hover,
+.skill-card:focus-visible,
+.pub-item:hover,
+.pub-item:focus-visible,
+.rec-card:hover,
+.rec-card:focus-visible,
+.update-item:hover,
+.update-item:focus-visible,
+.countdown-item:hover,
+.countdown-item:focus-visible{
+  transform:translateY(-2px) scale(1.03) !important;
+  box-shadow:var(--shadow-md);
+  background:#ffffff !important;
+  outline:none;
+}
+
+/* Press feedback */
+.hover-card:active,
+.edu-item:active,
+.xp-item:active,
+.skill-card:active,
+.pub-item:active,
+.rec-card:active,
+.update-item:active,
+.countdown-item:active{
+  transform:translateY(-1px) scale(1.01);
+  box-shadow:var(--shadow-sm);
+}
+
+/* Title color shifts on hover */
+.edu-item:hover .edu-degree,
+.skill-card:hover .skill-title,
+.pub-item:hover .pub-title,
+.rec-card:hover .rec-name,
+.update-item:hover .update-title,
+.xp-item:hover .xp-role{
+  color:var(--accent);
+  transition:color .18s ease;
+}
+
+/* Icon / image micro-zoom */
+.edu-item:hover .edu-icon,
+.skill-card:hover .skill-icon,
+.pub-item:hover .pub-icon,
+.rec-card:hover .rec-avatar,
+.xp-item:hover .xp-logo{
+  transform:scale(1.04);
+  transition:transform .22s ease;
+  transform-origin:center;
+}
+
+/* =====================================================
+   19) Responsive
+===================================================== */
+
+/* 1100px */
+@media (max-width:1100px){
+  .hero-grid{
+    grid-template-columns:1fr 360px;
+  }
+  .portrait-ring{
+    width:360px;
+    height:360px;
+  }
+  .portrait-img{
+    width:240px;
+    height:240px;
+  }
+}
+
+/* 900px */
+@media (max-width:900px){
+  .brand-logos img{
+    height:30px;
+  }
+
+  .hero-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-portrait{
+    order:-1;
+    min-height:320px;
+    margin-bottom:8px;
+  }
+
+  .hero-title{
+    font-size:44px;
+  }
+
+  .skills-cards{
+    grid-template-columns:1fr;
+  }
+
+  .about-grid{
+    grid-template-columns:1fr;
+  }
+
+  .rec-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-label{
+    font-size:16px;
+  }
+
+  .footer-logos img{
+    height:30px;
+  }
+
+  /* Mobile nav layout */
+  .nav-toggle{
+    display:flex;
+  }
+
+  .primary-nav{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .nav-list,
+  .brand-logos{
+    flex-direction:column;
+    width:100%;
+    display:none;
+    text-align:center;
+    padding:10px 0;
+  }
+
+  .primary-nav.open .nav-list,
+  .primary-nav.open .brand-logos{
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+  }
+
+  .brand-logos img{
+    height:28px;
+  }
+}
+
+/* 640px */
+@media (max-width:640px){
+  .nav-list{
+    gap:14px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .brand-logos{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+  }
+
+  .brand-logos img,
+  .footer-logos img{
+    height:26px;
+  }
+
+  .about-headshot img{
+    width:300px;
+    height:300px;
+  }
+
+  .about-badges,
+  .about-badges-name{
+    font-size:15px;
+    font-weight:600;
+  }
+
+  .updates-subtitle{
+    font-size:18px;
+  }
+
+  .pub-item{
+    grid-template-columns:48px 1fr;
+    padding:12px;
+  }
+
+  .pub-icon{
+    width:48px;
+    height:48px;
+  }
+
+  .pub-title{
+    font-size:16px;
+  }
+
+  .pub-authors,
+  .pub-type,
+  .pub-publisher{
+    font-size:14px;
+  }
+
+  .countdown-grid{
+    gap:1rem;
+  }
+
+  .countdown-item{
+    padding:0.75rem 1rem;
+  }
+
+  .count-num{
+    font-size:1.6rem;
+  }
+
+  .footer-right .social-icon{
+    width:32px;
+    height:32px;
+  }
+
+  .footer-bottom{
+    padding:10px 0 14px;
+  }
+
+  .footer-right{
+    column-gap:14px;
+    row-gap:8px;
+  }
+
+  .rg-subtitle{
+    font-size:18px;
+  }
+
+  .rg-notice{
+    padding:12px 14px;
+  }
+}
+
+/* 500px */
+@media (max-width:500px){
+  .nav-link{
+    font-size:16px;
+  }
+
+  .brand-logos img{
+    height:24px;
+  }
+}
+
+/* 480px */
+@media (max-width:480px){
+  .scroll-ribbon{
+    padding:10px 12px;
+    gap:6px;
+  }
+
+  .scroll-ribbon .sr-label{
+    display:none;
+  }
+
+  .section-updates .framed-image img{
+    border-width:8px;
+    border-radius:12px;
+  }
+
+  .pub-item{
+    grid-template-columns:40px 1fr;
+    gap:12px;
+    padding:10px;
+  }
+
+  .pub-icon{
+    width:40px;
+    height:40px;
+  }
+}
+
+/* 360px */
+@media (max-width:360px){
+  .brand-logos img,
+  .footer-logos img{
+    height:22px;
+  }
+
+  .footer-right .social-icon{
+    width:28px;
+    height:28px;
+  }
+
+  .footer-right{
+    column-gap:12px;
+  }
+}
+
+/* =====================================================
+   20) Reduced Motion
+===================================================== */
+@media (prefers-reduced-motion: reduce){
+  .hover-card,
+  .edu-item,
+  .xp-item,
+  .skill-card,
+  .pub-item,
+  .rec-card,
+  .update-item,
+  .countdown-item,
+  .rg-notice,
+  .scroll-ribbon{
+    transition:box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
+  }
+
+  .hover-card:hover,
+  .edu-item:hover,
+  .xp-item:hover,
+  .skill-card:hover,
+  .pub-item:hover,
+  .rec-card:hover,
+  .update-item:hover,
+  .countdown-item:hover,
+  .rg-notice:hover,
+  .scroll-ribbon:hover{
+    transform:none;
+  }
+
+  .scroll-ribbon{
+    transition:none;
+  }
+}
+
+.countdown-item:hover,
+.countdown-item:focus-visible {
+  color: var(--accent);
+  transition: color .18s ease;
 }

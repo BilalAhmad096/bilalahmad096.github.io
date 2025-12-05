@@ -43,6 +43,8 @@
           </article>
 
         </div>
+
+
         <h2 class ="updates-subtitle" data-aos="fade-up"> Past Events</h2>
         
         <div class="updates-list">
@@ -54,6 +56,121 @@
             <p class="update-desc">3rd of December 2025</p>
           </article>
         </div>
+
+        <h2 class ="updates-subtitle" data-aos="fade-up">Extracurricular</h2>
+        <div class="extracurricular-wrapper" data-aos="fade-up">
+          <div class="extra-card-buttons">
+
+            <div class="update-item extra-card" data-image="../image/cricket.jpg">
+              <p class="update-title">Cricket</p>
+            </div>
+
+            <div class="update-item extra-card" data-image="../image/hockey.jpg">
+              <p class="update-title">Hockey</p>
+            </div>
+
+            <div class="update-item extra-card" data-image="../image/Horse Riding.jpg">
+              <p class="update-title">Horse Riding</p>
+            </div>
+
+            <div class="update-item extra-card" data-image="../image/swimming.jpg">
+              <p class="update-title">Swimming</p>
+            </div>
+
+            <div class="update-item extra-card" data-image="../image/snooker.jpg">
+              <p class="update-title">Snooker</p>
+            </div>
+
+          </div>
+
+          <div class="extra-image-box" id="extra-image-box">
+            <img id="extra-image" src="" alt="Extracurricular image">
+          </div>
+        </div>
+
+        <h2 class ="updates-subtitle" data-aos="fade-up">Travelling</h2>
+        <div class="travelling-wrapper" data-aos="fade-up">
+          <div class="travel-card-buttons">
+
+            <div class="update-item travel-card" data-image="../image/germany.jpg">
+              <p class="update-title">Germany</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/france.jpg">
+              <p class="update-title">France</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/italy.jpg">
+              <p class="update-title">Italy</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/netherlands.jpg">
+              <p class="update-title">Netherlands</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/switzerland.jpg">
+              <p class="update-title">Switzerland</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/belgium.jpg">
+              <p class="update-title">Belgium</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/Spain.jpg">
+              <p class="update-title">Spain</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/england.jpg">
+              <p class="update-title">England</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/scotland.jpg">
+              <p class="update-title">Scotland</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/wales.jpg">
+              <p class="update-title">Wales</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/ireland.jpg">
+              <p class="update-title">Ireland</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/usa.jpg">
+              <p class="update-title">United States</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/saudi.jpg">
+              <p class="update-title">Saudia Arabia</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/dhabi.jpg">
+              <p class="update-title">United Arab Emirates</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/turkey.jpg">
+              <p class="update-title">Turkey</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/bahrain.jpg">
+              <p class="update-title">Bahrain</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/egypt.jpg">
+              <p class="update-title">Egypt</p>
+            </div>
+
+            <div class="update-item travel-card" data-image="../image/nepal.jpg">
+              <p class="update-title">Nepal</p>
+            </div>
+
+          </div>
+
+          <div class="travel-image-box" id="travel-image-box">
+            <img id="travel-image" src="" alt="Travel image">
+          </div>
+        </div>
+
       </div>
     </section>
     <section class="hadith-section">
@@ -101,6 +218,30 @@
       </div>
     </section>
   </main>
+
+  <script>
+    // Generic handler to show image for any card set
+    function activateCardImageSwitcher(cardSelector, imageSelector) {
+      const cards = document.querySelectorAll(cardSelector);
+      const imageBox = document.querySelector(imageSelector);
+
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          const imgPath = card.getAttribute("data-image");
+          imageBox.src = imgPath;
+          imageBox.style.display = "block";
+          imageBox.scrollIntoView({ behavior: "smooth" });
+        });
+      });
+    }
+
+    // Activate Extracurricular
+    activateCardImageSwitcher(".extra-card", "#extra-image");
+
+    // Activate Travelling
+    activateCardImageSwitcher(".travel-card", "#travel-image");
+  </script>
+
 
   <div id="footer"></div>
 

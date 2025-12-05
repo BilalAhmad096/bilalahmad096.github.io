@@ -1182,7 +1182,9 @@ figcaption.caption-below[lang="ar"]{
 .update-item:hover,
 .update-item:focus-visible,
 .countdown-item:hover,
-.countdown-item:focus-visible{
+.countdown-item:focus-visible
+.rg-notice:hover,
+.rg-notice:focus-visible{
   transform:translateY(-2px) scale(1.03) !important;
   box-shadow:var(--shadow-md);
   background:#ffffff !important;
@@ -1521,4 +1523,68 @@ figcaption.caption-below[lang="ar"]{
 .countdown-item:focus-visible {
   color: var(--accent);
   transition: color .18s ease;
+}
+/* =====================================================
+   21) Extracurricular Section
+/* Extracurricular Buttons */
+/* Extracurricular grid layout */
+.extra-card-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* Extra card tweaks (in addition to update-item styling) */
+.extra-card {
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Image preview */
+.extra-image-box {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.extra-image-box img {
+  width: 75%;
+  max-width: 700px;
+  border-radius: 16px;
+  border: 10px solid #fff;
+  outline: 1px solid rgba(10, 26, 59, 0.10);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  display: none; /* hidden until clicked */
+}
+/* =====================================================
+   22) Travelling Section
+/* Travelling Section Cards */
+.travel-card-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.travel-card {
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Travel image preview */
+.travel-image-box {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.travel-image-box img {
+  width: 75%;
+  max-width: 700px;
+  border-radius: 16px;
+  border: 10px solid #fff;
+  outline: 1px solid rgba(10, 26, 59, 0.10);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  display: none;
 }

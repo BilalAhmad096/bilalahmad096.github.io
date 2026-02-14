@@ -414,17 +414,22 @@ section{
 
 .edu-item{
   display:grid;
-  grid-template-columns:56px 1fr;
+  grid-template-columns:96px 1fr;
   gap:16px;
   background:var(--card);
   border-radius:var(--radius-md);
   padding:14px;
   box-shadow:var(--shadow-sm);
+  align-items:start;      /* top vertically */
+  justify-items:start;    /* left horizontally */
 }
 
 .edu-icon{
-  width:56px;
-  height:56px;
+  width:96px;
+  height:96px;
+  object-fit:contain;
+  align-self:start;       /* top inside its cell */
+  justify-self:start;     /* left inside its cell */
 }
 
 .edu-degree{

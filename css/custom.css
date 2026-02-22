@@ -1593,3 +1593,115 @@ figcaption.caption-below[lang="ar"]{
   box-shadow: 0 12px 30px rgba(0,0,0,0.12);
   display: none;
 }
+
+
+
+/* =====================================================
+   NEWS TICKER (continuous loop, no duplication)
+   - "BREAKING NEWS" fixed on the left
+   - Headline starts fully off-screen on the right
+   - Moves across full screen width
+   - Fully exits on the left before looping
+===================================================== */
+
+.news-top{
+  width:100%;
+  background: linear-gradient(90deg, #0a1a3b, #0f66ff);
+  overflow:hidden;
+}
+
+/* Full-width inner row (do NOT use your global .container here) */
+.news-inner{
+  width:100%;
+  max-width:none;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:16px;
+  padding:12px 24px;
+}
+
+/* Pill stays fixed on left */
+.news-pill{
+  flex:0 0 auto;
+  padding:7px 14px;
+  border-radius:999px;
+  background:#fff;
+  color:#0a1a3b;
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* Ticker "window" */
+.news-scroll{
+  flex:1 1 auto;
+  min-width:0;            /* IMPORTANT: prevents flex wrapping issues */
+  overflow:hidden;
+  position:relative;
+}
+
+/* Track starts from the RIGHT EDGE and moves across the whole screen */
+.news-track{
+  display:inline-block;
+  white-space:nowrap;
+  position:relative;
+  left:100%;                               /* start at right boundary */
+  will-change:transform;
+  animation: tickerLoop 6s linear infinite; /* speed: 4s faster, 6s slower */
+}
+
+/* Headline */
+.news-text{
+  display:inline-block;
+  color:#fff;
+  font-weight:700;
+  font-size:18px;
+  white-space:nowrap;
+  text-shadow:0 2px 10px rgba(0,0,0,0.25);
+}
+
+/* Move text fully off the left before looping */
+@keyframes tickerLoop{
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% - 100vw)); }
+}
+
+/* Optional: fade edges so it "vanishes" nicely near the pill and appears smoothly on right */
+.news-scroll::before,
+.news-scroll::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  width:34px;
+  pointer-events:none;
+  z-index:2;
+}
+
+.news-scroll::before{
+  left:0;
+  background: linear-gradient(90deg, rgba(10,26,59,1), rgba(10,26,59,0));
+}
+
+.news-scroll::after{
+  right:0;
+  background: linear-gradient(270deg, rgba(15,102,255,1), rgba(15,102,255,0));
+}
+
+/* Optional: pause on hover */
+.news-top:hover .news-track{
+  animation-play-state: paused;
+}
+
+/* Mobile tweaks */
+@media (max-width:640px){
+  .news-inner{
+    padding:10px 14px;
+    gap:12px;
+  }
+  .news-text{
+    font-size:16px;
+  }
+}

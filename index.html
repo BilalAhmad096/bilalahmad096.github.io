@@ -17,6 +17,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="./image/favicon-96x96.png">
   <link rel="manifest" href="./image/site.webmanifest">
   <link rel="shortcut icon" href="./image/favicon.ico">
+  <link rel="stylesheet" href="./connect-divider/connect-divider.css">
   <meta name="theme-color" content="#ffffff">
 
   <!-- optional extras for PWA or older browsers -->
@@ -24,6 +25,7 @@
   <link rel="shortcut icon" href="image/favicon.ico"> -->
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SXZ97YEHG6"></script>
+  <script src="./connect-divider/connect-divider.js"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -136,6 +138,31 @@
               URSA Fellow | DAAD Fellow | LSC Fellow | MHRD Fellow
             </figcaption>
           </figure>
+        </div>
+      </div>
+
+
+      <!-- ===============================
+          Connect Divider
+      =============================== -->
+      <div class="connect-divider" id="connectDivider">
+        <div class="connect-divider__line connect-divider__line--top"></div>
+        <div class="connect-divider__line connect-divider__line--bot"></div>
+
+        <button class="connect-divider__btn" id="connectBtn" onclick="expandConnectDivider()">
+          <i class="ti ti-plug" aria-hidden="true"></i>
+          Connect
+        </button>
+
+        <div class="connect-divider__actions" id="connectActions" aria-hidden="true">
+          <a class="connect-divider__action connect-divider__action--primary" href="#" id="downloadCvBtn" data-tooltip="Grab a copy of my latest academic & professional resume">
+            <i class="ti ti-download" aria-hidden="true"></i>
+            Download CV
+          </a>
+          <a class="connect-divider__action" href="mailto:connect@mintorian.com" data-tooltip="connect@mintorian.com">
+            <i class="ti ti-mail" aria-hidden="true"></i>
+            Email
+          </a>
         </div>
       </div>
     </section>
@@ -314,5 +341,6 @@
 
   <script src="js/card-accessibility.js" defer></script>
   <script src="js/backtotop.js" defer></script>
+  <script src="./connect-divider/connect-divider.js"></script>
 </body>
 </html>

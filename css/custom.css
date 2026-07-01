@@ -1705,3 +1705,252 @@ figcaption.caption-below[lang="ar"]{
     font-size:16px;
   }
 }
+
+/* =====================================================
+   23) Connect Divider Component
+===================================================== */
+.connect-divider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 40px;
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+
+/* Elegant, fine line divider rules matching design token colors */
+.connect-divider__line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(10, 26, 59, 0.15), transparent);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 1;
+}
+
+.connect-divider__line--top,
+.connect-divider__line--bot {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Central Trigger Button */
+.connect-divider__btn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  font-family: linetoBold, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+  background-color: var(--card);
+  border: 1px solid rgba(10, 26, 59, 0.12);
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+/* Seamless hook into your global card hover ecosystem */
+.connect-divider__btn:hover,
+.connect-divider__btn:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+.connect-divider__btn:active {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Hidden Actions Flex Container */
+.connect-divider__actions {
+  display: flex;
+  gap: 16px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 2;
+  margin-top: 0;
+}
+
+/* Action items stylized to match other site buttons and items */
+.connect-divider__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: linetoBold, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink);
+  background-color: var(--card);
+  border: 1px solid rgba(10, 26, 59, 0.08);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, color 0.18s ease;
+}
+
+.connect-divider__action:hover,
+.connect-divider__action:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background-color: #ffffff;
+  color: var(--accent);
+  outline: none;
+}
+
+/* Highlighting Download CV to match dark main branding style */
+.connect-divider__action--primary {
+  background-color: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
+}
+
+.connect-divider__action--primary:hover,
+.connect-divider__action--primary:focus-visible {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+/* =====================================================
+   Active Expanded States (Split Open Behavior)
+===================================================== */
+.connect-divider.is-expanded .connect-divider__line--top {
+  transform: translateY(-36px); /* Perfect split height clearance */
+}
+
+.connect-divider.is-expanded .connect-divider__line--bot {
+  transform: translateY(36px);
+}
+
+.connect-divider.is-expanded .connect-divider__btn {
+  display: none; /* Smooth layout drop-out */
+}
+
+.connect-divider.is-expanded .connect-divider__actions {
+  max-height: 120px;
+  opacity: 1;
+  transform: scale(1);
+  padding: 4px 0;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 640px) {
+  .connect-divider__actions {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .connect-divider__action {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .connect-divider.is-expanded .connect-divider__line--top {
+    transform: translateY(-64px); /* Extended spacing clearance for stacked mobile links */
+  }
+
+  .connect-divider.is-expanded .connect-divider__line--bot {
+    transform: translateY(64px);
+  }
+}
+
+/* Reduced Motion Override compatibility */
+@media (prefers-reduced-motion: reduce) {
+  .connect-divider__line,
+  .connect-divider__btn,
+  .connect-divider__actions,
+  .connect-divider__action {
+    transition: none !important;
+  }
+  .connect-divider__btn:hover,
+  .connect-divider__action:hover {
+    transform: none !important;
+  }
+}
+
+
+/* =====================================================
+   23.1) Connect Divider Tooltips
+===================================================== */
+.connect-divider__action {
+  position: relative; /* Anchor for the tooltips */
+}
+
+/* Tooltip base bubble styling */
+.connect-divider__action::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px); /* Position right above the button */
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  
+  /* Styling matching your design tokens */
+  background-color: var(--ink);
+  color: #ffffff;
+  font-family: linetoBook, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  
+  /* Hidden by default */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+/* Small elegant triangle indicator underneath the bubble */
+.connect-divider__action::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: var(--ink) transparent transparent transparent;
+  
+  /* Hidden by default */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+/* Reveal states on Hover or Focus */
+.connect-divider__action:hover::after,
+.connect-divider__action:focus-visible::after,
+.connect-divider__action:hover::before,
+.connect-divider__action:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Mobile Tweak: Turn off tooltips on tiny screens to prevent layout cutoff */
+@media (max-width: 640px) {
+  .connect-divider__action::after,
+  .connect-divider__action::before {
+    display: none !important;
+  }
+}

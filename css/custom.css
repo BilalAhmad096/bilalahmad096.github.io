@@ -1885,70 +1885,188 @@ figcaption.caption-below[lang="ar"]{
     transform: none !important;
   }
 }
+/* =====================================================
+   23.1) Connect Divider Actions + Tooltips
+===================================================== */
+
+.connect-divider__action {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 92px;
+  height: 44px;
+  padding: 0 18px;
+
+  margin: 0 6px;
+
+  border-radius: var(--radius-md);
+
+  font-family: linetoBook, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  color: var(--ink);
+  background: #ffffff;
+
+  border: 1px solid rgba(0,0,0,0.08);
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.06);
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
 
 
 /* =====================================================
-   23.1) Connect Divider Tooltips
+   Hover / Active States
 ===================================================== */
-.connect-divider__action {
-  position: relative; /* Anchor for the tooltips */
+
+.connect-divider__action:hover {
+  transform: translateY(-3px);
+
+  background: var(--ink);
+  color: #ffffff;
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.16);
 }
 
-/* Tooltip base bubble styling */
+
+.connect-divider__action:active {
+  transform: translateY(-1px) scale(.97);
+}
+
+
+/* Keyboard accessibility */
+.connect-divider__action:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+
+/* =====================================================
+   Tooltip Bubble
+===================================================== */
+
 .connect-divider__action::after {
   content: attr(data-tooltip);
+
   position: absolute;
-  bottom: calc(100% + 10px); /* Position right above the button */
+
+  bottom: calc(100% + 12px);
   left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  
-  /* Styling matching your design tokens */
-  background-color: var(--ink);
+
+  transform:
+    translateX(-50%)
+    translateY(8px)
+    scale(.96);
+
+  background: var(--ink);
   color: #ffffff;
+
   font-family: linetoBook, system-ui, sans-serif;
   font-size: 13px;
   font-weight: 500;
+
   white-space: nowrap;
-  padding: 6px 12px;
+
+  padding: 7px 14px;
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
-  
-  /* Hidden by default */
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.18);
+
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 10;
+
+  transition:
+    opacity .18s ease,
+    transform .18s cubic-bezier(.2,.8,.2,1);
+
+  z-index: 20;
 }
 
-/* Small elegant triangle indicator underneath the bubble */
+
+/* Tooltip Arrow */
 .connect-divider__action::before {
   content: "";
+
   position: absolute;
-  bottom: calc(100% + 4px);
+
+  bottom: calc(100% + 6px);
   left: 50%;
-  transform: translateX(-50%) translateY(4px);
+
+  transform:
+    translateX(-50%)
+    translateY(8px);
+
   border-width: 6px 6px 0 6px;
   border-style: solid;
-  border-color: var(--ink) transparent transparent transparent;
-  
-  /* Hidden by default */
+  border-color:
+    var(--ink)
+    transparent
+    transparent
+    transparent;
+
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 10;
+
+  transition:
+    opacity .18s ease,
+    transform .18s cubic-bezier(.2,.8,.2,1);
+
+  z-index: 20;
 }
 
-/* Reveal states on Hover or Focus */
+
+/* Reveal Tooltip */
 .connect-divider__action:hover::after,
-.connect-divider__action:focus-visible::after,
+.connect-divider__action:focus-visible::after {
+  opacity: 1;
+
+  transform:
+    translateX(-50%)
+    translateY(0)
+    scale(1);
+}
+
+
 .connect-divider__action:hover::before,
 .connect-divider__action:focus-visible::before {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+
+  transform:
+    translateX(-50%)
+    translateY(0);
 }
 
-/* Mobile Tweak: Turn off tooltips on tiny screens to prevent layout cutoff */
+
+/* =====================================================
+   Mobile
+===================================================== */
+
 @media (max-width: 640px) {
+
+  .connect-divider__action {
+    min-width: auto;
+    height: 40px;
+
+    padding: 0 14px;
+    margin: 0 4px;
+
+    font-size: 13px;
+  }
+
+
   .connect-divider__action::after,
   .connect-divider__action::before {
     display: none !important;

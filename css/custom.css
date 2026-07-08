@@ -1759,7 +1759,7 @@ figcaption.caption-below[lang="ar"]{
   background: var(--card);
   color: var(--ink);
   font-family: linetoBold, system-ui, sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   letter-spacing: .02em;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
@@ -1829,7 +1829,7 @@ figcaption.caption-below[lang="ar"]{
   background: var(--card);
   color: var(--ink);
   font-family: linetoBold, system-ui, sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   letter-spacing: .02em;
   text-decoration: none;
   white-space: nowrap;

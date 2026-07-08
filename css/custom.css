@@ -1705,370 +1705,251 @@ figcaption.caption-below[lang="ar"]{
     font-size:16px;
   }
 }
-
 /* =====================================================
-   23) Connect Divider Component
+   23) Connect Divider
 ===================================================== */
+
 .connect-divider {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-areas:
+    "top"
+    "stage"
+    "bot";
+  grid-template-rows: auto auto auto;
+  justify-items: center;
+  row-gap: 26px;
   width: 100%;
-  margin-top: 40px;
-  padding: 20px 0;
-  box-sizing: border-box;
+  padding: 40px 0;
 }
 
-/* Elegant, fine line divider rules matching design token colors */
 .connect-divider__line {
-  position: absolute;
-  left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(10, 26, 59, 0.15), transparent);
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  z-index: 1;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--ring) 15%,
+    var(--ring) 85%,
+    transparent
+  );
 }
 
-.connect-divider__line--top,
+.connect-divider__line--top {
+  grid-area: top;
+}
+
 .connect-divider__line--bot {
-  top: 50%;
-  transform: translateY(-50%);
+  grid-area: bot;
 }
 
-/* Central Trigger Button */
+.connect-divider__btn,
+.connect-divider__actions {
+  grid-area: stage;
+}
+
+/* Trigger Button */
 .connect-divider__btn {
-  position: relative;
-  z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 32px;
-  font-family: linetoBold, system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 16px;
+  gap: 12px;
+  height: 60px;
+  padding: 0 36px;
+  border-radius: 999px;
+  border: 1px solid var(--ring);
+  background: var(--card);
   color: var(--ink);
-  background-color: var(--card);
-  border: 1px solid rgba(10, 26, 59, 0.12);
-  border-radius: 50px;
+  font-family: linetoBold, system-ui, sans-serif;
+  font-size: 16px;
+  letter-spacing: .02em;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    color .25s ease,
+    opacity .25s ease;
 }
 
-/* Seamless hook into your global card hover ecosystem */
+.connect-divider__btn .ti {
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.connect-divider__btn svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
 .connect-divider__btn:hover,
 .connect-divider__btn:focus-visible {
   transform: translateY(-2px) scale(1.03);
   box-shadow: var(--shadow-md);
-  border-color: var(--accent);
   color: var(--accent);
   outline: none;
-}
-
-.connect-divider__btn:active {
-  transform: translateY(-1px) scale(1.01);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Hidden Actions Flex Container */
-.connect-divider__actions {
-  display: flex;
-  gap: 16px;
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  z-index: 2;
-  margin-top: 0;
-}
-
-/* Action items stylized to match other site buttons and items */
-.connect-divider__action {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  font-family: linetoBold, system-ui, sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--ink);
-  background-color: var(--card);
-  border: 1px solid rgba(10, 26, 59, 0.08);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, color 0.18s ease;
-}
-
-.connect-divider__action:hover,
-.connect-divider__action:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  background-color: #ffffff;
-  color: var(--accent);
-  outline: none;
-}
-
-/* Highlighting Download CV to match dark main branding style */
-.connect-divider__action--primary {
-  background-color: var(--ink);
-  color: #ffffff;
-  border-color: var(--ink);
-}
-
-.connect-divider__action--primary:hover,
-.connect-divider__action--primary:focus-visible {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: #ffffff;
-}
-
-/* =====================================================
-   Active Expanded States (Split Open Behavior)
-===================================================== */
-.connect-divider.is-expanded .connect-divider__line--top {
-  transform: translateY(-36px); /* Perfect split height clearance */
-}
-
-.connect-divider.is-expanded .connect-divider__line--bot {
-  transform: translateY(36px);
 }
 
 .connect-divider.is-expanded .connect-divider__btn {
-  display: none; /* Smooth layout drop-out */
+  opacity: 0;
+  transform: translateY(-2px) scale(.94);
+  pointer-events: none;
+}
+
+/* Action Buttons Wrapper */
+.connect-divider__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transform: scale(.95);
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
 }
 
 .connect-divider.is-expanded .connect-divider__actions {
-  max-height: 120px;
   opacity: 1;
   transform: scale(1);
-  padding: 4px 0;
+  pointer-events: auto;
 }
 
-/* Responsive adjustment for small screens */
-@media (max-width: 640px) {
-  .connect-divider__actions {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .connect-divider__action {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .connect-divider.is-expanded .connect-divider__line--top {
-    transform: translateY(-64px); /* Extended spacing clearance for stacked mobile links */
-  }
-
-  .connect-divider.is-expanded .connect-divider__line--bot {
-    transform: translateY(64px);
-  }
-}
-
-/* Reduced Motion Override compatibility */
-@media (prefers-reduced-motion: reduce) {
-  .connect-divider__line,
-  .connect-divider__btn,
-  .connect-divider__actions,
-  .connect-divider__action {
-    transition: none !important;
-  }
-  .connect-divider__btn:hover,
-  .connect-divider__action:hover {
-    transform: none !important;
-  }
-}
-/* =====================================================
-   23.1) Connect Divider Actions + Tooltips
-===================================================== */
-
-.connect-divider__action {
+/* Both Buttons Same Style */
+.connect-divider__action,
+.connect-divider__action--primary {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 210px;
+  height: 64px;
+  padding: 8px 30px 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ring);
+  background: var(--card);
+  color: var(--ink);
+  font-family: linetoBold, system-ui, sans-serif;
+  font-size: 16px;
+  letter-spacing: .02em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    color .22s ease,
+    border-color .22s ease;
+}
 
+.connect-divider__action .ti,
+.connect-divider__action--primary .ti {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  min-width: 92px;
+  flex-shrink: 0;
+  width: 44px;
   height: 44px;
-  padding: 0 18px;
-
-  margin: 0 6px;
-
-  border-radius: var(--radius-md);
-
-  font-family: linetoBook, system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-
-  white-space: nowrap;
-
-  color: var(--ink);
-  background: #ffffff;
-
-  border: 1px solid rgba(0,0,0,0.08);
-
-  box-shadow:
-    0 4px 12px rgba(0,0,0,0.06);
-
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+  border-radius: 50%;
+  background: var(--ring);
+  color: var(--accent);
+  font-size: 20px;
+  transition: background-color .22s ease, color .22s ease;
 }
 
-
-/* =====================================================
-   Hover / Active States
-===================================================== */
-
-.connect-divider__action:hover {
-  transform: translateY(-3px);
-
-  background: var(--ink);
-  color: #ffffff;
-
-  box-shadow:
-    0 12px 28px rgba(0,0,0,0.16);
+.connect-divider__action .ti svg,
+.connect-divider__action--primary .ti svg {
+  display: block;
+  width: 24px;
+  height: 24px;
 }
 
-
-.connect-divider__action:active {
-  transform: translateY(-1px) scale(.97);
+.connect-divider__action:hover,
+.connect-divider__action:focus-visible,
+.connect-divider__action--primary:hover,
+.connect-divider__action--primary:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+  color: var(--accent);
+  outline: none;
 }
 
-
-/* Keyboard accessibility */
-.connect-divider__action:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 4px;
-}
-
-
-/* =====================================================
-   Tooltip Bubble
-===================================================== */
-
-.connect-divider__action::after {
+/* Tooltip */
+.connect-divider__action[data-tooltip]::after {
   content: attr(data-tooltip);
-
   position: absolute;
-
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 14px);
   left: 50%;
-
-  transform:
-    translateX(-50%)
-    translateY(8px)
-    scale(.96);
-
+  transform: translate(-50%, 6px);
   background: var(--ink);
-  color: #ffffff;
-
-  font-family: linetoBook, system-ui, sans-serif;
+  color: #fff;
+  font-family: LinetoBook, system-ui, sans-serif;
   font-size: 13px;
-  font-weight: 500;
-
   white-space: nowrap;
-
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-sm);
-
-  box-shadow:
-    0 8px 24px rgba(0,0,0,.18);
-
+  box-shadow: var(--shadow-md);
   opacity: 0;
   pointer-events: none;
-
-  transition:
-    opacity .18s ease,
-    transform .18s cubic-bezier(.2,.8,.2,1);
-
+  transition: opacity .18s ease, transform .18s ease;
   z-index: 20;
 }
 
-
-/* Tooltip Arrow */
-.connect-divider__action::before {
+.connect-divider__action[data-tooltip]::before {
   content: "";
-
   position: absolute;
-
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
-
-  transform:
-    translateX(-50%)
-    translateY(8px);
-
+  transform: translate(-50%, 6px);
   border-width: 6px 6px 0 6px;
   border-style: solid;
-  border-color:
-    var(--ink)
-    transparent
-    transparent
-    transparent;
-
+  border-color: var(--ink) transparent transparent transparent;
   opacity: 0;
   pointer-events: none;
-
-  transition:
-    opacity .18s ease,
-    transform .18s cubic-bezier(.2,.8,.2,1);
-
-  z-index: 20;
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 19;
 }
 
-
-/* Reveal Tooltip */
-.connect-divider__action:hover::after,
-.connect-divider__action:focus-visible::after {
+.connect-divider__action[data-tooltip]:hover::after,
+.connect-divider__action[data-tooltip]:focus-visible::after,
+.connect-divider__action[data-tooltip]:hover::before,
+.connect-divider__action[data-tooltip]:focus-visible::before {
   opacity: 1;
-
-  transform:
-    translateX(-50%)
-    translateY(0)
-    scale(1);
+  transform: translate(-50%, 0);
 }
 
-
-.connect-divider__action:hover::before,
-.connect-divider__action:focus-visible::before {
-  opacity: 1;
-
-  transform:
-    translateX(-50%)
-    translateY(0);
-}
-
-
-/* =====================================================
-   Mobile
-===================================================== */
-
+/* Mobile */
 @media (max-width: 640px) {
-
-  .connect-divider__action {
-    min-width: auto;
-    height: 40px;
-
-    padding: 0 14px;
-    margin: 0 4px;
-
-    font-size: 13px;
+  .connect-divider {
+    padding: 32px 0;
+    row-gap: 20px;
   }
 
+  .connect-divider__actions {
+    flex-direction: column;
+    gap: 12px;
+  }
 
-  .connect-divider__action::after,
-  .connect-divider__action::before {
+  .connect-divider__action,
+  .connect-divider__action--primary {
+    min-width: 220px;
+    height: 54px;
+    font-size: 14px;
+  }
+
+  .connect-divider__action .ti,
+  .connect-divider__action--primary .ti {
+    width: 38px;
+    height: 38px;
+  }
+
+  .connect-divider__action .ti svg,
+  .connect-divider__action--primary .ti svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .connect-divider__action[data-tooltip]::after,
+  .connect-divider__action[data-tooltip]::before {
     display: none !important;
   }
 }

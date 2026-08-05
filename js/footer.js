@@ -1,6 +1,5 @@
 (function () {
-  const inPages = location.pathname.toLowerCase().includes('/pages/');
-  const base = inPages ? '..' : '.';
+  const base = '';
 
   const html = `
 <footer class="site-footer">

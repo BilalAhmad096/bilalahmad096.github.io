@@ -3,18 +3,19 @@
   const base = inPages ? '..' : '.';
 
   const html = `
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header class="site-header">
   <div class="container-wide">
     <nav class="primary-nav" id="mainNav" aria-label="Primary">
       <div class="nav-left">
 
         <!-- Mobile Hamburger -->
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+        <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu brandLogos">
           <span></span><span></span><span></span>
         </button>
       </div>
 
-      <ul class="nav-list">
+      <ul class="nav-list" id="navMenu">
         <li><a href="${base}/index.html" class="nav-link" data-nav="home">Home</a></li>
         <li><a href="${base}/pages/experience.html" class="nav-link" data-nav="experience">Experience</a></li>
         <li><a href="${base}/pages/publications.html" class="nav-link" data-nav="publications">Publications</a></li>
@@ -22,12 +23,12 @@
         <li><a href="${base}/pages/updates.html" class="nav-link" data-nav="updates">Updates</a></li>
       </ul>
 
-      <ul class="brand-logos">
-        <li><a href="https://www.bath.ac.uk/" target="_blank"><img src="${base}/image/Bath Logo.gif" alt="University of Bath"></a></li>
-        <li><a href="https://www.royalholloway.ac.uk/" target="_blank"><img src="${base}/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
-        <li><a href="https://www.iitr.ac.in/" target="_blank"><img src="${base}/image/iitr.png" alt="IIT Roorkee"></a></li>
-        <li><a href="https://www.rwth-aachen.de/" target="_blank"><img src="${base}/image/rwth.png" alt="RWTH Aachen University"></a></li>
-        <li><a href="https://www.amu.ac.in/" target="_blank"><img src="${base}/image/amu.jpg" alt="Aligarh Muslim University"></a></li>
+      <ul class="brand-logos" id="brandLogos">
+        <li><a href="https://www.bath.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/Bath Logo.gif" alt="University of Bath"></a></li>
+        <li><a href="https://www.royalholloway.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
+        <li><a href="https://www.iitr.ac.in/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/iitr.png" alt="IIT Roorkee"></a></li>
+        <li><a href="https://www.rwth-aachen.de/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/rwth.png" alt="RWTH Aachen University"></a></li>
+        <li><a href="https://www.amu.ac.in/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/amu.jpg" alt="Aligarh Muslim University"></a></li>
       </ul>
     </nav>
   </div>
@@ -47,13 +48,29 @@
   document.body.classList.add(`page-${key}`);
 
   document.querySelectorAll('.nav-link').forEach(a => {
-    if (a.dataset.nav === key) a.classList.add('active');
+    if (a.dataset.nav === key) {
+      a.classList.add('active');
+      a.setAttribute('aria-current', 'page');
+    }
   });
 
   // Mobile toggle
-  document.addEventListener("click", e => {
-    if (e.target.id === "navToggle" || e.target.closest("#navToggle")) {
-      document.getElementById("mainNav").classList.toggle("open");
+  const nav = document.getElementById('mainNav');
+  const toggle = document.getElementById('navToggle');
+
+  const setMenuOpen = open => {
+    nav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  };
+
+  toggle.addEventListener('click', () => {
+    setMenuOpen(!nav.classList.contains('open'));
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && nav.classList.contains('open')) {
+      setMenuOpen(false);
+      toggle.focus();
     }
   });
 })();

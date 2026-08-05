@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     mirror = true,
     once = false
   } = {}) => {
-    console.log(selector)
     document.querySelectorAll(selector).forEach((el, i) => {
       el.setAttribute('data-aos', effect);
       el.setAttribute('data-aos-offset', offset);
@@ -50,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function expandConnectDivider() {
   const divider = document.getElementById('connectDivider');
   const actions = document.getElementById('connectActions');
+  const button = document.getElementById('connectBtn');
   
   if (!divider || !actions) return;
 
@@ -58,6 +58,11 @@ function expandConnectDivider() {
   
   // Accessibility update: Reveal action items to screen readers
   actions.setAttribute('aria-hidden', 'false');
+  if (button) button.setAttribute('aria-expanded', 'true');
+
+  actions.querySelectorAll('.connect-divider__action').forEach(action => {
+    action.removeAttribute('tabindex');
+  });
   
   // 🌟 CRITICAL FIX: Refresh AOS calculations so elements further down 
   // the page recalculate their scroll trigger points properly.

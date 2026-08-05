@@ -1,4 +1,12 @@
 (function () {
+  const cleanPath = location.pathname
+    .replace(/\/index\.html$/i, '/')
+    .replace(/\.html$/i, '');
+
+  if (cleanPath !== location.pathname) {
+    history.replaceState(null, '', `${cleanPath}${location.search}${location.hash}`);
+  }
+
   const inPages = location.pathname.toLowerCase().includes('/pages/');
   const base = inPages ? '..' : '.';
 
@@ -16,11 +24,11 @@
       </div>
 
       <ul class="nav-list" id="navMenu">
-        <li><a href="${base}/index.html" class="nav-link" data-nav="home">Home</a></li>
-        <li><a href="${base}/pages/experience.html" class="nav-link" data-nav="experience">Experience</a></li>
-        <li><a href="${base}/pages/publications.html" class="nav-link" data-nav="publications">Publications</a></li>
-        <li><a href="${base}/pages/researchgroup.html" class="nav-link" data-nav="researchgroup">Research Group</a></li>
-        <li><a href="${base}/pages/updates.html" class="nav-link" data-nav="updates">Updates</a></li>
+        <li><a href="${base}/" class="nav-link" data-nav="home">Home</a></li>
+        <li><a href="${base}/pages/experience" class="nav-link" data-nav="experience">Experience</a></li>
+        <li><a href="${base}/pages/publications" class="nav-link" data-nav="publications">Publications</a></li>
+        <li><a href="${base}/pages/researchgroup" class="nav-link" data-nav="researchgroup">Research Group</a></li>
+        <li><a href="${base}/pages/updates" class="nav-link" data-nav="updates">Updates</a></li>
       </ul>
 
       <ul class="brand-logos" id="brandLogos">

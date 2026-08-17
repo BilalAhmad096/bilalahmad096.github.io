@@ -1097,10 +1097,9 @@ figcaption.caption-below[lang="ar"]{
 }
 
 .footer-right .social-icon{
-  width:44px;
-  height:44px;
+  width:36px;
+  height:36px;
   display:block;
-  filter:invert(1) brightness(1.1);
   transition:transform .22s ease, opacity .22s ease;
   opacity:.95;
 }
@@ -1423,8 +1422,8 @@ figcaption.caption-below[lang="ar"]{
   }
 
   .footer-right .social-icon{
-    width:32px;
-    height:32px;
+    width:28px;
+    height:28px;
   }
 
   .footer-bottom{
@@ -1492,8 +1491,8 @@ figcaption.caption-below[lang="ar"]{
   }
 
   .footer-right .social-icon{
-    width:28px;
-    height:28px;
+    width:24px;
+    height:24px;
   }
 
   .footer-right{

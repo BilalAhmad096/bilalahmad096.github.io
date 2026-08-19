@@ -31,6 +31,7 @@
   --section-updates-pro:    #f5f6fa;  /* soft gray-blue */
   --section-updates-person: #f1f3f6;  /* soft lilac/blue */
   --section-researchgroup:  #eef2f8;  /* soft, distinct from publications */
+  --section-recognition:    #f4f7fb;  /* sits between skills and education */
 }
 
 /* Section background helpers */
@@ -410,6 +411,137 @@ section{
 .skill-list{
   margin:6px 0 0 18px;
   padding:0;
+}
+
+.skills-lead{
+  margin:8px 0 0;
+  color:var(--ink-muted);
+  max-width:60ch;
+}
+
+.skill-lead{
+  margin:6px 0 0;
+  color:var(--ink-muted);
+  font-size:14.5px;
+  line-height:1.5;
+}
+
+/* Uppercase group label inside a skill card. Distinct from .skill-subtitle,
+   which is the older sentence-case label still used elsewhere. */
+.skill-micro{
+  margin:20px 0 0;
+  font-family:linetoBold;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+
+/* Capabilities: descriptions, so they read as separated lines. */
+.skill-caps{
+  list-style:none;
+  margin:10px 0 0;
+  padding:0;
+}
+
+.skill-caps li{
+  font-size:14.5px;
+  line-height:1.45;
+  padding:7px 0;
+  border-top:1px solid var(--ring);
+}
+
+.skill-caps li:first-child{
+  border-top:0;
+  padding-top:0;
+}
+
+/* Tools: discrete named things, so they read as chips. */
+.skill-chips{
+  list-style:none;
+  margin:10px 0 0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.skill-chips li{
+  background:var(--ring);
+  border-radius:999px;
+  padding:5px 11px;
+  font-size:12.5px;
+  line-height:1.35;
+  white-space:nowrap;
+}
+
+/* =====================================================
+   5b) Recognition
+   Note: .rec-* is already taken by the Recommendations
+   cards on the experience page, hence .recog-*.
+===================================================== */
+.section-recognition{
+  background:var(--section-recognition);
+  padding:40px 0;
+}
+
+.recog-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.recog-icon{
+  width:34px;
+  height:34px;
+}
+
+.recog-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:22px;
+  align-items:start;
+}
+
+.recog-card{
+  padding:20px;
+}
+
+.recog-award{
+  margin:10px 0 0;
+  padding:14px 16px;
+  border-radius:var(--radius-md);
+  background:var(--ring);
+  font-size:14.5px;
+  line-height:1.45;
+}
+
+.recog-award strong{
+  font-family:linetoBold;
+  display:block;
+}
+
+.recog-award span{
+  color:var(--ink-muted);
+}
+
+.recog-projects{
+  list-style:none;
+  margin:10px 0 0;
+  padding:0;
+}
+
+.recog-projects li{
+  font-size:14.5px;
+  line-height:1.45;
+  padding:9px 0;
+  border-top:1px solid var(--ring);
+}
+
+.recog-projects li:first-child{
+  border-top:0;
+  padding-top:0;
 }
 
 /* =====================================================
@@ -1291,6 +1423,10 @@ figcaption.caption-below[lang="ar"]{
   }
 
   .rec-grid{
+    grid-template-columns:1fr;
+  }
+
+  .recog-grid{
     grid-template-columns:1fr;
   }
 

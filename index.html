@@ -28,7 +28,7 @@
        Styles
   =============================== -->
   <link rel="stylesheet" href="css/styles.css?v=20260805">
-  <link rel="stylesheet" href="css/custom.css?v=20260806-2">
+  <link rel="stylesheet" href="css/custom.css?v=20260806-3">
   
 
   <!-- AOS (Animate On Scroll) CSS -->
@@ -215,58 +215,105 @@
     <section id="skills" class="section-skills">
       <div class="container">
         <h2 class="section-title" data-aos="fade-up">Skills Stack</h2>
+        <p class="skills-lead" data-aos="fade-up">Power systems research, applied machine learning, and the software that connects the two.</p>
         <div class="skills-cards">
           <article class="skill-card" data-aos="fade-up">
-            <img src="image/Development.svg" alt="" class="skill-icon">
-            <h3 class="skill-title">Development</h3>
-            <p>I am developing an automated framework of optimal procurement strategy for the Distribution Network Operator (DNO).</p>
-            <p class="skill-subtitle">Things I enjoy developing:</p>
-            <p>Power System Security Models, Optimization Models, OPF models, Power Flow, Distribution System Modelling, Power Electronics Modelling, Control System Modelling.</p>
-            <p class="skill-subtitle">Modules familiar with:</p>
-            <p>Pyomo, PandaPower, MATPOWER, Ipopt, Gurobi, SciPy, Pandas, NumPy, Matplotlib</p>
-            <!-- <ul class="skill-list">
-              <li>Gurobi</li><li>PandaPower</li><li>MATPOWER</li><li>SciPy</li><li>Pandas</li><li>NumPy</li><li>Matplotlib</li>
-            </ul> -->
-          </article>
-
-          <article class="skill-card" data-aos="fade-up">
-            <img src="image/frontend.svg" alt="" class="skill-icon">
-            <h3 class="skill-title">Coding</h3>
-            <p>As a Technical Lead at HCL, we added ML capabilities to existing products.</p>
-            <p class="skill-subtitle">Languages:</p>
-            <p>MATLAB, Python, Java, HTML, CSS, JavaScript</p>
-            <p class="skill-subtitle">Products Developed:</p>
-            <ul class="skill-list">
-              <li>Handwritten Text Extraction</li>
-              <li>OCR</li>
-              <li>Catalogue Tagging</li>
-              <li>Sales Forecasting</li>
-              <li>Document Digitalisation</li>
-              <li>Image Noise Removal</li>
-              <li>ML Based Power Flow Analysis</li>
-              <li>Fully Automated OPF Framework</li>
-              <li>Fully Automated SCOPF Framework</li>
-              
+            <img src="image/transformer.svg" alt="" class="skill-icon">
+            <h3 class="skill-title">Power Systems</h3>
+            <p class="skill-lead">Modelling and optimising distribution networks under stress.</p>
+            <p class="skill-micro">What I work on</p>
+            <ul class="skill-caps">
+              <li>Optimal power flow &mdash; OPF and SCOPF</li>
+              <li>Power system security models</li>
+              <li>Distribution and power-electronics modelling</li>
+              <li>Control system modelling</li>
+            </ul>
+            <p class="skill-micro">Solvers and libraries</p>
+            <ul class="skill-chips">
+              <li>Pyomo</li>
+              <li>PandaPower</li>
+              <li>MATPOWER</li>
+              <li>Gurobi</li>
+              <li>Ipopt</li>
             </ul>
           </article>
 
           <article class="skill-card" data-aos="fade-up">
-            <img src="image/Awards.svg" alt="" class="skill-icon">
-            <h3 class="skill-title">Fellowships & Projects</h3>
-            <p class="skill-subtitle">Fellowships:</p>
-            <p class="skill-list">URSA Fellowship</p>
-            <p class="skill-list">LSC Fellowship</p>
-            <p class="skill-list">DAAD Fellowship</p>
-            <p class="skill-list">MHRD Fellowship</p>
+            <img src="image/neural-network.svg" alt="" class="skill-icon">
+            <h3 class="skill-title">Machine Learning</h3>
+            <p class="skill-lead">Applied ML, from grid contingency screening to shipped product features.</p>
+            <p class="skill-micro">What I work on</p>
+            <ul class="skill-caps">
+              <li>Explainable AI for contingency screening</li>
+              <li>ML-based power flow analysis</li>
+              <li>Forecasting and document digitisation</li>
+              <li>Computer vision &mdash; OCR, handwriting, denoising</li>
+            </ul>
+            <p class="skill-micro">Libraries</p>
+            <ul class="skill-chips">
+              <li>Pandas</li>
+              <li>NumPy</li>
+              <li>SciPy</li>
+              <li>Matplotlib</li>
+            </ul>
+          </article>
 
-            <p class="skill-subtitle">Awards:</p>
-            <p class="skill-list">Third Best Paper Award in icSmartGrid 2025, Glasgow, UK</p>
-            
-            <p class="skill-subtitle">Projects:</p>
-            <ul class="skill-list">
+          <article class="skill-card" data-aos="fade-up">
+            <img src="image/terminal.svg" alt="" class="skill-icon">
+            <h3 class="skill-title">Software Engineering</h3>
+            <p class="skill-lead">Building the tooling around the research, and full-stack web work alongside it.</p>
+            <p class="skill-micro">What I work on</p>
+            <ul class="skill-caps">
+              <li>Full-stack web development</li>
+              <li>Automated OPF and SCOPF frameworks</li>
+              <li>Reproducible experiment pipelines</li>
+              <li>Code review and release support</li>
+            </ul>
+            <p class="skill-micro">Languages</p>
+            <ul class="skill-chips">
+              <li>Python</li>
+              <li>MATLAB</li>
+              <li>Java</li>
+              <li>JavaScript</li>
+              <li>HTML</li>
+              <li>CSS</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================
+         Recognition Section
+    =============================== -->
+    <section id="recognition" class="section-recognition">
+      <div class="container">
+        <div class="recog-head" data-aos="fade-up">
+          <img src="image/Awards.svg" alt="" class="recog-icon">
+          <h2 class="section-title">Recognition</h2>
+        </div>
+        <div class="recog-grid">
+          <article class="recog-card hover-card" data-aos="fade-up">
+            <p class="skill-micro">Fellowships</p>
+            <ul class="skill-chips">
+              <li>URSA</li>
+              <li>DAAD</li>
+              <li>LSC</li>
+              <li>MHRD</li>
+            </ul>
+            <p class="skill-micro">Award</p>
+            <p class="recog-award">
+              <strong>Third Best Paper</strong>
+              <span>icSmartGrid 2025 &mdash; Glasgow, UK</span>
+            </p>
+          </article>
+
+          <article class="recog-card hover-card" data-aos="fade-up">
+            <p class="skill-micro">Projects</p>
+            <ul class="recog-projects">
               <li>Power System Reliability in Adverse Weather Events</li>
-              <li>Automated Framework for DNO</li>
-              <li>System Level Control of Inverters in DC Microgrid</li>
+              <li>Automated Procurement Framework for DNOs</li>
+              <li>System-Level Control of Inverters in DC Microgrids</li>
               <li>Multilevel Inverter with MPP Tracking</li>
             </ul>
           </article>

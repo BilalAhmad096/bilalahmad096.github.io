@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#7510F7" stroke-width="1.09616" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(1.0400 1.0400) scale(0.91228)">
+    <path d="M 5.95 6.59 L 9.95 5.01" />
+    <path d="M 5.81 8.49 L 10.09 10.91" />
+    <path d="M 5.1 9.24 L 10.8 17.96" />
+    <path d="M 5.1 14.76 L 10.8 6.04" />
+    <path d="M 5.81 15.51 L 10.09 13.09" />
+    <path d="M 5.95 17.41 L 9.95 18.99" />
+    <path d="M 14.05 5.01 L 18.05 6.59" />
+    <path d="M 13.2 6.04 L 18.9 14.76" />
+    <path d="M 13.91 10.91 L 18.19 8.49" />
+    <path d="M 13.91 13.09 L 18.19 15.51" />
+    <path d="M 13.2 17.96 L 18.9 9.24" />
+    <path d="M 14.05 18.99 L 18.05 17.41" />
+    <circle cx="3.9" cy="7.4" r="1.5" />
+    <circle cx="3.9" cy="16.6" r="1.5" />
+    <circle cx="12" cy="4.2" r="1.5" />
+    <circle cx="12" cy="12" r="1.5" />
+    <circle cx="12" cy="19.8" r="1.5" />
+    <circle cx="20.1" cy="7.4" r="1.5" />
+    <circle cx="20.1" cy="16.6" r="1.5" />
+  </g>
+</svg>

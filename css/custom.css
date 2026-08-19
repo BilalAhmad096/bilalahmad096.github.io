@@ -402,17 +402,6 @@ section{
   font-size:22px;
 }
 
-.skill-subtitle{
-  margin:10px 0 6px;
-  font-family:linetoBold;
-  color:var(--ink);
-}
-
-.skill-list{
-  margin:6px 0 0 18px;
-  padding:0;
-}
-
 .skills-lead{
   margin:8px 0 0;
   color:var(--ink-muted);
@@ -426,8 +415,7 @@ section{
   line-height:1.5;
 }
 
-/* Uppercase group label inside a skill card. Distinct from .skill-subtitle,
-   which is the older sentence-case label still used elsewhere. */
+/* Uppercase group label inside a skill card. */
 .skill-micro{
   margin:20px 0 0;
   font-family:linetoBold;

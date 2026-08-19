@@ -382,6 +382,15 @@ section{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:20px;
+  margin-top:26px;
+}
+
+/* The lead belongs to the heading, so it sits tight beneath it; the card grid
+   is a separate group and gets the wider gap above. Without this the section
+   title's own 18px bottom margin pushed the lead away and left the cards
+   flush against it - the two gaps read as the wrong way round. */
+.section-skills .section-title{
+  margin-bottom:8px;
 }
 
 .skill-card{
@@ -478,6 +487,12 @@ section{
   display:flex;
   align-items:center;
   gap:12px;
+}
+
+/* The title's default 6px/18px margins are asymmetric, which pushed it 6px
+   off centre from the icon inside this flex row. */
+.recog-head .section-title{
+  margin:0;
 }
 
 .recog-icon{

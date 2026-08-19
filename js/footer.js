@@ -14,7 +14,7 @@
           <li><a href="https://www.ed.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/Edinburgh.png" alt="University of Edinburgh"></a></li>
           <li><a href="https://www.ukpowernetworks.co.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/ukpn.png" alt="UK Power Networks"></a></li>
           <li><a href="https://www.tneigroup.com/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/TNEI-logo.jpg" alt="TNEI Consultancy"></a></li>
-          <li><a href="https://www.psr-inc.com/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/psr-logo.jpeg" alt="PSR Inc."></a></li>
+          <li><a href="https://www.psr-inc.com/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/psr-logo (2).jpeg" alt="PSR Inc."></a></li>
         </ul>
       </div>
     </div>

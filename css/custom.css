@@ -402,10 +402,11 @@ section{
   font-size:22px;
 }
 
+/* No max-width: at 60ch this clamped to ~589px and broke the one-line
+   lead across two. The .container cap of 1080px already bounds it. */
 .skills-lead{
   margin:8px 0 0;
   color:var(--ink-muted);
-  max-width:60ch;
 }
 
 .skill-lead{

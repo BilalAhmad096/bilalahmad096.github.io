@@ -1,0 +1,164 @@
+{
+  "name": "Bilal Ahmad",
+  "tagline": "Electrical Engineer  |  Power Systems Researcher  |  Machine Learning",
+  "contact": [
+    { "text": "Bath, United Kingdom", "link": null },
+    { "text": "connect@mintorian.com", "link": "mailto:connect@mintorian.com" },
+    { "text": "mintorian.com", "link": "https://mintorian.com" },
+    { "text": "linkedin.com/in/mintorian", "link": "https://www.linkedin.com/in/mintorian" },
+    { "text": "github.com/BilalAhmad096", "link": "https://github.com/BilalAhmad096" }
+  ],
+  "profile": "PhD researcher at the University of Bath working on power distribution network reliability and Battery Energy Storage Systems, combining Optimal Power Flow (OPF/SCOPF) with explainable machine learning for grid resilience. Former Technical Lead in Machine Learning at HCL Technologies, with a track record spanning power system optimisation, control engineering, and applied AI across research and industry. Currently also working as a full stack developer alongside the research.",
+
+  "experience": [
+    {
+      "role": "Full Stack Developer",
+      "org": "Dystil.AI",
+      "dates": "Apr 2026 – Present  ·  Part-time, Remote",
+      "bullets": [
+        "Full-stack web development across front-end interfaces and back-end services",
+        "Feature implementation, code review and release support"
+      ]
+    },
+    {
+      "role": "Full Stack Developer",
+      "org": "Just Jutz",
+      "dates": "Apr 2026 – Present  ·  Part-time, Remote",
+      "bullets": [
+        "End-to-end web development, from user interface through to server-side logic",
+        "Building and maintaining features across the existing codebase"
+      ]
+    },
+    {
+      "role": "Teaching Assistant",
+      "org": "University of Bath",
+      "dates": "Jan 2026 – Present",
+      "bullets": [
+        "Supported labs, tutorials and grading across computing and electrical modules"
+      ]
+    },
+    {
+      "role": "Teaching Assistant",
+      "org": "University of London",
+      "dates": "Apr 2023 – Jun 2026",
+      "bullets": [
+        "Supported labs, tutorials and grading across computing and electrical modules",
+        "Held office hours and provided one-to-one support for coursework and projects",
+        "Coordinated assessment rubrics and feedback to improve learning outcomes"
+      ]
+    },
+    {
+      "role": "Visiting Researcher",
+      "org": "Technical University of Denmark",
+      "dates": "May 2026",
+      "bullets": []
+    },
+    {
+      "role": "Research Assistant",
+      "org": "Royal Holloway, University of London",
+      "dates": "Aug 2023 – Oct 2025",
+      "bullets": [
+        "Contributed to ML-driven power systems research and prototype development",
+        "Managed datasets, experiments and result reproducibility pipelines",
+        "Prepared figures, drafts and proofs-of-concept for publications"
+      ]
+    },
+    {
+      "role": "Technical Lead, Machine Learning",
+      "org": "HCL Technologies",
+      "dates": "Aug 2022 – Jul 2023",
+      "bullets": [
+        "Led development of ML-enabled features across products, including handwritten text extraction, OCR, and automated catalogue tagging",
+        "Built sales forecasting and document digitisation pipelines, and an image noise-removal model for MedTech-relevant sensor systems",
+        "Designed a fully automated OPF and SCOPF framework applying ML-based power flow analysis for grid contingency screening"
+      ]
+    },
+    {
+      "role": "Visiting Researcher",
+      "org": "RWTH Aachen University",
+      "dates": "Oct 2021 – Mar 2022",
+      "bullets": [
+        "MTDC microgrid model in MATLAB",
+        "ADRC scheme for buck, boost and DAB converters",
+        "Robustness and convergence analysis",
+        "Small-signal, sensitivity and modal analysis"
+      ]
+    },
+    {
+      "role": "Intern",
+      "org": "PricewaterhouseCoopers",
+      "dates": "Aug 2021 – Oct 2021",
+      "bullets": [
+        "Artificial intelligence in smart grids",
+        "Advanced metering infrastructure",
+        "Smart grid contracts"
+      ]
+    },
+    {
+      "role": "Intern",
+      "org": "Harduaganj Thermal Power Station",
+      "dates": "May 2017 – Jun 2017",
+      "bullets": [
+        "Coal handling plant supervision",
+        "Cooling unit and switchgear supervision",
+        "SCADA monitoring and workforce management"
+      ]
+    }
+  ],
+
+  "education": [
+    {
+      "role": "PhD, Power System Reliability",
+      "org": "University of Bath",
+      "dates": "Current",
+      "bullets": [
+        "Researching power distribution network preparedness for severe weather events involving compound hazards",
+        "Developing an automated optimal procurement strategy framework for Distribution Network Operators (DNOs)",
+        "Applying explainable AI (XAI) to intelligent contingency screening for power system reliability"
+      ]
+    },
+    {
+      "role": "MPhil, Power System Optimisation using Machine Learning",
+      "org": "Royal Holloway, University of London",
+      "dates": "",
+      "bullets": []
+    },
+    {
+      "role": "M.Tech, Electrical Power Systems",
+      "org": "IIT Roorkee",
+      "dates": "Distinction",
+      "bullets": []
+    },
+    {
+      "role": "B.Tech, Electrical Engineering",
+      "org": "Aligarh Muslim University",
+      "dates": "",
+      "bullets": []
+    }
+  ],
+
+  "publications": [
+    "B. Ahmad and O. Nduka, “A Comparative Analysis of Machine Learning Based Power Flow Study with Custom Made Open Source Python Codes,” IEEE icSmartGrid 2025.",
+    "B. Ahmad, S. M. Amrr, M. Nabi, M. R. Khalid and M. S. J. Asghar, “Analysis of Three-Phase Grid-Tied Thyristor Based Inverter for Solar PV Applications,” IEEE SEFET 2021.",
+    "M. R. Khalid, B. Ahmad, A. Sarwar and M. S. J. Asghar, “Review of Thyristor Based Grid Tied Inverters for Solar PV Applications,” IEEE I2CT Pune 2019.",
+    "Forthcoming — International Journal of Renewable Energy Research."
+  ],
+
+  "projects": [
+    "Power System Reliability in Adverse Weather Events — Bath PhD research programme",
+    "XAI-based SCOPF Framework for Power System Optimisation — RHUL MPhil programme",
+    "System-Level Control of Inverters in DC Microgrids — RWTH Aachen thesis",
+    "Multilevel Inverter with MPP Tracking — power electronics research project"
+  ],
+
+  "skills": [
+    ["Languages", "Python · MATLAB · Java · JavaScript · HTML · CSS"],
+    ["Optimisation and power systems", "Pyomo · PandaPower · MATPOWER · Gurobi · Ipopt"],
+    ["Data and machine learning", "Pandas · NumPy · SciPy · Matplotlib"]
+  ],
+
+  "awards": [
+    ["Fellowships", "URSA · DAAD · LSC · MHRD"],
+    ["Award", "Third Best Paper — icSmartGrid 2025, Glasgow, UK"]
+  ]
+}

@@ -1,0 +1,19 @@
+# core.autocrlf is true on this machine. Git guesses binary by looking for a NUL
+# byte near the start of a file, and a small text-heavy PDF has none - so it gets
+# treated as text and rewritten with CRLF on checkout, which corrupts it.
+# Mark the binary formats explicitly rather than relying on the guess.
+
+*.pdf   binary
+*.docx  binary
+*.doc   binary
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary

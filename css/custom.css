@@ -530,6 +530,39 @@ section{
   color:var(--ink-muted);
 }
 
+/* Fellowships carry a name plus a funder sentence, so they are rows rather
+   than chips: .skill-chips sets white-space:nowrap, which is right for single
+   tool names but turns a sentence into a bar wider than the card - and
+   .hover-card's overflow:hidden then clips it silently on phones. */
+.recog-fellowships{
+  list-style:none;
+  margin:10px 0 0;
+  padding:0;
+}
+
+.recog-fellowships li{
+  padding:9px 0;
+  border-top:1px solid var(--ring);
+  line-height:1.45;
+}
+
+.recog-fellowships li:first-child{
+  border-top:0;
+  padding-top:0;
+}
+
+.recog-fellowships strong{
+  display:block;
+  font-family:linetoBold;
+  font-size:14.5px;
+}
+
+.recog-fellowships span{
+  display:block;
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
 .recog-projects{
   list-style:none;
   margin:10px 0 0;

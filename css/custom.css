@@ -838,10 +838,6 @@ section{
   max-width:var(--container);
 }
 
-.rg-header{
-  margin-bottom:16px;
-}
-
 .rg-title{
   margin-bottom:6px;
 }
@@ -858,20 +854,12 @@ section{
   gap:12px;
 }
 
+/* Background, radius, shadow and transition come from the shared card block
+   further down; only the accent stripe and padding are specific here. */
 .rg-notice{
-  background:var(--card);
-  border-radius:var(--radius-md);
   padding:14px 16px;
-  box-shadow:var(--shadow-sm);
   color:var(--ink);
-  border-left:4px solid var(--ring);
-  transition:transform .22s ease,
-             box-shadow .22s ease,
-             background-color .22s ease;
-}
-
-.rg-notice{
-  border-left-color:var(--accent);
+  border-left:4px solid var(--accent);
 }
 
 /* =====================================================
@@ -1368,7 +1356,7 @@ figcaption.caption-below[lang="ar"]{
 .update-item:hover,
 .update-item:focus-visible,
 .countdown-item:hover,
-.countdown-item:focus-visible
+.countdown-item:focus-visible,
 .rg-notice:hover,
 .rg-notice:focus-visible{
   transform:translateY(-2px) scale(1.03) !important;

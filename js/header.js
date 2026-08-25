@@ -35,7 +35,7 @@
       </ul>
 
       <ul class="brand-logos" id="brandLogos">
-        <li><a href="https://www.bath.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/Bath Logo.gif" alt="University of Bath"></a></li>
+        <li><a href="https://www.bath.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/bath-wordmark.png" alt="University of Bath"></a></li>
         <li><a href="https://www.royalholloway.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
         <li><a href="https://www.iitr.ac.in/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/iitr.png" alt="IIT Roorkee"></a></li>
         <li><a href="https://www.rwth-aachen.de/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/rwth.png" alt="RWTH Aachen University"></a></li>

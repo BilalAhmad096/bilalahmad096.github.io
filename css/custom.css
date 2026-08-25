@@ -729,17 +729,38 @@ section{
   overflow:hidden;
 }
 
+/* Display quote mark. .rec-card already sets position:relative and
+   overflow:hidden, so this needs no structural change. The font size looks
+   extreme because linetoBold's opening quote carries little ink for its size:
+   at 240px the drawn mark is about 68x103px. */
+.rec-mark{
+  position:absolute;
+  top:-56px;
+  right:8px;
+  font-family:linetoBold;
+  font-size:240px;
+  line-height:1;
+  color:#cddcf5;
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+}
+
 .rec-quote{
   margin:0 0 14px;
   font-size:16px;
   line-height:1.7;
   color:var(--ink);
+  position:relative;
+  z-index:1;
 }
 
 .rec-author{
   display:flex;
   gap:12px;
   align-items:center;
+  position:relative;
+  z-index:1;
 }
 
 .rec-avatar{

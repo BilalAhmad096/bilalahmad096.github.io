@@ -9,7 +9,7 @@
       <div class="footer-collab-row">
         <span class="footer-label">Collaborators:</span>
         <ul class=" footer-logos">
-          <li><a href="https://www.sandia.gov/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/Sandia.svg" alt="Sandia National Laboratories"></a></li>
+          <li><a href="https://www.sandia.gov/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/Sandia.png" alt="Sandia National Laboratories"></a></li>
           <li><a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/manchester.png" alt="University of Manchester"></a></li>
           <li><a href="https://www.ed.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/Edinburgh.png" alt="University of Edinburgh"></a></li>
           <li><a href="https://www.ukpowernetworks.co.uk/" target="_blank" rel="noopener noreferrer"><img src="${base}/image/ukpn.png" alt="UK Power Networks"></a></li>

@@ -56,12 +56,37 @@ html{
   overflow-x:hidden;
 }
 
+/* Full-height column so the footer sits at the bottom of the viewport on short
+   pages instead of stopping wherever the content ended. main takes the slack. */
 body{
   margin:0;
   font-family:LinetoBook, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:var(--ink);
   background:linear-gradient(90deg, var(--bg-start), var(--bg-end));
   overflow-x:clip;
+  min-height:100vh;
+  min-height:100dvh;   /* accounts for mobile browser chrome */
+  display:flex;
+  flex-direction:column;
+}
+
+#main-content{
+  flex:1 0 auto;
+}
+
+/* The sticky box has to be this wrapper, not .site-header inside it: #header is
+   exactly as tall as the header, so a sticky box within it has zero travel and
+   just scrolls away. As a flex item its containing block is body, which spans
+   the whole document, so it can stay pinned. */
+#header{
+  flex:0 0 auto;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+#footer{
+  flex:0 0 auto;
 }
 
 .skip-link{
@@ -118,9 +143,6 @@ section{
 
 /* Sticky header (final behaviour: white, shadow) */
 .site-header{
-  position:sticky;
-  top:0;
-  z-index:1000;
   background:#fff;
   color:var(--ink);
   border-bottom:1px solid #ddd;

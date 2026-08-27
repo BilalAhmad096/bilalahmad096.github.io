@@ -2183,3 +2183,30 @@ figcaption.caption-below[lang="ar"]{
     display: none !important;
   }
 }
+
+/* DOI link on publication entries */
+.pub-doi{
+  display:inline-flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+  font-size:14px;
+  font-weight:600;
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:border-color .18s ease;
+}
+
+.pub-doi:hover,
+.pub-doi:focus-visible{
+  border-bottom-color:var(--accent);
+}
+
+.pub-doi-id{
+  font-weight:400;
+  font-size:13px;
+  color:var(--ink-muted);
+  word-break:break-all;
+}

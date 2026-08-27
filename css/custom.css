@@ -2210,3 +2210,44 @@ figcaption.caption-below[lang="ar"]{
   color:var(--ink-muted);
   word-break:break-all;
 }
+
+/* Screen-reader-only text */
+.visually-hidden{
+  position:absolute;
+  width:1px;
+  height:1px;
+  margin:-1px;
+  padding:0;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}
+
+/* Outbound company link on experience entries */
+.xp-link{
+  color:inherit;
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:color .18s ease, border-color .18s ease;
+}
+
+.xp-link:hover,
+.xp-link:focus-visible{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+.xp-link-icon{
+  display:inline-block;
+  margin-left:4px;
+  font-size:.85em;
+  line-height:1;
+  opacity:.65;
+}
+
+.xp-link:hover .xp-link-icon,
+.xp-link:focus-visible .xp-link-icon{
+  opacity:1;
+}

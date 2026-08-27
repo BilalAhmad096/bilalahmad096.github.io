@@ -73,13 +73,42 @@
   const nav = document.getElementById('mainNav');
   const toggle = document.getElementById('navToggle');
 
+  // Closing the menu on an outside tap or on scroll only matters while it is
+  // open, so those listeners are attached and removed alongside the class.
+  let openScrollY = 0;
+
+  const closeOnOutsideClick = event => {
+    if (!nav.contains(event.target)) setMenuOpen(false);
+  };
+
+  const closeOnScroll = () => {
+    // Opening the menu reflows the header, which some browsers report as a
+    // small scroll. Ignore anything under a finger's worth of movement.
+    if (Math.abs(window.scrollY - openScrollY) > 10) setMenuOpen(false);
+  };
+
   const setMenuOpen = open => {
     nav.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', String(open));
+
+    if (open) {
+      openScrollY = window.scrollY;
+      document.addEventListener('pointerdown', closeOnOutsideClick);
+      window.addEventListener('scroll', closeOnScroll, { passive: true });
+    } else {
+      document.removeEventListener('pointerdown', closeOnOutsideClick);
+      window.removeEventListener('scroll', closeOnScroll);
+    }
   };
 
   toggle.addEventListener('click', () => {
     setMenuOpen(!nav.classList.contains('open'));
+  });
+
+  // Same-page links (and anything that leaves the menu up) should not leave a
+  // stale open menu behind.
+  nav.querySelectorAll('.nav-list a, .brand-logos a').forEach(a => {
+    a.addEventListener('click', () => setMenuOpen(false));
   });
 
   document.addEventListener('keydown', event => {
@@ -88,4 +117,11 @@
       toggle.focus();
     }
   });
+
+  // Back at desktop widths the menu is always visible, so drop the open state.
+  const desktop = window.matchMedia('(min-width: 901px)');
+  const syncDesktop = () => {
+    if (desktop.matches && nav.classList.contains('open')) setMenuOpen(false);
+  };
+  desktop.addEventListener('change', syncDesktop);
 })();

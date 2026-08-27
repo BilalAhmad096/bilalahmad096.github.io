@@ -1752,6 +1752,16 @@ figcaption.caption-below[lang="ar"]{
   .scroll-ribbon{
     transition:none;
   }
+
+  /* the connect line still splits, it just does it instantly */
+  .connect-divider__line,
+  .connect-divider.is-expanded .connect-divider__line,
+  .connect-divider__btn,
+  .connect-divider.is-expanded .connect-divider__btn,
+  .connect-divider__actions,
+  .connect-divider.is-expanded .connect-divider__actions{
+    transition:none;
+  }
 }
 
 .countdown-item:hover,
@@ -1940,20 +1950,39 @@ figcaption.caption-below[lang="ar"]{
 ===================================================== */
 
 .connect-divider {
+  /* gap between each half of the split line and the buttons it frames */
+  --connect-gap: 26px;
   display: grid;
-  grid-template-areas:
-    "top"
-    "stage"
-    "bot";
-  grid-template-rows: auto auto auto;
+  grid-template-areas: "stage";
   justify-items: center;
-  row-gap: 26px;
+  align-items: center;
   width: 100%;
-  padding: 40px 0;
+  padding: 67px 0;
 }
 
+/* Both halves stretch over the button row and draw their rule across its
+   middle, so at rest they sit on top of each other and read as one line
+   running through the section — hidden only where the opaque button covers
+   it. Expanding translates each half out past the buttons; because the
+   translation is a percentage of the stretched box, the halves land the same
+   distance clear of the buttons whatever height the row happens to be. */
 .connect-divider__line {
+  grid-area: stage;
+  align-self: stretch;
+  justify-self: stretch;
+  position: relative;
   width: 100%;
+  pointer-events: none;
+  /* closing: the two halves shut back together like a shutter */
+  transition: transform .38s cubic-bezier(.55, 0, .68, .3);
+}
+
+.connect-divider__line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
   height: 1px;
   background: linear-gradient(
     to right,
@@ -1964,17 +1993,24 @@ figcaption.caption-below[lang="ar"]{
   );
 }
 
-.connect-divider__line--top {
-  grid-area: top;
+/* opening: burst apart, with a touch of overshoot */
+.connect-divider.is-expanded .connect-divider__line {
+  transition: transform .5s cubic-bezier(.34, 1.42, .64, 1);
 }
 
-.connect-divider__line--bot {
-  grid-area: bot;
+.connect-divider.is-expanded .connect-divider__line--top {
+  transform: translateY(calc(-50% - var(--connect-gap)));
+}
+
+.connect-divider.is-expanded .connect-divider__line--bot {
+  transform: translateY(calc(50% + var(--connect-gap)));
 }
 
 .connect-divider__btn,
 .connect-divider__actions {
   grid-area: stage;
+  position: relative;
+  z-index: 1; /* over the line, which is positioned for its ::before */
 }
 
 /* Trigger Button */
@@ -1999,7 +2035,8 @@ figcaption.caption-below[lang="ar"]{
     transform .25s ease,
     box-shadow .25s ease,
     color .25s ease,
-    opacity .25s ease;
+    /* on the way back it waits for the shutter to close */
+    opacity .26s ease .22s;
 }
 
 .connect-divider__btn .ti {
@@ -2025,6 +2062,7 @@ figcaption.caption-below[lang="ar"]{
   opacity: 0;
   transform: translateY(-2px) scale(.94);
   pointer-events: none;
+  transition: transform .16s ease, opacity .16s ease;
 }
 
 /* Action Buttons Wrapper */
@@ -2035,13 +2073,15 @@ figcaption.caption-below[lang="ar"]{
   opacity: 0;
   transform: scale(.95);
   pointer-events: none;
-  transition: opacity .3s ease, transform .3s ease;
+  transition: opacity .16s ease, transform .16s ease;
 }
 
 .connect-divider.is-expanded .connect-divider__actions {
   opacity: 1;
   transform: scale(1);
   pointer-events: auto;
+  /* held back until the line has started to part */
+  transition: opacity .3s ease .14s, transform .3s ease .14s;
 }
 
 /* Both Buttons Same Style */
@@ -2150,8 +2190,8 @@ figcaption.caption-below[lang="ar"]{
 /* Mobile */
 @media (max-width: 640px) {
   .connect-divider {
-    padding: 32px 0;
-    row-gap: 20px;
+    --connect-gap: 20px;
+    padding: 53px 0;
   }
 
   .connect-divider__actions {

@@ -44,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Handles the expanding animation and accessibility states
- * for the Connect Section Divider.
+ * for the Connect Section Divider. Both states occupy the same box, so
+ * expanding never reflows the page and AOS needs no refresh.
  */
 function setConnectExpanded(expanded) {
   const divider = document.getElementById('connectDivider');
@@ -69,31 +70,35 @@ function setConnectExpanded(expanded) {
     }
   });
 
-  // 🌟 CRITICAL FIX: Refresh AOS calculations so elements further down
-  // the page recalculate their scroll trigger points properly.
-  if (typeof AOS !== 'undefined') {
-    setTimeout(() => {
-      AOS.refresh();
-    }, 400); // Matches the 0.4s CSS transition time
-  }
-
   // The expanded state hides the Connect button itself, so a click outside
-  // the divider is the way back out. Escape does the same for keyboards.
+  // the divider, a scroll, or Escape are the ways back out.
   if (expanded) {
+    connectOpenScrollY = window.scrollY;
     document.addEventListener('pointerdown', closeConnectOnOutsideClick);
     document.addEventListener('keydown', closeConnectOnEscape);
+    window.addEventListener('scroll', closeConnectOnScroll, { passive: true });
 
     // Optional: Auto-focus the first link for keyboard users
     const firstAction = actions.querySelector('.connect-divider__action');
     if (firstAction) {
       setTimeout(() => {
-        if (divider.classList.contains('is-expanded')) firstAction.focus();
+        // preventScroll, or the focus nudges the page and trips the
+        // close-on-scroll handler straight away.
+        if (divider.classList.contains('is-expanded')) firstAction.focus({ preventScroll: true });
       }, 300);
     }
   } else {
     document.removeEventListener('pointerdown', closeConnectOnOutsideClick);
     document.removeEventListener('keydown', closeConnectOnEscape);
+    window.removeEventListener('scroll', closeConnectOnScroll);
   }
+}
+
+let connectOpenScrollY = 0;
+
+function closeConnectOnScroll() {
+  // Focusing the first action can nudge the page, so ignore small movements.
+  if (Math.abs(window.scrollY - connectOpenScrollY) > 10) setConnectExpanded(false);
 }
 
 function closeConnectOnOutsideClick(event) {

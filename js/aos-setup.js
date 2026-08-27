@@ -43,40 +43,72 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Handles the expanding animation and accessibility states 
+ * Handles the expanding animation and accessibility states
  * for the Connect Section Divider.
  */
-function expandConnectDivider() {
+function setConnectExpanded(expanded) {
   const divider = document.getElementById('connectDivider');
   const actions = document.getElementById('connectActions');
   const button = document.getElementById('connectBtn');
-  
+
   if (!divider || !actions) return;
+  if (divider.classList.contains('is-expanded') === expanded) return;
 
   // Toggle the active class to trigger CSS transitions
-  divider.classList.add('is-expanded');
-  
-  // Accessibility update: Reveal action items to screen readers
-  actions.setAttribute('aria-hidden', 'false');
-  if (button) button.setAttribute('aria-expanded', 'true');
+  divider.classList.toggle('is-expanded', expanded);
+
+  // Accessibility update: reveal/hide action items to screen readers
+  actions.setAttribute('aria-hidden', String(!expanded));
+  if (button) button.setAttribute('aria-expanded', String(expanded));
 
   actions.querySelectorAll('.connect-divider__action').forEach(action => {
-    action.removeAttribute('tabindex');
+    if (expanded) {
+      action.removeAttribute('tabindex');
+    } else {
+      action.setAttribute('tabindex', '-1');
+    }
   });
-  
-  // 🌟 CRITICAL FIX: Refresh AOS calculations so elements further down 
+
+  // 🌟 CRITICAL FIX: Refresh AOS calculations so elements further down
   // the page recalculate their scroll trigger points properly.
   if (typeof AOS !== 'undefined') {
     setTimeout(() => {
       AOS.refresh();
     }, 400); // Matches the 0.4s CSS transition time
   }
-  
-  // Optional: Auto-focus the first link for keyboard users
-  const firstAction = actions.querySelector('.connect-divider__action');
-  if (firstAction) {
-    setTimeout(() => {
-      firstAction.focus();
-    }, 300);
+
+  // The expanded state hides the Connect button itself, so a click outside
+  // the divider is the way back out. Escape does the same for keyboards.
+  if (expanded) {
+    document.addEventListener('pointerdown', closeConnectOnOutsideClick);
+    document.addEventListener('keydown', closeConnectOnEscape);
+
+    // Optional: Auto-focus the first link for keyboard users
+    const firstAction = actions.querySelector('.connect-divider__action');
+    if (firstAction) {
+      setTimeout(() => {
+        if (divider.classList.contains('is-expanded')) firstAction.focus();
+      }, 300);
+    }
+  } else {
+    document.removeEventListener('pointerdown', closeConnectOnOutsideClick);
+    document.removeEventListener('keydown', closeConnectOnEscape);
   }
+}
+
+function closeConnectOnOutsideClick(event) {
+  const divider = document.getElementById('connectDivider');
+  if (divider && !divider.contains(event.target)) setConnectExpanded(false);
+}
+
+function closeConnectOnEscape(event) {
+  if (event.key !== 'Escape') return;
+  setConnectExpanded(false);
+  const button = document.getElementById('connectBtn');
+  if (button) button.focus();
+}
+
+// Kept for the inline onclick on the Connect button.
+function expandConnectDivider() {
+  setConnectExpanded(true);
 }

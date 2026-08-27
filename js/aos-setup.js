@@ -117,3 +117,31 @@ function closeConnectOnEscape(event) {
 function expandConnectDivider() {
   setConnectExpanded(true);
 }
+
+/**
+ * Magnetic pills: the Connect button and its two actions lean a few pixels
+ * toward the pointer while it is over them, and settle back on the way out.
+ * Pointer devices only — there is nothing to lean toward on a touchscreen —
+ * and skipped when the visitor has asked for less motion.
+ */
+(function () {
+  if (!window.matchMedia('(hover: hover)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const pills = document.querySelectorAll('.connect-divider__btn, .connect-divider__action');
+
+  pills.forEach(pill => {
+    pill.addEventListener('pointermove', event => {
+      const rect = pill.getBoundingClientRect();
+      const dx = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+      const dy = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+      pill.style.setProperty('--mx', (dx * 7).toFixed(1) + 'px');
+      pill.style.setProperty('--my', (dy * 5).toFixed(1) + 'px');
+    });
+
+    pill.addEventListener('pointerleave', () => {
+      pill.style.setProperty('--mx', '0px');
+      pill.style.setProperty('--my', '0px');
+    });
+  });
+})();

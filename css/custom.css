@@ -1760,8 +1760,14 @@ figcaption.caption-below[lang="ar"]{
   .connect-divider.is-expanded .connect-divider__btn,
   .connect-divider__actions,
   .connect-divider__action,
-  .connect-divider.is-expanded .connect-divider__action{
+  .connect-divider.is-expanded .connect-divider__action,
+  .connect-divider__btn svg{
     transition:none;
+  }
+
+  .connect-divider__btn:hover svg,
+  .connect-divider__btn:focus-visible svg{
+    transform:none;
   }
 }
 
@@ -2031,9 +2037,12 @@ figcaption.caption-below[lang="ar"]{
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   opacity: 1;
-  transform: translateY(0) scale(1);
+  /* --mx/--my are set from the pointer; 0 until something moves over it */
+  --mx: 0px;
+  --my: 0px;
+  transform: translate(var(--mx), var(--my));
   transition:
-    transform .25s ease,
+    transform .5s cubic-bezier(.2, .8, .2, 1),
     box-shadow .25s ease,
     color .25s ease,
     /* on the way back it waits for the shutter to close */
@@ -2053,10 +2062,22 @@ figcaption.caption-below[lang="ar"]{
 
 .connect-divider__btn:hover,
 .connect-divider__btn:focus-visible {
-  transform: translateY(-2px) scale(1.03);
+  transform: translate(var(--mx), calc(var(--my) - 2px)) scale(1.03);
   box-shadow: var(--shadow-md);
   color: var(--accent);
   outline: none;
+  /* tight enough to feel like it is following, not chasing */
+  transition: transform .12s ease-out, box-shadow .25s ease, color .25s ease;
+}
+
+/* the node glyph turns as you lean on it */
+.connect-divider__btn svg {
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1);
+}
+
+.connect-divider__btn:hover svg,
+.connect-divider__btn:focus-visible svg {
+  transform: rotate(45deg);
 }
 
 .connect-divider.is-expanded .connect-divider__btn {
@@ -2082,6 +2103,8 @@ figcaption.caption-below[lang="ar"]{
 /* Both Buttons Same Style */
 .connect-divider__action,
 .connect-divider__action--primary {
+  --mx: 0px;
+  --my: 0px;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -2116,7 +2139,7 @@ figcaption.caption-below[lang="ar"]{
 .connect-divider.is-expanded .connect-divider__action,
 .connect-divider.is-expanded .connect-divider__action--primary {
   opacity: 1;
-  transform: none;
+  transform: translate(var(--mx), var(--my));
   transition-delay: .06s, .06s, 0s, 0s, 0s;
 }
 
@@ -2160,8 +2183,8 @@ figcaption.caption-below[lang="ar"]{
    the lift stays crisp */
 .connect-divider.is-expanded .connect-divider__action:hover,
 .connect-divider.is-expanded .connect-divider__action:focus-visible {
-  transform: translateY(-2px) scale(1.03);
-  transition: transform .22s ease, box-shadow .22s ease, color .22s ease;
+  transform: translate(var(--mx), calc(var(--my) - 2px)) scale(1.03);
+  transition: transform .12s ease-out, box-shadow .22s ease, color .22s ease;
 }
 
 /* Tooltip */

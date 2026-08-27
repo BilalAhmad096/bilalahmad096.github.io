@@ -1959,6 +1959,13 @@ figcaption.caption-below[lang="ar"]{
 .connect-divider {
   /* gap between each half of the split line and the buttons it frames */
   --connect-gap: 26px;
+  /* It sits between the two sections rather than inside either one, and
+     paints the seam itself: About above the line, Education below it. */
+  background: linear-gradient(
+    to bottom,
+    var(--section-about) 0 50%,
+    var(--section-education) 50% 100%
+  );
   display: grid;
   grid-template-areas: "stage";
   justify-items: center;

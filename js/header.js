@@ -45,8 +45,11 @@
   </div>
 </header>`;
   
+  // The header is authored statically in each page so that crawlers (and
+  // no-JS visitors) see the real nav links. Only inject as a fallback.
   const mount = document.getElementById('header');
-  if (mount) mount.innerHTML = html;
+  if (!mount) return;
+  if (!mount.querySelector('.site-header')) mount.innerHTML = html;
 
   // highlight active page
   const pathParts = location.pathname.split('/').filter(Boolean);

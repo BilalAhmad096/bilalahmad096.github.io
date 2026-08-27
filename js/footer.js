@@ -46,6 +46,7 @@
     </div>
   </div>
 </footer>`;
+  // Authored statically in each page for crawlability; inject only as a fallback.
   const mount = document.getElementById('footer');
-  if (mount) mount.innerHTML = html;
+  if (mount && !mount.querySelector('.site-footer')) mount.innerHTML = html;
 })();

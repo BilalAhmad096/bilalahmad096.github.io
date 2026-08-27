@@ -1759,7 +1759,8 @@ figcaption.caption-below[lang="ar"]{
   .connect-divider__btn,
   .connect-divider.is-expanded .connect-divider__btn,
   .connect-divider__actions,
-  .connect-divider.is-expanded .connect-divider__actions{
+  .connect-divider__action,
+  .connect-divider.is-expanded .connect-divider__action{
     transition:none;
   }
 }
@@ -2066,22 +2067,16 @@ figcaption.caption-below[lang="ar"]{
 }
 
 /* Action Buttons Wrapper */
+/* The group itself no longer fades; each button emerges on its own. */
 .connect-divider__actions {
   display: flex;
   align-items: center;
   gap: 16px;
-  opacity: 0;
-  transform: scale(.95);
   pointer-events: none;
-  transition: opacity .16s ease, transform .16s ease;
 }
 
 .connect-divider.is-expanded .connect-divider__actions {
-  opacity: 1;
-  transform: scale(1);
   pointer-events: auto;
-  /* held back until the line has started to part */
-  transition: opacity .3s ease .14s, transform .3s ease .14s;
 }
 
 /* Both Buttons Same Style */
@@ -2104,11 +2099,30 @@ figcaption.caption-below[lang="ar"]{
   text-decoration: none;
   white-space: nowrap;
   box-shadow: var(--shadow-sm);
+  opacity: 0;
   transition:
-    transform .22s ease,
+    transform .44s cubic-bezier(.34, 1.3, .64, 1),
+    opacity .18s ease,
     box-shadow .22s ease,
     color .22s ease,
     border-color .22s ease;
+}
+
+/* At rest each one sits tucked in behind the Connect button, so opening
+   pushes them out through the line rather than fading them in beside it. */
+.connect-divider__actions > :nth-child(1) { transform: translateX(80px) scale(.84); }
+.connect-divider__actions > :nth-child(2) { transform: translateX(-80px) scale(.84); }
+
+.connect-divider.is-expanded .connect-divider__action,
+.connect-divider.is-expanded .connect-divider__action--primary {
+  opacity: 1;
+  transform: none;
+  transition-delay: .06s, .06s, 0s, 0s, 0s;
+}
+
+/* the second one follows a beat behind */
+.connect-divider.is-expanded .connect-divider__actions > :nth-child(2) {
+  transition-delay: .13s, .13s, 0s, 0s, 0s;
 }
 
 .connect-divider__action .ti,
@@ -2137,10 +2151,17 @@ figcaption.caption-below[lang="ar"]{
 .connect-divider__action:focus-visible,
 .connect-divider__action--primary:hover,
 .connect-divider__action--primary:focus-visible {
-  transform: translateY(-2px) scale(1.03);
   box-shadow: var(--shadow-md);
   color: var(--accent);
   outline: none;
+}
+
+/* outranks the .is-expanded transform above, and drops the slow spring so
+   the lift stays crisp */
+.connect-divider.is-expanded .connect-divider__action:hover,
+.connect-divider.is-expanded .connect-divider__action:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  transition: transform .22s ease, box-shadow .22s ease, color .22s ease;
 }
 
 /* Tooltip */
@@ -2198,6 +2219,10 @@ figcaption.caption-below[lang="ar"]{
     flex-direction: column;
     gap: 12px;
   }
+
+  /* stacked, so they emerge up and down instead */
+  .connect-divider__actions > :nth-child(1) { transform: translateY(38px) scale(.84); }
+  .connect-divider__actions > :nth-child(2) { transform: translateY(-38px) scale(.84); }
 
   .connect-divider__action,
   .connect-divider__action--primary {

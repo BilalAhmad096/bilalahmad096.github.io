@@ -1,0 +1,30 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "ask-mintorian-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-28",
+  "workers_dev": true,
+  "vars": {
+    "ENVIRONMENT": "production",
+    "AI_MODEL": "gpt-5.6-terra",
+    "AI_REASONING_EFFORT": "low",
+    "ALLOWED_ORIGINS": "https://mintorian.com,https://www.mintorian.com,http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500,http://127.0.0.1:5500",
+    "CHAT_RATE_LIMIT": "20",
+    "CONTACT_RATE_LIMIT": "5"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+
+  // Production custom domain (enable after mintorian.com is active in the
+  // same Cloudflare account):
+  // "routes": [
+  //   { "pattern": "api.mintorian.com", "custom_domain": true }
+  // ]
+
+  // Recommended distributed rate limiting (add after creating a KV namespace):
+  // "kv_namespaces": [
+  //   { "binding": "RATE_LIMIT_KV", "id": "YOUR_KV_NAMESPACE_ID" }
+  // ]
+}

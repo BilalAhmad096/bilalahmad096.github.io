@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "lastVerified": "2026-08-28",
+  "subject": "Bilal Ahmad",
+  "publicOnly": true,
+  "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
+  "navigation": [
+    { "id": "about", "label": "About", "url": "/#about" },
+    { "id": "education", "label": "Education", "url": "/#education" },
+    { "id": "skills", "label": "Technical skills", "url": "/#skills" },
+    { "id": "recognition", "label": "Recognition and projects", "url": "/#recognition" },
+    { "id": "experience", "label": "Experience", "url": "/experience/" },
+    { "id": "publications", "label": "Publications", "url": "/publications/" },
+    { "id": "research-group", "label": "Research group", "url": "/researchgroup/" },
+    { "id": "contact", "label": "Email Bilal", "url": "mailto:connect@mintorian.com" }
+  ],
+  "categoryCoverage": {
+    "PROFILE": "verified_records_available",
+    "EDUCATION": "verified_records_available",
+    "PHD": "verified_records_available",
+    "RESEARCH": "verified_records_available",
+    "PUBLICATIONS": "verified_records_available",
+    "PROJECTS": "verified_records_available",
+    "PROFESSIONAL_EXPERIENCE": "verified_records_available",
+    "TECHNICAL_SKILLS": "verified_records_available",
+    "AWARDS": "verified_records_available",
+    "FELLOWSHIPS": "verified_records_available",
+    "PRESENTATIONS": "no_verified_entries",
+    "RESEARCH_INTERESTS": "verified_records_available",
+    "CONTACT": "verified_records_available",
+    "COLLABORATION": "verified_records_available"
+  },
+  "records": [
+    {
+      "id": "profile-summary",
+      "category": "PROFILE",
+      "title": "Professional and research profile",
+      "summary": "Bilal Ahmad is a PhD student at the University of Bath whose work combines power-system reliability, battery energy storage systems and machine-learning-enabled decision support. He also works in full-stack development and previously served as a Technical Lead in machine learning at HCL Technologies.",
+      "details": [
+        "His research combines data-driven learning with physically interpretable models.",
+        "The stated goals include grid resilience, flexibility and transparent decision support.",
+        "His profile spans academic research, electrical engineering, applied machine learning and software engineering."
+      ],
+      "keywords": ["profile", "about", "biography", "power systems researcher", "machine learning", "full stack developer"],
+      "source": { "label": "About Bilal", "url": "/#about" },
+      "status": "verified"
+    },
+    {
+      "id": "research-core",
+      "category": "RESEARCH",
+      "title": "Core research focus",
+      "summary": "Bilal researches power-system reliability, battery energy storage systems (BESS), optimal power flow and security-constrained optimal power flow (OPF/SCOPF), and explainable AI for intelligent contingency screening.",
+      "details": [
+        "The work focuses on energy-system operations and planning.",
+        "It uses machine learning alongside physically interpretable power-system models.",
+        "Distribution-network resilience, uncertainty and adverse-weather preparedness are recurring themes."
+      ],
+      "keywords": ["research", "bess", "battery energy storage", "reliability", "distribution system", "distribution network", "opf", "scopf", "optimal power flow", "contingency screening", "xai", "explainable ai", "grid resilience"],
+      "source": { "label": "About Bilal", "url": "/#about" },
+      "status": "verified"
+    },
+    {
+      "id": "phd-bath",
+      "category": "PHD",
+      "title": "PhD in Power System Reliability",
+      "summary": "Bilal is pursuing a PhD at the University of Bath on power-system reliability.",
+      "details": [
+        "The public CV describes research on power-distribution-network preparedness for severe weather events involving compound hazards.",
+        "The work includes an automated optimal-procurement strategy framework for Distribution Network Operators (DNOs).",
+        "The work applies explainable AI to intelligent contingency screening for power-system reliability."
+      ],
+      "keywords": ["phd", "doctorate", "bath", "power system reliability", "severe weather", "compound hazards", "dno", "procurement", "xai", "contingency screening"],
+      "source": { "label": "Education", "url": "/#education" },
+      "status": "verified"
+    },
+    {
+      "id": "education-mphil",
+      "category": "EDUCATION",
+      "title": "MPhil in Power System Optimisation Using Machine Learning",
+      "summary": "Bilal completed an MPhil at Royal Holloway, University of London, focused on power-system optimisation using machine learning.",
+      "details": [],
+      "keywords": ["education", "mphil", "royal holloway", "university of london", "power system optimisation", "machine learning"],
+      "source": { "label": "Education", "url": "/#education" },
+      "status": "verified"
+    },
+    {
+      "id": "education-mtech",
+      "category": "EDUCATION",
+      "title": "M.Tech in Electrical Power Systems",
+      "summary": "Bilal completed an M.Tech in Electrical Power Systems at IIT Roorkee with First Division with Distinction.",
+      "details": ["His M.Tech thesis work was undertaken at RWTH Aachen University on system-level control of inverters in a DC microgrid."],
+      "keywords": ["education", "mtech", "iit roorkee", "electrical power systems", "distinction", "rwth aachen", "dc microgrid"],
+      "source": { "label": "Education", "url": "/#education" },
+      "status": "verified"
+    },
+    {
+      "id": "education-btech",
+      "category": "EDUCATION",
+      "title": "B.Tech in Electrical Engineering",
+      "summary": "Bilal completed a B.Tech in Electrical Engineering at Aligarh Muslim University with First Division.",
+      "details": [],
+      "keywords": ["education", "btech", "aligarh muslim university", "amu", "electrical engineering"],
+      "source": { "label": "Education", "url": "/#education" },
+      "status": "verified"
+    },
+    {
+      "id": "education-dtu-summer-school",
+      "category": "EDUCATION",
+      "title": "DTU PES Summer School 2026",
+      "summary": "Bilal attended the 2026 DTU PES Summer School at the Technical University of Denmark on enhancing power-distribution-system reliability with machine learning.",
+      "details": [],
+      "keywords": ["education", "summer school", "dtu", "technical university of denmark", "distribution reliability", "machine learning"],
+      "source": { "label": "Education", "url": "/#education" },
+      "status": "verified"
+    },
+    {
+      "id": "publication-icsmartgrid-2025",
+      "category": "PUBLICATIONS",
+      "title": "A Comparative Analysis of Machine Learning Based Power Flow Study with Custom Made Open Source Python Codes",
+      "summary": "A conference paper by Bilal Ahmad and Onyema Nduka, published at IEEE icSmartGrid 2025.",
+      "details": [
+        "DOI: 10.1109/icsmartgrid66138.2025.11071830",
+        "This is the most directly relevant listed publication for machine-learning-assisted power-flow analysis."
+      ],
+      "keywords": ["publication", "paper", "machine learning", "power flow", "python", "icsmartgrid", "2025", "onyema nduka", "contingency", "scopf"],
+      "source": { "label": "Publications — icSmartGrid 2025", "url": "https://doi.org/10.1109/icsmartgrid66138.2025.11071830" },
+      "status": "verified"
+    },
+    {
+      "id": "publication-sefet-2021",
+      "category": "PUBLICATIONS",
+      "title": "Analysis of Three-Phase Grid-Tied Thyristor Based Inverter for Solar PV Applications",
+      "summary": "A conference paper by Bilal Ahmad, Syed Muhammad Amrr, M. Nabi, Mohd Rizwan Khalid and M. S. Jamil Asghar, published at IEEE SEFET 2021.",
+      "details": ["DOI: 10.1109/sefet48154.2021.9375746"],
+      "keywords": ["publication", "paper", "thyristor", "grid-tied inverter", "solar pv", "power electronics", "sefet", "2021"],
+      "source": { "label": "Publications — SEFET 2021", "url": "https://doi.org/10.1109/sefet48154.2021.9375746" },
+      "status": "verified"
+    },
+    {
+      "id": "publication-i2ct-2019",
+      "category": "PUBLICATIONS",
+      "title": "Review of Thyristor Based Grid Tied Inverters for Solar PV Applications",
+      "summary": "A conference paper by Mohd Rizwan Khalid, Bilal Ahmad, Adil Sarwar and M. S. Jamil Asghar, published at IEEE I2CT Pune 2019.",
+      "details": ["DOI: 10.1109/i2ct45611.2019.9033670"],
+      "keywords": ["publication", "paper", "review", "thyristor", "grid-tied inverter", "solar pv", "i2ct", "2019"],
+      "source": { "label": "Publications — I2CT 2019", "url": "https://doi.org/10.1109/i2ct45611.2019.9033670" },
+      "status": "verified"
+    },
+    {
+      "id": "publication-forthcoming-ijrer",
+      "category": "PUBLICATIONS",
+      "title": "Forthcoming journal paper — title not publicly listed",
+      "summary": "The Mintorian publications page notes a forthcoming paper in the International Journal of Renewable Energy Research, but does not publicly list a verified title, author list, date or results.",
+      "details": ["The assistant must not infer or invent the missing bibliographic details."],
+      "keywords": ["publication", "forthcoming", "journal", "ijrer", "international journal of renewable energy research"],
+      "source": { "label": "Publications", "url": "/publications/" },
+      "status": "verified_limited"
+    },
+    {
+      "id": "project-weather-reliability",
+      "category": "PROJECTS",
+      "title": "Power System Reliability in Adverse Weather Events",
+      "summary": "A University of Bath PhD research programme concerning power-distribution-network preparedness and reliability during severe weather and compound hazards.",
+      "details": ["The public material does not state numerical results, deployment outcomes or named external clients for this project."],
+      "keywords": ["project", "adverse weather", "compound hazards", "distribution network", "reliability", "resilience", "phd"],
+      "source": { "label": "Recognition and projects", "url": "/#recognition" },
+      "status": "verified"
+    },
+    {
+      "id": "project-dno-procurement",
+      "category": "PROJECTS",
+      "title": "Automated Procurement Framework for DNOs",
+      "summary": "A research project developing an automated optimal-procurement strategy framework for Distribution Network Operators.",
+      "details": ["The public material does not identify a specific DNO client or report numerical outcomes."],
+      "keywords": ["project", "dno", "distribution network operator", "procurement", "optimisation", "automation"],
+      "source": { "label": "Recognition and projects", "url": "/#recognition" },
+      "status": "verified"
+    },
+    {
+      "id": "project-xai-scopf",
+      "category": "PROJECTS",
+      "title": "XAI-based SCOPF Framework for Power System Optimisation",
+      "summary": "Bilal's public CV describes an MPhil programme involving an explainable-AI-based security-constrained optimal power flow framework for power-system optimisation and intelligent contingency screening.",
+      "details": ["The public profile supports the topic but does not provide verified numerical performance claims."],
+      "keywords": ["project", "xai", "explainable ai", "scopf", "security constrained optimal power flow", "contingency screening", "machine learning", "mphil"],
+      "source": { "label": "Bilal Ahmad CV", "url": "/Files/Bilal_Ahmad_CV.pdf" },
+      "status": "verified"
+    },
+    {
+      "id": "project-dc-microgrid",
+      "category": "PROJECTS",
+      "title": "System-Level Control of Inverters in DC Microgrids",
+      "summary": "Research undertaken at RWTH Aachen University involving an MTDC microgrid model in MATLAB and control schemes for buck, boost and dual-active-bridge converters.",
+      "details": ["The work included robustness, convergence, small-signal, sensitivity and modal analysis."],
+      "keywords": ["project", "dc microgrid", "mtdc", "inverter", "matlab", "adrc", "buck", "boost", "dab", "rwth aachen", "control"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "project-multilevel-inverter",
+      "category": "PROJECTS",
+      "title": "Multilevel Inverter with MPP Tracking",
+      "summary": "A power-electronics research project on a multilevel inverter with maximum power point tracking.",
+      "details": ["No further verified public technical or numerical details are listed."],
+      "keywords": ["project", "multilevel inverter", "mpp", "mppt", "power electronics", "solar"],
+      "source": { "label": "Recognition and projects", "url": "/#recognition" },
+      "status": "verified_limited"
+    },
+    {
+      "id": "skills-power-systems",
+      "category": "TECHNICAL_SKILLS",
+      "title": "Power systems and optimisation",
+      "summary": "Bilal's stated power-systems capabilities include OPF and SCOPF, energy-systems modelling, power-electronics modelling and control-system modelling.",
+      "details": ["Listed libraries and solvers: Pyomo, PandaPower, MATPOWER, Gurobi and Ipopt."],
+      "keywords": ["skills", "power systems", "opf", "scopf", "pyomo", "pandapower", "matpower", "gurobi", "ipopt", "optimisation", "control"],
+      "source": { "label": "Technical skills", "url": "/#skills" },
+      "status": "verified"
+    },
+    {
+      "id": "skills-machine-learning",
+      "category": "TECHNICAL_SKILLS",
+      "title": "Machine learning and applied AI",
+      "summary": "Bilal's stated machine-learning capabilities include explainable AI, ML-based power-system analysis, computer vision, OCR and handwritten-text extraction.",
+      "details": ["Listed libraries: scikit-learn, TensorFlow, PyTorch, Hugging Face Hub, Pandas and NumPy."],
+      "keywords": ["skills", "machine learning", "ml", "ai", "xai", "computer vision", "ocr", "scikit-learn", "tensorflow", "pytorch", "hugging face", "pandas", "numpy"],
+      "source": { "label": "Technical skills", "url": "/#skills" },
+      "status": "verified"
+    },
+    {
+      "id": "skills-software",
+      "category": "TECHNICAL_SKILLS",
+      "title": "Software engineering",
+      "summary": "Bilal works on automated power-systems frameworks, reproducible experiment pipelines, agentic-AI solutions and full-stack web development.",
+      "details": ["Listed languages: Python, MATLAB, Java, JavaScript, HTML and CSS."],
+      "keywords": ["skills", "software engineering", "full stack", "agentic ai", "python", "matlab", "java", "javascript", "html", "css", "reproducibility"],
+      "source": { "label": "Technical skills", "url": "/#skills" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-dystil",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Full Stack Developer at Dystil.AI",
+      "summary": "Bilal has worked part-time and remotely as a Full Stack Developer at Dystil.AI since April 2026.",
+      "details": ["The public profile lists front-end and back-end development, feature implementation, code review and release support."],
+      "keywords": ["experience", "employment", "dystil", "full stack", "developer", "2026"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-just-jutz",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Full Stack Developer at Just Jutz",
+      "summary": "Bilal has worked part-time and remotely as a Full Stack Developer at Just Jutz since April 2026.",
+      "details": ["The public profile lists end-to-end web development and maintenance of features across an existing codebase."],
+      "keywords": ["experience", "employment", "just jutz", "full stack", "developer", "2026"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-bath-ta",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Teaching Assistant at the University of Bath",
+      "summary": "Bilal has served as a Teaching Assistant at the University of Bath since January 2026.",
+      "details": ["The public profile lists support for labs, tutorials and grading across computing and electrical modules."],
+      "keywords": ["experience", "teaching", "teaching assistant", "university of bath", "2026"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-london-ta",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Teaching Assistant at the University of London",
+      "summary": "Bilal served as a Teaching Assistant at the University of London from April 2023 to June 2026.",
+      "details": ["The role included labs, tutorials, grading, office hours, one-to-one support, assessment rubrics and feedback."],
+      "keywords": ["experience", "teaching", "teaching assistant", "university of london", "2023", "2026"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-dtu",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Visiting Researcher at the Technical University of Denmark",
+      "summary": "Bilal was a Visiting Researcher at the Technical University of Denmark in May 2026.",
+      "details": ["No further verified role details are listed on the public experience page."],
+      "keywords": ["experience", "visiting researcher", "dtu", "technical university of denmark", "2026"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified_limited"
+    },
+    {
+      "id": "experience-rhul-ra",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Research Assistant at Royal Holloway, University of London",
+      "summary": "Bilal worked as a Research Assistant at Royal Holloway, University of London from August 2023 to October 2025.",
+      "details": ["The public profile lists ML-driven power-systems research, prototype development, dataset and experiment management, reproducibility pipelines, figures and publication proofs of concept."],
+      "keywords": ["experience", "research assistant", "royal holloway", "power systems", "machine learning", "reproducibility", "2023", "2025"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-hcl",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Technical Lead in Machine Learning at HCL Technologies",
+      "summary": "Bilal worked as a Technical Lead in machine learning at HCL Technologies from August 2022 to July 2023.",
+      "details": [
+        "Publicly listed work includes AI/ML product integration, handwritten-text extraction, OCR, catalogue tagging and classification, document digitisation and sales forecasting.",
+        "The public CV also lists a fully automated OPF/SCOPF framework applying ML-based power-flow analysis for grid contingency screening."
+      ],
+      "keywords": ["experience", "hcl", "technical lead", "machine learning", "ocr", "forecasting", "opf", "scopf", "contingency screening", "2022", "2023"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-rwth",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Visiting Researcher at RWTH Aachen University",
+      "summary": "Bilal was a Visiting Researcher at RWTH Aachen University from October 2021 to March 2022.",
+      "details": ["The work covered MTDC microgrid modelling in MATLAB, ADRC for power converters, robustness and convergence, and small-signal, sensitivity and modal analysis."],
+      "keywords": ["experience", "rwth", "visiting researcher", "microgrid", "matlab", "adrc", "control", "2021", "2022"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-pwc",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Intern at PricewaterhouseCoopers",
+      "summary": "Bilal completed an internship at PricewaterhouseCoopers from August to October 2021.",
+      "details": ["The public profile lists artificial intelligence in smart grids, advanced metering infrastructure and smart-grid contracts."],
+      "keywords": ["experience", "pwc", "pricewaterhousecoopers", "intern", "smart grid", "advanced metering", "2021"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "experience-harduaganj",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Intern at Harduaganj Thermal Power Station",
+      "summary": "Bilal completed an internship at Harduaganj Thermal Power Station from May to June 2017.",
+      "details": ["The public profile lists coal handling, cooling-unit and switchgear supervision, SCADA monitoring and workforce management."],
+      "keywords": ["experience", "harduaganj", "thermal power station", "intern", "scada", "switchgear", "2017"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
+      "id": "award-icsmartgrid",
+      "category": "AWARDS",
+      "title": "Third Best Paper — icSmartGrid 2025",
+      "summary": "Bilal's profile lists a Third Best Paper award at icSmartGrid 2025 in Glasgow, UK.",
+      "details": [],
+      "keywords": ["award", "third best paper", "icsmartgrid", "glasgow", "2025"],
+      "source": { "label": "Recognition", "url": "/#recognition" },
+      "status": "verified"
+    },
+    {
+      "id": "fellowships",
+      "category": "FELLOWSHIPS",
+      "title": "Publicly listed fellowships",
+      "summary": "Bilal's profile lists URSA, DAAD, LSC and MHRD fellowships.",
+      "details": [
+        "URSA Fellowship — funded by the University of Bath, United Kingdom.",
+        "DAAD Fellowship — funded by BMZ, Germany.",
+        "LSC Fellowship — funded by the University of London, United Kingdom.",
+        "MHRD Fellowship — funded by the Ministry of Human Resource Development, India."
+      ],
+      "keywords": ["fellowship", "ursa", "daad", "lsc", "mhrd", "funding", "recognition"],
+      "source": { "label": "Recognition", "url": "/#recognition" },
+      "status": "verified"
+    },
+    {
+      "id": "research-interests",
+      "category": "RESEARCH_INTERESTS",
+      "title": "Research interests",
+      "summary": "Bilal's stated interests include power-system reliability, distribution networks, BESS, OPF/SCOPF, explainable AI, ML-based power-system analysis, contingency screening, grid resilience and power-electronics control.",
+      "details": ["Potential overlap should be described only against these verified topics, without implying a collaboration or result that is not publicly documented."],
+      "keywords": ["research interests", "reliability", "distribution", "bess", "opf", "scopf", "xai", "machine learning", "contingency", "resilience", "power electronics", "control"],
+      "source": { "label": "About and technical skills", "url": "/#about" },
+      "status": "verified"
+    },
+    {
+      "id": "contact-public",
+      "category": "CONTACT",
+      "title": "Public contact information",
+      "summary": "Bilal can be contacted at connect@mintorian.com. His public profile lists Bath, United Kingdom as his location.",
+      "details": ["LinkedIn: https://www.linkedin.com/in/mintorian", "Website: https://mintorian.com"],
+      "keywords": ["contact", "email", "location", "bath", "linkedin", "connect"],
+      "source": { "label": "Email Bilal", "url": "mailto:connect@mintorian.com" },
+      "status": "verified"
+    },
+    {
+      "id": "collaboration-options",
+      "category": "COLLABORATION",
+      "title": "Research and professional enquiries",
+      "summary": "Visitors may contact Bilal about research collaboration, power-systems or machine-learning projects, publication discussions, professional opportunities and speaking invitations.",
+      "details": [
+        "This record describes supported enquiry routes, not an assertion that Bilal has accepted a collaboration.",
+        "Live calendar availability is not publicly listed and must never be inferred."
+      ],
+      "keywords": ["collaborate", "collaboration", "hire", "project", "meeting", "speaker", "speaking", "paper discussion", "research enquiry", "professional enquiry"],
+      "source": { "label": "Email Bilal", "url": "mailto:connect@mintorian.com" },
+      "status": "verified"
+    }
+  ]
+}

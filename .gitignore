@@ -1,1 +1,10 @@
 .idea/
+.env
+.env.*
+!.env.example
+worker/.env
+worker/.dev.vars
+node_modules/
+.wrangler/
+coverage/
+npm-debug.log*

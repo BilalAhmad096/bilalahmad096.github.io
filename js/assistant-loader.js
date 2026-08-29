@@ -2,7 +2,7 @@
   "use strict";
 
   const script = document.currentScript;
-  const assetVersion = "20260829-2";
+  const assetVersion = "20260829-3";
   const isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   const apiBase = script?.dataset.apiBase || (isLocal
     ? "http://127.0.0.1:8787"
@@ -36,13 +36,12 @@
       document.body.appendChild(dock);
     }
     const backToTop = document.querySelector(".scroll-ribbon");
-    if (backToTop && backToTop.parentElement !== dock) dock.prepend(backToTop);
+    if (backToTop && dock.firstElementChild !== backToTop) dock.prepend(backToTop);
     return dock;
   }
 
-  function attachBackToTop(dock) {
-    const backToTop = document.querySelector(".scroll-ribbon");
-    if (backToTop && backToTop.parentElement !== dock) dock.prepend(backToTop);
+  function attachBackToTop(dock, backToTop = document.querySelector(".scroll-ribbon")) {
+    if (backToTop && dock.firstElementChild !== backToTop) dock.prepend(backToTop);
   }
 
   function createTrigger(dock) {
@@ -92,6 +91,10 @@
     if (document.querySelector(".ask-mintorian-trigger")) return;
     loadStyles();
     const dock = ensureActionDock();
+    document.addEventListener("mintorian:back-to-top-ready", event => {
+      const backToTop = event.detail?.button;
+      if (backToTop?.matches?.(".scroll-ribbon")) attachBackToTop(dock, backToTop);
+    });
     const trigger = createTrigger(dock);
     // backtotop.js also waits for DOMContentLoaded. Depending on listener
     // ordering its button may be appended just after this loader runs.

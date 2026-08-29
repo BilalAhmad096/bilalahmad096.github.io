@@ -20,6 +20,13 @@
   right:auto;
   bottom:auto;
   z-index:auto;
+  margin-bottom:6px;
+}
+
+.mintorian-floating-actions.assistant-is-open .scroll-ribbon{
+  opacity:0;
+  transform:translateY(6px);
+  pointer-events:none;
 }
 
 .ask-mintorian-trigger{

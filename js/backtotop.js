@@ -13,7 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     <span class="sr-label">Top</span>
   `;
 
-  document.body.appendChild(btn);
+  const actionDock = document.getElementById('mintorian-floating-actions');
+  (actionDock || document.body).appendChild(btn);
+  document.dispatchEvent(new CustomEvent('mintorian:back-to-top-ready', {
+    detail: { button: btn }
+  }));
 
   // Show/hide on scroll
   const THRESHOLD = 280;

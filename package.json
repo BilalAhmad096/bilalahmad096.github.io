@@ -7,7 +7,7 @@
   "scripts": {
     "dev:api": "wrangler dev --config worker/wrangler.jsonc --port 8787",
     "deploy:api": "wrangler deploy --config worker/wrangler.jsonc",
-    "check": "node --check js/assistant-loader.js && node --check js/ask-mintorian.js && node --check worker/src/index.js && node --check worker/src/email.js && node --check worker/src/knowledge.js && node --check worker/src/openai.js && node --check worker/src/security.js && node --check tests/live-agent-eval.mjs",
+    "check": "node --check js/backtotop.js && node --check js/assistant-loader.js && node --check js/ask-mintorian.js && node --check worker/src/index.js && node --check worker/src/email.js && node --check worker/src/knowledge.js && node --check worker/src/openai.js && node --check worker/src/security.js && node --check tests/live-agent-eval.mjs",
     "test": "node --test tests/*.test.js",
     "test:live": "node tests/live-agent-eval.mjs"
   },

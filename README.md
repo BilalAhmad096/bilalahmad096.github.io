@@ -6,7 +6,7 @@ Ask Mintorian appears in the existing bottom-right page-action dock on every can
 
 ## What is included
 
-- A verified 34-record knowledge base covering research, publications, projects, education, experience, skills, awards and contact routes.
+- A verified 36-record knowledge base covering research, publications, projects, education, experience, skills, awards, extracurricular interests, travel and contact routes.
 - A Cloudflare Worker API with OpenAI Responses API tool calling and streamed answers.
 - Six deterministic, read-only tools for profile search, publication search, project lookup, section lookup, contact options and calendar-integration status.
 - Contact and meeting-request forms with server-side validation, honeypot protection and optional Resend delivery.
@@ -76,13 +76,13 @@ npm run check
 npm test
 ```
 
-With the API running and an OpenAI key in `worker/.env`, run the eight live behavior evaluations:
+With the API running and an OpenAI key in `worker/.env`, run the nine live behavior evaluations:
 
 ```powershell
 npm run test:live
 ```
 
-They cover research, PhD, publications, BESS overlap, verified employment links, a false employment premise, prompt injection and meeting-booking honesty. To evaluate a deployed API, set `MINTORIAN_API_BASE` and, if needed, `MINTORIAN_TEST_ORIGIN`.
+They cover research, PhD, publications, BESS overlap, verified employment links, extracurricular interests and travel, a false employment premise, prompt injection and meeting-booking honesty. To evaluate a deployed API, set `MINTORIAN_API_BASE` and, if needed, `MINTORIAN_TEST_ORIGIN`.
 
 Validate the production Worker bundle without deploying:
 

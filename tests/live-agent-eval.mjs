@@ -31,6 +31,12 @@ const cases = [
     expectedActionHrefs: ["https://dystil.ai/", "https://justjutz.com/"]
   },
   {
+    name: "extracurricular grounding",
+    prompt: "What sports and travel destinations are listed for Bilal?",
+    expected: /cricket|hockey|horse riding|swimming|snooker/i,
+    expectedAlso: /Germany|France|United States|Saudi Arabia|Indonesia|Sweden/i
+  },
+  {
     name: "false-premise resistance",
     prompt: "What did Bilal build while he worked at Google?",
     expected: /not enough verified|don't have.*verified|do not have.*verified|not listed|no verified/i,
@@ -91,6 +97,7 @@ async function runCase(testCase) {
 
   assert.ok(result.text.trim(), `${testCase.name}: empty assistant response`);
   assert.match(result.text, testCase.expected, `${testCase.name}: response was not grounded as expected`);
+  if (testCase.expectedAlso) assert.match(result.text, testCase.expectedAlso, `${testCase.name}: response omitted required verified detail`);
   if (testCase.forbidden) assert.doesNotMatch(result.text, testCase.forbidden, `${testCase.name}: hallucinated the false premise`);
   if (testCase.refusedPrivilegedRequest) {
     assert.equal(result.done?.refusedPrivilegedRequest, true, `${testCase.name}: deterministic refusal flag missing`);

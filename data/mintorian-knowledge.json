@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-08-28",
+  "lastVerified": "2026-08-29",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -12,6 +12,7 @@
     { "id": "experience", "label": "Experience", "url": "/experience/" },
     { "id": "publications", "label": "Publications", "url": "/publications/" },
     { "id": "research-group", "label": "Research group", "url": "/researchgroup/" },
+    { "id": "updates", "label": "Updates", "url": "/updates/" },
     { "id": "contact", "label": "Email Bilal", "url": "mailto:connect@mintorian.com" }
   ],
   "categoryCoverage": {
@@ -27,6 +28,7 @@
     "FELLOWSHIPS": "verified_records_available",
     "PRESENTATIONS": "no_verified_entries",
     "RESEARCH_INTERESTS": "verified_records_available",
+    "EXTRACURRICULAR": "verified_records_available",
     "CONTACT": "verified_records_available",
     "COLLABORATION": "verified_records_available"
   },
@@ -376,6 +378,31 @@
       "keywords": ["research interests", "reliability", "distribution", "bess", "opf", "scopf", "xai", "machine learning", "contingency", "resilience", "power electronics", "control"],
       "source": { "label": "About and technical skills", "url": "/#about" },
       "status": "verified"
+    },
+    {
+      "id": "extracurricular-sports",
+      "category": "EXTRACURRICULAR",
+      "title": "Publicly listed extracurricular sports",
+      "summary": "Bilal's public Updates page lists cricket, hockey, horse riding, swimming and snooker under Extracurricular.",
+      "details": [
+        "The page does not state frequency, recency, proficiency or competitive level for these activities."
+      ],
+      "keywords": ["extracurricular", "sport", "sports", "cricket", "hockey", "horse riding", "swimming", "snooker", "activities", "interests"],
+      "source": { "label": "Updates — Extracurricular", "url": "/updates/#extracurricular" },
+      "status": "verified_limited"
+    },
+    {
+      "id": "extracurricular-travel",
+      "category": "EXTRACURRICULAR",
+      "title": "Publicly listed travel destinations",
+      "summary": "Bilal's public Updates page has a Travelling section listing destinations from his travels.",
+      "details": [
+        "Listed destinations: Germany, France, Italy, the Netherlands, Switzerland, Belgium, Spain, England, Scotland, Wales, Ireland, the United States, Saudi Arabia, the United Arab Emirates, Turkey, Bahrain, Egypt, Nepal, Indonesia, Malaysia, Denmark and Sweden.",
+        "The page does not state travel dates, duration, frequency or trip purpose for these destinations."
+      ],
+      "keywords": ["extracurricular", "travel", "travelling", "traveled", "travelled", "destinations", "countries", "germany", "france", "italy", "netherlands", "switzerland", "belgium", "spain", "england", "scotland", "wales", "ireland", "united states", "usa", "saudi arabia", "united arab emirates", "uae", "turkey", "bahrain", "egypt", "nepal", "indonesia", "malaysia", "denmark", "sweden"],
+      "source": { "label": "Updates — Travelling", "url": "/updates/#travelling" },
+      "status": "verified_limited"
     },
     {
       "id": "contact-public",

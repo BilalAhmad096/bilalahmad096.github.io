@@ -13,10 +13,32 @@ test("knowledge base exposes verified records and all required categories", () =
   for (const category of [
     "PROFILE", "EDUCATION", "PHD", "RESEARCH", "PUBLICATIONS", "PROJECTS",
     "PROFESSIONAL_EXPERIENCE", "TECHNICAL_SKILLS", "AWARDS", "FELLOWSHIPS",
-    "PRESENTATIONS", "RESEARCH_INTERESTS", "CONTACT", "COLLABORATION"
+    "PRESENTATIONS", "RESEARCH_INTERESTS", "EXTRACURRICULAR", "CONTACT", "COLLABORATION"
   ]) {
     assert.ok(metadata.categories.includes(category), `missing ${category}`);
   }
+});
+
+test("sports and travel are retrievable without unsupported detail", () => {
+  const result = searchKnowledgeBase({
+    query: "extracurricular sports and travel",
+    categories: ["EXTRACURRICULAR"],
+    limit: 5
+  });
+  const sports = result.results.find(record => record.id === "extracurricular-sports");
+  const travel = result.results.find(record => record.id === "extracurricular-travel");
+
+  assert.match(sports.summary, /cricket, hockey, horse riding, swimming and snooker/i);
+  assert.equal(sports.verification, "verified_limited");
+  assert.match(travel.details.join(" "), /Germany.*United States.*Saudi Arabia.*Indonesia.*Sweden/i);
+  assert.equal(travel.verification, "verified_limited");
+
+  const unsupported = searchKnowledgeBase({
+    query: "football",
+    categories: ["EXTRACURRICULAR"],
+    limit: 5
+  });
+  assert.equal(unsupported.resultCount, 0);
 });
 
 test("BESS and SCOPF aliases retrieve grounded research records", () => {

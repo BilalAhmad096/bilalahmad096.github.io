@@ -6,6 +6,7 @@ import {
 import { privilegedRequestResponse, RequestError } from "./security.js";
 
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
+const VERIFIED_EXTERNAL_HOSTS = new Set(["dystil.ai", "justjutz.com"]);
 
 const SYSTEM_INSTRUCTIONS = `You are Ask Mintorian, the research and collaboration assistant for Bilal Ahmad's public website.
 
@@ -201,7 +202,7 @@ function parseToolArguments(toolCall) {
   }
 }
 
-function inferActions(latestMessage, toolCalls) {
+function inferActions(latestMessage, toolCalls, toolResults = []) {
   const text = latestMessage.toLowerCase();
   const tools = new Set(toolCalls.map(call => call.name));
   const actions = [];
@@ -210,6 +211,26 @@ function inferActions(latestMessage, toolCalls) {
   }
   if (tools.has("check_availability") || /meeting|book|calendar|availability|call/.test(text)) {
     actions.push({ type: "meeting", label: "Request a meeting" });
+  }
+
+  const seenUrls = new Set();
+  const records = toolResults.flatMap(result => Array.isArray(result?.results) ? result.results : []);
+  for (const record of records) {
+    for (const link of Array.isArray(record?.links) ? record.links : []) {
+      try {
+        const url = new URL(link.url);
+        const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+        if (url.protocol !== "https:" || !VERIFIED_EXTERNAL_HOSTS.has(hostname) || seenUrls.has(url.href)) continue;
+        seenUrls.add(url.href);
+        actions.push({
+          type: "external_link",
+          label: String(link.label || "Visit website").slice(0, 80),
+          href: url.href
+        });
+      } catch {
+        // Ignore malformed knowledge-base links rather than exposing them as actions.
+      }
+    }
   }
   return actions;
 }
@@ -299,10 +320,12 @@ export async function runAgent({ messages, env, sendEvent }) {
   }
 
   input.push(...(first.output || []));
+  const groundedResults = [];
   for (const toolCall of toolCalls) {
     await sendEvent("tool", { name: toolCall.name, state: "running", label: toolLabels[toolCall.name] || "Checking verified information…" });
     const result = executeKnowledgeTool(toolCall.name, parseToolArguments(toolCall));
     const groundedResult = { ...result, navigation: getNavigation() };
+    groundedResults.push(groundedResult);
     input.push({
       type: "function_call_output",
       call_id: toolCall.call_id,
@@ -323,7 +346,7 @@ export async function runAgent({ messages, env, sendEvent }) {
 
   await streamOpenAIEvents(finalResponse, text => sendEvent("delta", { text }));
 
-  const actions = inferActions(latestMessage, toolCalls);
+  const actions = inferActions(latestMessage, toolCalls, groundedResults);
   if (actions.length) await sendEvent("actions", { actions });
   await sendEvent("done", { grounded: true, tools: toolCalls.map(call => call.name) });
 }

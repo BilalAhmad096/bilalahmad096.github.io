@@ -99,7 +99,8 @@ function createIcon(name) {
     send: '<path d="m4 4 17 8-17 8 3-8zm3 8h14"></path>',
     back: '<path d="m15 5-7 7 7 7"></path>',
     mail: '<path d="M3 5h18v14H3z"></path><path d="m3 6 9 7 9-7"></path>',
-    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M7 3v4m10-4v4M3 10h18"></path>'
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M7 3v4m10-4v4M3 10h18"></path>',
+    external: '<path d="M14 4h6v6m0-6-9 9"></path><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"></path>'
   };
   return `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${icons[name]}</svg>`;
 }
@@ -447,6 +448,18 @@ class AskMintorian {
     const group = document.createElement("div");
     group.className = "ask-mintorian-message-actions";
     for (const action of actions) {
+      if (action.type === "external_link") {
+        const href = safeHref(String(action.href || ""));
+        if (!href) continue;
+        const link = document.createElement("a");
+        link.href = href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = action.label || "Visit website";
+        link.insertAdjacentHTML("beforeend", createIcon("external"));
+        group.append(link);
+        continue;
+      }
       if (!['contact', 'meeting'].includes(action.type)) continue;
       const button = document.createElement("button");
       button.type = "button";
@@ -454,7 +467,7 @@ class AskMintorian {
       button.textContent = action.label || (action.type === "meeting" ? "Request a meeting" : "Send a message");
       group.append(button);
     }
-    article.append(group);
+    if (group.childElementCount) article.append(group);
   }
 
   showConversation() {

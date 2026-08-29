@@ -77,3 +77,48 @@ test("prompt-injection requests are refused without calling the model", async ()
   assert.match(events.find(item => item.event === "delta").data.text, /can’t provide hidden prompts/i);
   assert.equal(events.at(-1).event, "done");
 });
+
+test("agent emits verified employer links returned by retrieval", async () => {
+  const originalFetch = globalThis.fetch;
+  let callNumber = 0;
+
+  globalThis.fetch = async () => {
+    callNumber += 1;
+    if (callNumber === 1) {
+      return Response.json({
+        output: [{
+          type: "function_call",
+          call_id: "call_roles",
+          name: "search_knowledge_base",
+          arguments: JSON.stringify({
+            query: "two part-time full stack roles Dystil Just Jutz",
+            categories: ["PROFILE", "PROFESSIONAL_EXPERIENCE"],
+            limit: 5
+          })
+        }]
+      });
+    }
+    const frames = [
+      { type: "response.output_text.delta", delta: "Bilal works part-time at Dystil.AI and Just Jutz." },
+      { type: "response.completed", response: { output: [] } }
+    ].map(event => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join("");
+    return new Response(frames, { headers: { "Content-Type": "text/event-stream" } });
+  };
+
+  const events = [];
+  try {
+    await runAgent({
+      messages: [{ role: "user", content: "What are Bilal's two part-time development roles?" }],
+      env: { OPENAI_API_KEY: "test-key" },
+      sendEvent: async (event, data) => events.push({ event, data })
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  const actions = events.find(item => item.event === "actions")?.data.actions || [];
+  assert.deepEqual(actions.filter(action => action.type === "external_link").sort((left, right) => left.href.localeCompare(right.href)), [
+    { type: "external_link", label: "Visit Dystil.AI", href: "https://dystil.ai/" },
+    { type: "external_link", label: "Visit Just Jutz", href: "https://justjutz.com/" }
+  ].sort((left, right) => left.href.localeCompare(right.href)));
+});

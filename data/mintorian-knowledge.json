@@ -35,13 +35,14 @@
       "id": "profile-summary",
       "category": "PROFILE",
       "title": "Professional and research profile",
-      "summary": "Bilal Ahmad is a PhD student at the University of Bath whose work combines power-system reliability, battery energy storage systems and machine-learning-enabled decision support. He also works in full-stack development and previously served as a Technical Lead in machine learning at HCL Technologies.",
+      "summary": "Bilal Ahmad is a PhD student at the University of Bath whose work combines power-system reliability, battery energy storage systems and machine-learning-enabled decision support. Alongside his research, he holds two part-time Full Stack Developer roles and previously served as a Technical Lead in machine learning at HCL Technologies.",
       "details": [
         "His research combines data-driven learning with physically interpretable models.",
         "The stated goals include grid resilience, flexibility and transparent decision support.",
-        "His profile spans academic research, electrical engineering, applied machine learning and software engineering."
+        "His profile spans academic research, electrical engineering, applied machine learning and software engineering.",
+        "His two current part-time, remote Full Stack Developer roles are at Dystil.AI and Just Jutz; both are listed from April 2026 to present."
       ],
-      "keywords": ["profile", "about", "biography", "power systems researcher", "machine learning", "full stack developer"],
+      "keywords": ["profile", "about", "biography", "power systems researcher", "machine learning", "full stack developer", "two part-time roles", "dystil", "just jutz"],
       "source": { "label": "About Bilal", "url": "/#about" },
       "status": "verified"
     },
@@ -244,6 +245,7 @@
       "details": ["The public profile lists front-end and back-end development, feature implementation, code review and release support."],
       "keywords": ["experience", "employment", "dystil", "full stack", "developer", "2026"],
       "source": { "label": "Professional experience", "url": "/experience/" },
+      "links": [{ "label": "Visit Dystil.AI", "url": "https://dystil.ai/" }],
       "status": "verified"
     },
     {
@@ -254,6 +256,7 @@
       "details": ["The public profile lists end-to-end web development and maintenance of features across an existing codebase."],
       "keywords": ["experience", "employment", "just jutz", "full stack", "developer", "2026"],
       "source": { "label": "Professional experience", "url": "/experience/" },
+      "links": [{ "label": "Visit Just Jutz", "url": "https://justjutz.com/" }],
       "status": "verified"
     },
     {

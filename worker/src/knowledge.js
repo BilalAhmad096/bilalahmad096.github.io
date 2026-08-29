@@ -80,6 +80,9 @@ function publicRecord(record) {
     summary: record.summary,
     details: record.details,
     source: record.source,
+    links: Array.isArray(record.links)
+      ? record.links.map(link => ({ label: link.label, url: link.url }))
+      : undefined,
     verification: record.status
   };
 }

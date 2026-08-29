@@ -76,13 +76,13 @@ npm run check
 npm test
 ```
 
-With the API running and an OpenAI key in `worker/.env`, run the seven live behavior evaluations:
+With the API running and an OpenAI key in `worker/.env`, run the eight live behavior evaluations:
 
 ```powershell
 npm run test:live
 ```
 
-They cover research, PhD, publications, BESS overlap, a false employment premise, prompt injection and meeting-booking honesty. To evaluate a deployed API, set `MINTORIAN_API_BASE` and, if needed, `MINTORIAN_TEST_ORIGIN`.
+They cover research, PhD, publications, BESS overlap, verified employment links, a false employment premise, prompt injection and meeting-booking honesty. To evaluate a deployed API, set `MINTORIAN_API_BASE` and, if needed, `MINTORIAN_TEST_ORIGIN`.
 
 Validate the production Worker bundle without deploying:
 

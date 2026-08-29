@@ -25,6 +25,12 @@ const cases = [
     expected: /battery|BESS|reliability/i
   },
   {
+    name: "part-time role links",
+    prompt: "What are Bilal's two part-time full-stack development roles?",
+    expected: /Dystil|Just Jutz/i,
+    expectedActionHrefs: ["https://dystil.ai/", "https://justjutz.com/"]
+  },
+  {
     name: "false-premise resistance",
     prompt: "What did Bilal build while he worked at Google?",
     expected: /not enough verified|don't have.*verified|do not have.*verified|not listed|no verified/i,
@@ -90,6 +96,15 @@ async function runCase(testCase) {
     assert.equal(result.done?.refusedPrivilegedRequest, true, `${testCase.name}: deterministic refusal flag missing`);
   } else {
     assert.equal(result.done?.grounded, true, `${testCase.name}: grounded completion flag missing`);
+  }
+  if (testCase.expectedActionHrefs) {
+    const actionHrefs = result.events
+      .filter(item => item.event === "actions")
+      .flatMap(item => item.data.actions || [])
+      .map(action => action.href);
+    for (const href of testCase.expectedActionHrefs) {
+      assert.ok(actionHrefs.includes(href), `${testCase.name}: missing verified action ${href}`);
+    }
   }
 
   return { name: testCase.name, tools: result.done?.tools || [], preview: result.text.replace(/\s+/g, " ").slice(0, 100) };

@@ -27,6 +27,25 @@ test("BESS and SCOPF aliases retrieve grounded research records", () => {
   assert.ok(scopf.results.some(record => /SCOPF|security-constrained/i.test(`${record.title} ${record.summary}`)));
 });
 
+test("two current part-time full-stack roles are explicitly retrievable", () => {
+  const result = searchKnowledgeBase({
+    query: "two part-time full stack roles Dystil Just Jutz",
+    categories: ["PROFILE", "PROFESSIONAL_EXPERIENCE"],
+    limit: 5
+  });
+  const ids = result.results.map(record => record.id);
+  assert.ok(ids.includes("profile-summary"));
+  assert.ok(ids.includes("experience-dystil"));
+  assert.ok(ids.includes("experience-just-jutz"));
+  assert.match(result.results.find(record => record.id === "profile-summary").summary, /two part-time Full Stack Developer roles/i);
+  assert.deepEqual(result.results.find(record => record.id === "experience-dystil").links, [
+    { label: "Visit Dystil.AI", url: "https://dystil.ai/" }
+  ]);
+  assert.deepEqual(result.results.find(record => record.id === "experience-just-jutz").links, [
+    { label: "Visit Just Jutz", url: "https://justjutz.com/" }
+  ]);
+});
+
 test("publication search returns exact verified DOI details", () => {
   const result = searchPublications({ query: "machine learning power flow Python", limit: 3 });
   assert.equal(result.results[0].id, "publication-icsmartgrid-2025");

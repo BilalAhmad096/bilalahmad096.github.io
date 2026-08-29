@@ -325,7 +325,11 @@
 }
 
 .ask-mintorian-suggestions button,
-.ask-mintorian-message-actions button{
+.ask-mintorian-message-actions button,
+.ask-mintorian-message-actions a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
   min-height:34px;
   padding:7px 10px;
   border:1px solid #cad8ec;
@@ -336,6 +340,7 @@
   font-size:12.5px;
   line-height:1.25;
   text-align:left;
+  text-decoration:none;
   cursor:pointer;
   transition:border-color .18s ease, background-color .18s ease, transform .18s ease;
 }
@@ -343,7 +348,9 @@
 .ask-mintorian-suggestions button:hover,
 .ask-mintorian-suggestions button:focus-visible,
 .ask-mintorian-message-actions button:hover,
-.ask-mintorian-message-actions button:focus-visible{
+.ask-mintorian-message-actions button:focus-visible,
+.ask-mintorian-message-actions a:hover,
+.ask-mintorian-message-actions a:focus-visible{
   border-color:#0f66ff;
   background:#eef5ff;
   color:#0757d9;
@@ -352,7 +359,8 @@
 }
 
 .ask-mintorian-suggestions button:focus-visible,
-.ask-mintorian-message-actions button:focus-visible{
+.ask-mintorian-message-actions button:focus-visible,
+.ask-mintorian-message-actions a:focus-visible{
   box-shadow:0 0 0 3px rgba(15,102,255,.18);
 }
 
@@ -361,6 +369,12 @@
   flex-wrap:wrap;
   gap:7px;
   margin-top:7px;
+}
+
+.ask-mintorian-message-actions a svg{
+  width:14px;
+  height:14px;
+  flex:0 0 auto;
 }
 
 .ask-mintorian-tool-status{
@@ -819,6 +833,7 @@
   .ask-mintorian-icon-button,
   .ask-mintorian-suggestions button,
   .ask-mintorian-message-actions button,
+  .ask-mintorian-message-actions a,
   .ask-mintorian-send,
   .ask-mintorian-submit{
     transition:none;

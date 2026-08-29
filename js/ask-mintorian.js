@@ -150,10 +150,10 @@ class AskMintorian {
 
       <div class="ask-mintorian-conversation">
         <div class="ask-mintorian-messages" role="log" aria-live="polite" aria-relevant="additions text">
-          <article class="ask-mintorian-message ask-mintorian-message--assistant">
+          <article class="ask-mintorian-message ask-mintorian-message--assistant ask-mintorian-message--welcome">
             <span class="ask-mintorian-message__label">Ask Mintorian</span>
             <div class="ask-mintorian-message__content" id="ask-mintorian-description">
-              <p>Explore Bilal’s research, publications, projects and technical work — or ask about a potential collaboration.</p>
+              <p>Explore Bilal’s research, publications, projects and technical work, or ask about a potential collaboration.</p>
             </div>
           </article>
         </div>

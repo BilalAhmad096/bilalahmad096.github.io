@@ -426,7 +426,10 @@ class AskMintorian {
       this.appendActions(assistant.article, actions);
       this.history.push({ role: "assistant", content: responseText });
     } catch (error) {
-      responseText = error.message || "I’m having trouble connecting right now.";
+      const rawMessage = String(error?.message || "");
+      responseText = /networkerror|failed to fetch|load failed|network request failed/i.test(rawMessage)
+        ? "I’m having trouble connecting to the research assistant right now."
+        : rawMessage || "I’m having trouble connecting to the research assistant right now.";
       assistant.article.classList.add("is-error");
       renderResponse(assistant.content, `${responseText}\n\nYou can still visit [Publications](/publications/) or email [connect@mintorian.com](mailto:connect@mintorian.com).`);
       track("chat_error");

@@ -32,7 +32,7 @@ test("agent requires a verified tool call, keeps storage off and streams the fin
   try {
     await runAgent({
       messages: [{ role: "user", content: "What does Bilal research?" }],
-      env: { OPENAI_API_KEY: "test-key", AI_MODEL: "gpt-5.6-terra", AI_REASONING_EFFORT: "low" },
+      env: { OPENAI_API_KEY: "test-key", AI_MODEL: "gpt-5.6-luna", AI_REASONING_EFFORT: "low" },
       sendEvent: async (event, data) => events.push({ event, data })
     });
   } finally {
@@ -40,6 +40,8 @@ test("agent requires a verified tool call, keeps storage off and streams the fin
   }
 
   assert.equal(requests.length, 2);
+  assert.equal(requests[0].model, "gpt-5.6-luna");
+  assert.deepEqual(requests[0].reasoning, { effort: "low" });
   assert.equal(requests[0].store, false);
   assert.equal(requests[0].tool_choice, "required");
   assert.equal(requests[0].tools.some(tool => tool.type === "web_search"), false);

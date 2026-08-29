@@ -51,7 +51,7 @@ If your static server uses another allowed port, set `data-api-base` on the assi
 
 ## Model and privacy defaults
 
-The default model is `gpt-5.6-terra` with low reasoning effort. Override it without changing code by setting `AI_MODEL` and `AI_REASONING_EFFORT` in the Worker environment.
+The default model is `gpt-5.6-luna` with low reasoning effort. Override it without changing code by setting `AI_MODEL` and `AI_REASONING_EFFORT` in the Worker environment.
 
 Requests use the OpenAI Responses API with `store: false`. Mintorian does not persist chat messages. Cloudflare observability is enabled for operational telemetry, so do not log request bodies or model text when extending the Worker.
 
@@ -102,13 +102,13 @@ npx wrangler deploy --dry-run --config worker/wrangler.jsonc
 
    Add `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` the same way when enabling form delivery.
 
-2. Create a Workers KV namespace for distributed rate limiting, then replace the placeholder ID in the commented `kv_namespaces` block in `worker/wrangler.jsonc`:
+2. The production configuration already binds its distributed rate-limit namespace as `RATE_LIMIT_KV`. When deploying a copy into another Cloudflare account, create a replacement namespace and update the configuration automatically:
 
    ```powershell
-   npx wrangler kv namespace create RATE_LIMIT_KV --config worker/wrangler.jsonc
+   npx wrangler kv namespace create ask-mintorian-rate-limit --binding RATE_LIMIT_KV --update-config --config worker/wrangler.jsonc
    ```
 
-3. If `mintorian.com` is managed in the same Cloudflare account, enable the commented `api.mintorian.com` custom-domain route in `worker/wrangler.jsonc`. Otherwise, deploy to `workers.dev` and set the loader's `data-api-base` to that URL.
+3. Production uses `https://ask-mintorian-api.dystil-ai.workers.dev`. The loader can be pointed at another deployment using its `data-api-base` attribute if the endpoint changes.
 
 4. Deploy:
 

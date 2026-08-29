@@ -143,7 +143,7 @@ function apiKey(env) {
 
 function modelSettings(env) {
   return {
-    model: env.AI_MODEL || "gpt-5.6-terra",
+    model: env.AI_MODEL || "gpt-5.6-luna",
     reasoning: { effort: env.AI_REASONING_EFFORT || "low" },
     store: false
   };
@@ -330,7 +330,7 @@ export async function runAgent({ messages, env, sendEvent }) {
 
 export function getAgentConfiguration(env) {
   return {
-    model: env.AI_MODEL || "gpt-5.6-terra",
+    model: env.AI_MODEL || "gpt-5.6-luna",
     reasoningEffort: env.AI_REASONING_EFFORT || "low",
     dataStorage: false,
     webSearch: false

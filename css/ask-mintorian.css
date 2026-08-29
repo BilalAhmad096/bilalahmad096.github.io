@@ -454,7 +454,7 @@
   align-items:flex-end;
   gap:9px;
   flex:0 0 auto;
-  padding:11px 12px;
+  padding:9px 12px;
   border-top:1px solid #e3e9f2;
   background:#fff;
 }
@@ -462,11 +462,11 @@
 .ask-mintorian-composer textarea{
   display:block;
   width:100%;
-  min-height:43px;
+  min-height:44px;
   max-height:112px;
   resize:none;
   overflow-y:hidden;
-  padding:11px 12px;
+  padding:10px 12px;
   border:1px solid #cfd9e8;
   border-radius:13px;
   outline:none;
@@ -489,8 +489,8 @@
 .ask-mintorian-send{
   display:grid;
   place-items:center;
-  width:43px;
-  height:43px;
+  width:44px;
+  height:44px;
   flex:0 0 auto;
   padding:0;
   border:0;

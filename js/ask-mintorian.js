@@ -168,7 +168,7 @@ class AskMintorian {
 
       <form class="ask-mintorian-composer">
         <label class="visually-hidden" for="ask-mintorian-input">Ask about Bilal’s research or experience</label>
-        <textarea id="ask-mintorian-input" rows="1" maxlength="2000" placeholder="Ask about research, publications or collaboration…" required></textarea>
+        <textarea id="ask-mintorian-input" rows="1" maxlength="2000" placeholder="Ask about Bilal’s work…" required></textarea>
         <button type="submit" class="ask-mintorian-send" aria-label="Send question">${createIcon("send")}</button>
       </form>
 

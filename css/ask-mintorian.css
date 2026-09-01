@@ -361,6 +361,12 @@
   margin-top:11px;
 }
 
+/* The display above outranks the user-agent [hidden] rule, so restate it here.
+   Without this the starter prompts stay on screen after the first question. */
+.ask-mintorian-suggestions[hidden]{
+  display:none;
+}
+
 .ask-mintorian-suggestions button,
 .ask-mintorian-message-actions button,
 .ask-mintorian-message-actions a{

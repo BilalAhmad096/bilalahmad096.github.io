@@ -34,6 +34,17 @@ Response style:
 - For contact or meeting intent, explain the available route and invite the visitor to use the corresponding form. A meeting request is not a booking.
 - Do not use emojis, hype or generic marketing language.`;
 
+const FOLLOW_UP_INSTRUCTIONS = `You propose follow-up questions for visitors to Bilal Ahmad's public research assistant.
+
+You receive the verified records that were just retrieved and the questions the visitor has already asked. Reply with JSON only, shaped as {"followups": ["...", "..."]}.
+
+Rules:
+- Propose two or three questions the visitor might naturally ask next.
+- Every question must be answerable from the supplied records. Never propose a question about a topic those records do not cover.
+- Do not repeat or lightly reword a question the visitor has already asked.
+- Write them in the visitor's own voice, as short direct questions under seventy characters, with no numbering, bullets or quotation marks.
+- Return {"followups": []} rather than proposing anything the records do not support.`;
+
 const toolDefinitions = [
   {
     type: "function",
@@ -290,6 +301,64 @@ async function streamOpenAIEvents(response, onDelta) {
   }
 }
 
+function followUpRecords(groundedResults) {
+  const records = groundedResults.flatMap(result => (Array.isArray(result?.results) ? result.results : []));
+  return records.slice(0, 8).map(record => ({
+    category: record.category,
+    title: record.title,
+    summary: record.summary
+  }));
+}
+
+function parseFollowUps(payload) {
+  const text = extractResponseText(payload).trim();
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) return [];
+
+  let parsed;
+  try {
+    parsed = JSON.parse(match[0]);
+  } catch {
+    return [];
+  }
+
+  const proposed = Array.isArray(parsed?.followups) ? parsed.followups : [];
+  const seen = new Set();
+  const questions = [];
+  for (const item of proposed) {
+    const question = String(item || "").replace(/\s+/g, " ").trim().slice(0, 120);
+    const key = question.toLowerCase();
+    if (question.length < 8 || seen.has(key)) continue;
+    seen.add(key);
+    questions.push(question);
+    if (questions.length === 3) break;
+  }
+  return questions;
+}
+
+// Grounded in the records retrieved this turn, so a suggested question is always one the
+// knowledge base can actually answer. Started before the answer streams and awaited after,
+// which keeps it off the visible response time.
+async function requestFollowUps({ env, settings, messages, groundedResults }) {
+  const records = followUpRecords(groundedResults);
+  if (!records.length) return [];
+
+  const response = await openAIRequest(env, {
+    ...settings,
+    instructions: FOLLOW_UP_INSTRUCTIONS,
+    input: [{
+      role: "user",
+      content: JSON.stringify({
+        verifiedRecords: records,
+        alreadyAsked: messages.filter(message => message.role === "user").slice(-4).map(message => message.content)
+      })
+    }],
+    text: { verbosity: "low" },
+    max_output_tokens: 200
+  });
+  return parseFollowUps(await response.json());
+}
+
 export async function runAgent({ messages, env, sendEvent }) {
   const latestMessage = messages.at(-1).content;
   const deterministicRefusal = privilegedRequestResponse(latestMessage);
@@ -337,6 +406,10 @@ export async function runAgent({ messages, env, sendEvent }) {
     await sendEvent("tool", { name: toolCall.name, state: "complete", label: toolLabels[toolCall.name] || "Verified information ready" });
   }
 
+  // Kicked off before the answer streams so its latency overlaps generation. Follow-ups
+  // are a convenience: a failure here must never disturb the answer the visitor gets.
+  const followUpTask = requestFollowUps({ env, settings, messages, groundedResults }).catch(() => []);
+
   const finalResponse = await openAIRequest(env, {
     ...settings,
     instructions: SYSTEM_INSTRUCTIONS,
@@ -351,6 +424,10 @@ export async function runAgent({ messages, env, sendEvent }) {
 
   const actions = inferActions(latestMessage, toolCalls, groundedResults);
   if (actions.length) await sendEvent("actions", { actions });
+
+  const followups = await followUpTask;
+  if (followups.length) await sendEvent("followups", { followups });
+
   await sendEvent("done", { grounded: true, tools: toolCalls.map(call => call.name) });
 }
 

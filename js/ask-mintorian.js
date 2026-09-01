@@ -193,13 +193,7 @@ class AskMintorian {
     this.sendButton = this.panel.querySelector(".ask-mintorian-send");
     this.closeButton = this.panel.querySelector(".ask-mintorian-close");
 
-    for (const prompt of SUGGESTIONS) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = prompt;
-      button.addEventListener("click", () => this.send(prompt));
-      this.suggestions.append(button);
-    }
+    this.renderSuggestions(SUGGESTIONS, "Suggested questions");
   }
 
   bind() {
@@ -372,6 +366,7 @@ class AskMintorian {
 
     let responseText = "";
     let actions = [];
+    let followups = [];
     try {
       const response = await fetch(apiUrl(this.apiBase, "/v1/chat"), {
         method: "POST",
@@ -415,6 +410,8 @@ class AskMintorian {
             this.showToolStatus(data.label, data.state);
           } else if (eventName === "actions") {
             actions = Array.isArray(data.actions) ? data.actions : [];
+          } else if (eventName === "followups") {
+            followups = Array.isArray(data.followups) ? data.followups : [];
           } else if (eventName === "error") {
             streamError = new Error(data.message || "The research assistant is unavailable right now.");
           }
@@ -426,6 +423,11 @@ class AskMintorian {
       renderResponse(assistant.content, responseText);
       this.appendActions(assistant.article, actions);
       this.history.push({ role: "assistant", content: responseText });
+      // Starter prompts never come back. Anything shown from here is a grounded follow-up.
+      this.renderSuggestions(
+        followups.slice(0, 3).map(item => String(item || "").trim().slice(0, 120)).filter(Boolean),
+        "Follow-up questions"
+      );
     } catch (error) {
       const rawMessage = String(error?.message || "");
       responseText = /networkerror|failed to fetch|load failed|network request failed/i.test(rawMessage)
@@ -468,6 +470,19 @@ class AskMintorian {
       group.append(button);
     }
     if (group.childElementCount) article.append(group);
+  }
+
+  renderSuggestions(prompts, label) {
+    this.suggestions.replaceChildren();
+    for (const prompt of prompts) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = prompt;
+      button.addEventListener("click", () => this.send(prompt));
+      this.suggestions.append(button);
+    }
+    this.suggestions.setAttribute("aria-label", label);
+    this.suggestions.hidden = !prompts.length;
   }
 
   showConversation() {

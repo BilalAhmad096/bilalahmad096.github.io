@@ -25,6 +25,21 @@ const cases = [
     expected: /battery|BESS|reliability/i
   },
   {
+    name: "clean-energy alignment",
+    prompt: "How does Bilal's research relate to clean energy and SDG 7?",
+    expected: /SDG 7|Sustainable Development Goal 7|Affordable and Clean Energy/i
+  },
+  {
+    name: "professional events",
+    prompt: "Which professional energy events has Bilal attended recently?",
+    expected: /DTU PES|ECR Net Zero|Supergen|Exeter Energy Systems/i
+  },
+  {
+    name: "public recommendations",
+    prompt: "What do Bilal's public recommendations say about him?",
+    expected: /Bhavesh Bhalja|Saad Bin Arif/i
+  },
+  {
     name: "part-time role links",
     prompt: "What are Bilal's two part-time full-stack development roles?",
     expected: /Dystil|Just Jutz/i,

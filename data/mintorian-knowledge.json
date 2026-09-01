@@ -28,6 +28,8 @@
     "FELLOWSHIPS": "verified_records_available",
     "PRESENTATIONS": "no_verified_entries",
     "RESEARCH_INTERESTS": "verified_records_available",
+    "EVENTS": "verified_records_available",
+    "RECOMMENDATIONS": "verified_records_available",
     "EXTRACURRICULAR": "verified_records_available",
     "CONTACT": "verified_records_available",
     "COLLABORATION": "verified_records_available"
@@ -61,6 +63,18 @@
       "keywords": ["research", "bess", "battery energy storage", "reliability", "distribution system", "distribution network", "opf", "scopf", "optimal power flow", "contingency screening", "xai", "explainable ai", "grid resilience"],
       "source": { "label": "About Bilal", "url": "/#about" },
       "status": "verified"
+    },
+    {
+      "id": "research-sdg7",
+      "category": "RESEARCH",
+      "title": "Clean-energy and SDG 7 alignment",
+      "summary": "Bilal's public profile states that his research supports UN Sustainable Development Goal 7: Affordable and Clean Energy and the transition toward smarter, more efficient energy systems.",
+      "details": [
+        "This is a stated research alignment; it does not by itself establish a formal United Nations affiliation or endorsement."
+      ],
+      "keywords": ["research", "sdg", "sdg 7", "un sustainable development goal 7", "affordable clean energy", "energy transition", "clean energy", "sustainability"],
+      "source": { "label": "About Bilal", "url": "/#about" },
+      "status": "verified_limited"
     },
     {
       "id": "phd-bath",
@@ -380,6 +394,78 @@
       "status": "verified"
     },
     {
+      "id": "event-dtu-pes-summer-school-2026",
+      "category": "EVENTS",
+      "title": "DTU PES Summer School 2026",
+      "summary": "Bilal attended the DTU PES Summer School at the Technical University of Denmark in Copenhagen from 18 to 22 May 2026.",
+      "details": [
+        "The public Updates page describes it as an intensive course on novel research topics and methods in power systems, with talks from researchers and industrial companies."
+      ],
+      "keywords": ["event", "conference", "summer school", "dtu", "pes", "technical university of denmark", "copenhagen", "power systems", "18 may 2026", "22 may 2026"],
+      "source": { "label": "Updates — DTU PES Summer School", "url": "/updates/" },
+      "status": "verified"
+    },
+    {
+      "id": "event-ecr-net-zero-2026",
+      "category": "EVENTS",
+      "title": "ECR Net Zero Conference 2026",
+      "summary": "Bilal's public Updates page lists the ECR Net Zero Conference at the Birmingham Conference and Events Centre on 9–10 March 2026.",
+      "details": [
+        "The listed attendance was funded by the Supergen Energy Networks Hub."
+      ],
+      "keywords": ["event", "conference", "ecr", "early career researcher", "net zero", "birmingham", "bcec", "supergen energy networks hub", "march 2026"],
+      "source": { "label": "Updates — ECR Net Zero Conference", "url": "/updates/" },
+      "status": "verified"
+    },
+    {
+      "id": "event-supergen-newcastle-2025",
+      "category": "EVENTS",
+      "title": "Supergen Energy Innovation Event 2025",
+      "summary": "Bilal attended the Supergen Energy Innovation Event in Newcastle on 8 December 2025.",
+      "details": [
+        "The public Updates page describes the Supergen Energy Networks Hub as an EPSRC-funded research project bringing together industry, academia, government and civil society for interdisciplinary energy-networks research."
+      ],
+      "keywords": ["event", "supergen", "energy innovation", "energy networks", "newcastle", "epsrc", "net zero", "8 december 2025"],
+      "source": { "label": "Updates — Supergen Energy Innovation Event", "url": "/updates/" },
+      "status": "verified"
+    },
+    {
+      "id": "event-gw4-exeter-2025",
+      "category": "EVENTS",
+      "title": "Exeter Energy Systems Conference 2025",
+      "summary": "Bilal attended the Exeter Energy Systems Conference associated with GW4 on 3 December 2025.",
+      "details": [
+        "The public Updates page describes GW4 as an alliance of the universities of Bath, Bristol, Cardiff and Exeter."
+      ],
+      "keywords": ["event", "conference", "exeter energy systems", "gw4", "bath", "bristol", "cardiff", "exeter", "3 december 2025"],
+      "source": { "label": "Updates — Exeter Energy Systems Conference", "url": "/updates/" },
+      "status": "verified"
+    },
+    {
+      "id": "recommendation-bhavesh-bhalja",
+      "category": "RECOMMENDATIONS",
+      "title": "Public recommendation from Dr. Bhavesh Bhalja",
+      "summary": "Dr. Bhavesh Bhalja, Professor at IIT Roorkee, publicly describes Bilal as a sincere and willing learner with a good command of power-system modelling, MATLAB, Java, Python and JavaScript.",
+      "details": [
+        "The recommendation appears on Bilal's public Experience page and refers to his M.Tech programme at IIT Roorkee."
+      ],
+      "keywords": ["recommendation", "testimonial", "bhavesh bhalja", "iit roorkee", "power system modelling", "matlab", "java", "python", "javascript", "mtech"],
+      "source": { "label": "Experience — Recommendations", "url": "/experience/#received" },
+      "status": "verified_limited"
+    },
+    {
+      "id": "recommendation-saad-bin-arif",
+      "category": "RECOMMENDATIONS",
+      "title": "Public recommendation from Dr. Saad Bin Arif",
+      "summary": "Dr. Saad Bin Arif, Assistant Professor at Aligarh Muslim University, publicly comments on Bilal's technical understanding of power systems, leadership and collaborative communication.",
+      "details": [
+        "The recommendation appears on Bilal's public Experience page."
+      ],
+      "keywords": ["recommendation", "testimonial", "saad bin arif", "amu", "aligarh muslim university", "power systems", "leadership", "communication", "collaboration"],
+      "source": { "label": "Experience — Recommendations", "url": "/experience/#received" },
+      "status": "verified_limited"
+    },
+    {
       "id": "extracurricular-sports",
       "category": "EXTRACURRICULAR",
       "title": "Publicly listed extracurricular sports",
@@ -409,8 +495,13 @@
       "category": "CONTACT",
       "title": "Public contact information",
       "summary": "Bilal can be contacted at connect@mintorian.com. His public profile lists Bath, United Kingdom as his location.",
-      "details": ["LinkedIn: https://www.linkedin.com/in/mintorian", "Website: https://mintorian.com"],
-      "keywords": ["contact", "email", "location", "bath", "linkedin", "connect"],
+      "details": [
+        "Website: https://mintorian.com",
+        "LinkedIn: https://www.linkedin.com/in/mintorian",
+        "GitHub: https://github.com/BilalAhmad096",
+        "Google Scholar: https://scholar.google.com/citations?user=Y-ShcXcAAAAJ"
+      ],
+      "keywords": ["contact", "email", "location", "bath", "linkedin", "github", "google scholar", "academic profile", "connect"],
       "source": { "label": "Email Bilal", "url": "mailto:connect@mintorian.com" },
       "status": "verified"
     },

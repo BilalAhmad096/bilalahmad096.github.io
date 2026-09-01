@@ -8,7 +8,7 @@
   "vars": {
     "ENVIRONMENT": "production",
     "AI_MODEL": "gpt-5.6-luna",
-    "AI_REASONING_EFFORT": "low",
+    "AI_REASONING_EFFORT": "none",
     "ALLOWED_ORIGINS": "https://mintorian.com,https://www.mintorian.com,http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500,http://127.0.0.1:5500",
     "CHAT_RATE_LIMIT": "20",
     "CONTACT_RATE_LIMIT": "5"

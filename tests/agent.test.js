@@ -1,6 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { runAgent } from "../worker/src/openai.js";
+import { getAgentConfiguration, runAgent } from "../worker/src/openai.js";
+
+test("agent defaults to the cost-sensitive model with no reasoning overhead", () => {
+  assert.deepEqual(getAgentConfiguration({}), {
+    model: "gpt-5.6-luna",
+    reasoningEffort: "none",
+    dataStorage: false,
+    webSearch: false
+  });
+});
 
 test("agent requires a verified tool call, keeps storage off and streams the final answer", async () => {
   const originalFetch = globalThis.fetch;

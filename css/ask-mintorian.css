@@ -114,6 +114,7 @@
   box-shadow:0 28px 80px rgba(10,26,59,.25), 0 4px 14px rgba(10,26,59,.08);
   font-family:LinetoBook, system-ui, -apple-system, "Segoe UI", sans-serif;
   opacity:0;
+  pointer-events:none;
   transform-origin:bottom right;
   transition:opacity .18s ease,
     width .26s cubic-bezier(.2,.8,.2,1),
@@ -123,9 +124,17 @@
 
 .ask-mintorian-panel.is-open{
   opacity:1;
+  pointer-events:auto;
   width:min(420px, calc(100vw - 32px));
   height:min(690px, calc(100dvh - 32px));
   border-radius:24px;
+}
+
+/* The display above outranks the user-agent [hidden] rule. Without this the closed panel
+   stays in the layout, invisible but still hit-testable, directly over the trigger it
+   collapses onto - so clicking the button to reopen lands on the panel instead. */
+.ask-mintorian-panel[hidden]{
+  display:none;
 }
 
 /* Hold the contents back until the box has room for them, so nothing is squeezed

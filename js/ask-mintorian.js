@@ -226,6 +226,7 @@ class AskMintorian {
     this.isOpen = true;
     this.panel.hidden = false;
     this.backdrop.hidden = false;
+    this.syncCollapsedOrigin();
     requestAnimationFrame(() => {
       this.panel.classList.add("is-open");
       this.backdrop.classList.add("is-open");
@@ -246,6 +247,7 @@ class AskMintorian {
   close() {
     if (!this.isOpen) return;
     this.isOpen = false;
+    this.syncCollapsedOrigin();
     this.panel.classList.remove("is-open");
     this.backdrop.classList.remove("is-open");
     this.panel.setAttribute("aria-hidden", "true");
@@ -470,6 +472,15 @@ class AskMintorian {
       group.append(button);
     }
     if (group.childElementCount) article.append(group);
+  }
+
+  // The panel collapses to the trigger's exact footprint, and the trigger is sized by its
+  // own label, so measure it rather than hard-coding a width the text could outgrow.
+  syncCollapsedOrigin() {
+    const rect = this.trigger.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    this.panel.style.setProperty("--ask-mintorian-collapsed-width", `${Math.round(rect.width)}px`);
+    this.panel.style.setProperty("--ask-mintorian-collapsed-height", `${Math.round(rect.height)}px`);
   }
 
   renderSuggestions(prompts, label) {

@@ -29,6 +29,12 @@
   pointer-events:none;
 }
 
+.mintorian-floating-actions.assistant-is-open .ask-mintorian-trigger{
+  opacity:0;
+  transform:scale(.97);
+  pointer-events:none;
+}
+
 .ask-mintorian-trigger{
   display:inline-flex;
   align-items:center;
@@ -46,7 +52,7 @@
   line-height:1;
   letter-spacing:.1px;
   cursor:pointer;
-  transition:transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+  transition:transform .2s ease, box-shadow .2s ease, background-color .2s ease, opacity .18s ease;
 }
 
 .ask-mintorian-trigger:hover,
@@ -91,28 +97,47 @@
 .ask-mintorian-panel{
   position:fixed;
   right:max(16px, env(safe-area-inset-right));
-  bottom:calc(86px + env(safe-area-inset-bottom));
+  bottom:calc(16px + env(safe-area-inset-bottom));
   z-index:10001;
   display:flex;
   flex-direction:column;
-  width:min(420px, calc(100vw - 32px));
-  height:min(690px, calc(100dvh - 112px));
+  /* Closed, the panel occupies exactly the trigger's footprint on the same corner, so
+     opening it reads as the button growing into the panel rather than a box appearing
+     above it. The assistant measures the trigger and publishes both custom properties. */
+  width:var(--ask-mintorian-collapsed-width, 190px);
+  height:var(--ask-mintorian-collapsed-height, 54px);
   overflow:hidden;
   border:1px solid rgba(10,26,59,.12);
-  border-radius:24px;
+  border-radius:18px;
   background:var(--card, #fff);
   color:var(--ink, #0a1a3b);
   box-shadow:0 28px 80px rgba(10,26,59,.25), 0 4px 14px rgba(10,26,59,.08);
   font-family:LinetoBook, system-ui, -apple-system, "Segoe UI", sans-serif;
   opacity:0;
-  transform:translateY(14px) scale(.985);
   transform-origin:bottom right;
-  transition:opacity .2s ease, transform .24s cubic-bezier(.2,.8,.2,1);
+  transition:opacity .18s ease,
+    width .26s cubic-bezier(.2,.8,.2,1),
+    height .26s cubic-bezier(.2,.8,.2,1),
+    border-radius .26s cubic-bezier(.2,.8,.2,1);
 }
 
 .ask-mintorian-panel.is-open{
   opacity:1;
-  transform:translateY(0) scale(1);
+  width:min(420px, calc(100vw - 32px));
+  height:min(690px, calc(100dvh - 32px));
+  border-radius:24px;
+}
+
+/* Hold the contents back until the box has room for them, so nothing is squeezed
+   against the panel edge mid-expansion. */
+.ask-mintorian-panel > *{
+  opacity:0;
+  transition:opacity .12s ease;
+}
+
+.ask-mintorian-panel.is-open > *{
+  opacity:1;
+  transition:opacity .2s ease .1s;
 }
 
 .ask-mintorian-backdrop{
@@ -821,7 +846,16 @@
     height:auto;
     max-height:none;
     border-radius:20px;
+    transform:translateY(12px) scale(.99);
     transform-origin:bottom center;
+    transition:opacity .2s ease, transform .24s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .ask-mintorian-panel.is-open{
+    width:auto;
+    height:auto;
+    border-radius:20px;
+    transform:none;
   }
 
   .ask-mintorian-header{
@@ -872,6 +906,7 @@
 @media (prefers-reduced-motion:reduce){
   .ask-mintorian-trigger,
   .ask-mintorian-panel,
+  .ask-mintorian-panel > *,
   .ask-mintorian-backdrop,
   .ask-mintorian-icon-button,
   .ask-mintorian-suggestions button,

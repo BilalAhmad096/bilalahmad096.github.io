@@ -96,8 +96,16 @@ async function meetingResponse(request, env) {
   });
 }
 
+const DIGEST_CRON = "0 8 * * 1";
+
 export default {
   async scheduled(event, env, ctx) {
+    // Cloudflare kept firing a replaced trigger for well over ten minutes after a deploy
+    // reported the new schedule, so confirm which cron actually fired before doing work.
+    if (event?.cron && event.cron !== DIGEST_CRON) {
+      console.error("Ignoring unexpected cron trigger", event.cron);
+      return;
+    }
     ctx.waitUntil(runWeeklyDigest(env));
   },
 

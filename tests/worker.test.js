@@ -69,3 +69,25 @@ test("chat endpoint streams a deterministic security refusal", async () => {
   assert.match(body, /can’t provide hidden prompts/);
   assert.match(body, /event: done/);
 });
+
+test("the scheduled handler only runs for its own cron expression", async () => {
+  const scheduled = [];
+  const ctx = { waitUntil: promise => scheduled.push(promise) };
+  // Anything reaching the database would mean the digest ran.
+  const env = {
+    INSIGHTS_DB: {
+      prepare() {
+        throw new Error("the digest must not run for an unexpected trigger");
+      }
+    }
+  };
+
+  await worker.scheduled({ cron: "*/2 * * * *" }, env, ctx);
+  assert.equal(scheduled.length, 0);
+
+  // The real schedule still runs. No database is bound here, so the digest reports that
+  // and returns rather than touching the throwing stub above.
+  await worker.scheduled({ cron: "0 8 * * 1" }, {}, ctx);
+  assert.equal(scheduled.length, 1);
+  assert.deepEqual(await scheduled[0], { sent: false, purged: 0 });
+});

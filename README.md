@@ -6,7 +6,7 @@ Ask Mintorian appears in the existing bottom-right page-action dock on every can
 
 ## What is included
 
-- A verified 43-record knowledge base covering research, publications, projects, education, experience, skills, awards, professional events, public recommendations, extracurricular interests, travel and contact routes.
+- A verified 44-record knowledge base covering research, publications, projects, education, experience, skills, awards, conference presentations, professional events, public recommendations, extracurricular interests, travel and contact routes.
 - A Cloudflare Worker API with OpenAI Responses API tool calling and streamed answers.
 - Six deterministic, read-only tools for profile search, publication search, project lookup, section lookup, contact options and calendar-integration status.
 - Contact and meeting-request forms with server-side validation, honeypot protection and optional Resend delivery.

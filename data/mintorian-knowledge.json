@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-08-29",
+  "lastVerified": "2026-09-02",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -26,7 +26,7 @@
     "TECHNICAL_SKILLS": "verified_records_available",
     "AWARDS": "verified_records_available",
     "FELLOWSHIPS": "verified_records_available",
-    "PRESENTATIONS": "no_verified_entries",
+    "PRESENTATIONS": "verified_records_available",
     "RESEARCH_INTERESTS": "verified_records_available",
     "EVENTS": "verified_records_available",
     "RECOMMENDATIONS": "verified_records_available",
@@ -365,6 +365,20 @@
       "summary": "Bilal's profile lists a Third Best Paper award at icSmartGrid 2025 in Glasgow, UK.",
       "details": [],
       "keywords": ["award", "third best paper", "icsmartgrid", "glasgow", "2025"],
+      "source": { "label": "Recognition", "url": "/#recognition" },
+      "status": "verified"
+    },
+    {
+      "id": "presentation-icsmartgrid-2025",
+      "category": "PRESENTATIONS",
+      "title": "Conference presentation — icSmartGrid 2025",
+      "summary": "Bilal presented his machine-learning power-flow paper at IEEE icSmartGrid 2025 in Glasgow, UK, where it received the Third Best Paper award.",
+      "details": [
+        "The paper presented was \"A Comparative Analysis of Machine Learning Based Power Flow Study with Custom Made Open Source Python Codes\", co-authored with Onyema Nduka.",
+        "DOI: 10.1109/icsmartgrid66138.2025.11071830",
+        "This is the only presentation listed on Bilal's public profile."
+      ],
+      "keywords": ["presentation", "presented", "presenting", "conference talk", "talk", "speaking", "icsmartgrid", "glasgow", "2025", "third best paper", "machine learning", "power flow"],
       "source": { "label": "Recognition", "url": "/#recognition" },
       "status": "verified"
     },

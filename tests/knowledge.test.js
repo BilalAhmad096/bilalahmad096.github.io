@@ -9,7 +9,7 @@ import {
 
 test("knowledge base exposes verified records and all required categories", () => {
   const metadata = getKnowledgeMetadata();
-  assert.ok(metadata.recordCount >= 43);
+  assert.ok(metadata.recordCount >= 44);
   for (const category of [
     "PROFILE", "EDUCATION", "PHD", "RESEARCH", "PUBLICATIONS", "PROJECTS",
     "PROFESSIONAL_EXPERIENCE", "TECHNICAL_SKILLS", "AWARDS", "FELLOWSHIPS",
@@ -119,10 +119,16 @@ test("false-premise employers and invented awards return no verified match", () 
   assert.match(google.guidance, /do not speculate/i);
 });
 
-test("presentations are explicitly marked as having no verified entries", () => {
-  const result = getProfileInformation({ section: "PRESENTATIONS" });
-  assert.equal(result.resultCount, 0);
-  assert.equal(result.coverage.PRESENTATIONS, "no_verified_entries");
+test("the icSmartGrid presentation is retrievable and every category now has entries", () => {
+  const section = getProfileInformation({ section: "PRESENTATIONS" });
+  assert.equal(section.coverage.PRESENTATIONS, "verified_records_available");
+  assert.equal(section.results[0].id, "presentation-icsmartgrid-2025");
+
+  // The phrasing that returned nothing in production before the record existed.
+  const asked = searchKnowledgeBase({ query: "Has he presented at any conferences?", categories: [], limit: 3 });
+  assert.equal(asked.results[0].id, "presentation-icsmartgrid-2025");
+  assert.match(asked.results[0].summary, /Third Best Paper/i);
+  assert.match(asked.results[0].details.join(" "), /10\.1109\/icsmartgrid66138\.2025\.11071830/);
 });
 
 test("generic orientation questions fall back to the category the phrasing implies", () => {

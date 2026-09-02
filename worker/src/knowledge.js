@@ -335,6 +335,10 @@ export function getNavigation() {
   return knowledgeBase.navigation.map(item => ({ ...item }));
 }
 
+export function getAllRecordIds() {
+  return knowledgeBase.records.map(record => record.id);
+}
+
 export function getKnowledgeMetadata() {
   return {
     schemaVersion: knowledgeBase.schemaVersion,

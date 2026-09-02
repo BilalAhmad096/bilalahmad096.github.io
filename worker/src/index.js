@@ -1,4 +1,5 @@
 import { sendContactMessage, sendMeetingRequest, validateContact, validateMeetingRequest } from "./email.js";
+import { recordTurn, runWeeklyDigest } from "./insights.js";
 import { getAgentConfiguration, runAgent } from "./openai.js";
 import { getKnowledgeMetadata } from "./knowledge.js";
 import {
@@ -39,9 +40,10 @@ async function chatResponse(request, env, ctx) {
 
   const task = (async () => {
     const sendEvent = (event, data) => writer.write(sseFrame(event, data));
+    let retrieval = null;
     try {
       await sendEvent("meta", { requestId, assistant: "Ask Mintorian" });
-      await runAgent({ messages, env, sendEvent });
+      retrieval = await runAgent({ messages, env, sendEvent });
     } catch (error) {
       const known = error instanceof RequestError;
       console.error("Chat stream failed", requestId, error?.code || error?.name || "unknown_error");
@@ -54,6 +56,8 @@ async function chatResponse(request, env, ctx) {
     } finally {
       await writer.close();
     }
+    // Logged only after the response is flushed, so capture can never delay an answer.
+    if (retrieval) await recordTurn(env, retrieval);
   })();
   ctx.waitUntil(task);
 
@@ -93,6 +97,10 @@ async function meetingResponse(request, env) {
 }
 
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(runWeeklyDigest(env));
+  },
+
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 

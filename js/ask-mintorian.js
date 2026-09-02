@@ -177,7 +177,7 @@ class AskMintorian {
           <button type="button" data-view="contact">${createIcon("mail")} Contact</button>
           <button type="button" data-view="meeting">${createIcon("calendar")} Request a meeting</button>
         </div>
-        <p>Answers use Bilal’s verified public profile. Conversations are not saved by Mintorian.</p>
+        <p>Answers use Bilal’s verified public profile. Questions are kept for 90 days to improve coverage, with nothing that identifies you.</p>
       </footer>`;
 
     document.body.append(this.backdrop, this.panel);

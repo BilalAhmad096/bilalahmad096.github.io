@@ -359,13 +359,40 @@ async function requestFollowUps({ env, settings, messages, groundedResults }) {
   return parseFollowUps(await response.json());
 }
 
+const MATCH_TYPE_RANK = { term: 3, orientation: 2, none: 1 };
+
+function summariseRetrieval(question, toolCalls, groundedResults) {
+  let matchType = "none";
+  let resultCount = 0;
+  const recordIds = new Set();
+
+  for (const result of groundedResults) {
+    const candidate = String(result?.matchType || "none");
+    if ((MATCH_TYPE_RANK[candidate] || 0) > (MATCH_TYPE_RANK[matchType] || 0)) matchType = candidate;
+    resultCount += Number(result?.resultCount) || 0;
+    for (const record of Array.isArray(result?.results) ? result.results : []) {
+      if (record?.id) recordIds.add(record.id);
+    }
+  }
+
+  return {
+    question,
+    matchType,
+    resultCount,
+    grounded: matchType !== "none",
+    tools: toolCalls.map(call => call.name),
+    toolQueries: toolCalls.map(call => parseToolArguments(call).query || parseToolArguments(call).project_name || ""),
+    recordIds: [...recordIds]
+  };
+}
+
 export async function runAgent({ messages, env, sendEvent }) {
   const latestMessage = messages.at(-1).content;
   const deterministicRefusal = privilegedRequestResponse(latestMessage);
   if (deterministicRefusal) {
     await sendEvent("delta", { text: deterministicRefusal });
     await sendEvent("done", { grounded: true, refusedPrivilegedRequest: true });
-    return;
+    return { question: latestMessage, matchType: "refused", resultCount: 0, grounded: false, tools: [], toolQueries: [], recordIds: [] };
   }
 
   const input = conversationInput(messages);
@@ -388,7 +415,7 @@ export async function runAgent({ messages, env, sendEvent }) {
     const fallback = extractResponseText(first) || "I don’t have enough verified information in Bilal’s public profile to answer that, so I don’t want to speculate.";
     await sendEvent("delta", { text: fallback });
     await sendEvent("done", { grounded: false });
-    return;
+    return { question: latestMessage, matchType: "untooled", resultCount: 0, grounded: false, tools: [], toolQueries: [], recordIds: [] };
   }
 
   input.push(...(first.output || []));
@@ -429,6 +456,8 @@ export async function runAgent({ messages, env, sendEvent }) {
   if (followups.length) await sendEvent("followups", { followups });
 
   await sendEvent("done", { grounded: true, tools: toolCalls.map(call => call.name) });
+
+  return summariseRetrieval(latestMessage, toolCalls, groundedResults);
 }
 
 export function getAgentConfiguration(env) {

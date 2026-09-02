@@ -53,7 +53,9 @@ If your static server uses another allowed port, set `data-api-base` on the assi
 
 The default model is `gpt-5.6-luna` with reasoning effort set to `none` for the lowest reasoning overhead. Override it without changing code by setting `AI_MODEL` and `AI_REASONING_EFFORT` in the Worker environment.
 
-Requests use the OpenAI Responses API with `store: false`. Mintorian does not persist chat messages. Cloudflare observability is enabled for operational telemetry, so do not log request bodies or model text when extending the Worker.
+Requests use the OpenAI Responses API with `store: false`, so OpenAI retains nothing.
+
+Mintorian records one row per question in the `ask-mintorian-insights` D1 database: the question text, the search terms the model used, which verified records were returned, and whether the turn was grounded. It records no IP address, no session identifier and no assistant answer, and rows are deleted after 90 days by the Monday digest job. That row exists to show which questions the knowledge base cannot yet answer; do not extend it with anything that identifies a visitor.
 
 ## Optional email delivery
 

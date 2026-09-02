@@ -22,5 +22,16 @@
       "binding": "RATE_LIMIT_KV",
       "id": "03e3d55b25f84807a976621f84c7c515"
     }
-  ]
+  ],
+  "d1_databases": [
+    {
+      "binding": "INSIGHTS_DB",
+      "database_name": "ask-mintorian-insights",
+      "database_id": "ca3918e3-0486-4d02-8add-aa1c0ff9c9fc",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": ["0 8 * * 1"]
+  }
 }

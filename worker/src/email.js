@@ -8,7 +8,7 @@ const CONTACT_REASONS = new Set([
   "Other"
 ]);
 
-function escapeHtml(value) {
+export function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -129,4 +129,40 @@ export async function sendMeetingRequest(env, data, idempotencyKey) {
     <strong>Preferred date/time:</strong> ${escapeHtml(data.preferredWindow)}</p>
     <p><strong>Topic:</strong><br>${escapeHtml(data.topic).replaceAll("\n", "<br>")}</p>`;
   return sendViaResend(env, { subject, text, html, replyTo: data.email }, idempotencyKey);
+}
+
+// Operational mail sent by the scheduled digest rather than by a visitor. It reports
+// failures to the logs instead of raising visitor-facing errors, and it never throws:
+// a broken digest must not take the cron run down with it.
+export async function sendOperationalEmail(env, { subject, text, html }) {
+  const recipient = env.DIGEST_TO_EMAIL || env.CONTACT_TO_EMAIL;
+  if (!env.RESEND_API_KEY || !recipient || !env.CONTACT_FROM_EMAIL) {
+    console.error("Digest email is not configured");
+    return false;
+  }
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: env.CONTACT_FROM_EMAIL,
+        to: [recipient],
+        subject,
+        text,
+        html
+      })
+    });
+    if (!response.ok) {
+      console.error("Digest email failed", response.status);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error("Digest email error", error?.name || "unknown_error");
+    return false;
+  }
 }

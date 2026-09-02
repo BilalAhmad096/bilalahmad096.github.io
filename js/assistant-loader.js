@@ -2,7 +2,7 @@
   "use strict";
 
   const script = document.currentScript;
-  const assetVersion = "20260902-2";
+  const assetVersion = "20260902-3";
   const isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   const apiBase = script?.dataset.apiBase || (isLocal
     ? "http://127.0.0.1:8787"

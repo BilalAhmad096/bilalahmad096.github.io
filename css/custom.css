@@ -348,7 +348,9 @@ section{
   display:grid;
   grid-template-columns:1.2fr .8fr;
   gap:36px;
-  align-items:center;
+  /* the text column is the taller one at every two-column width, so the
+     photo lines up with the first line rather than floating mid-column */
+  align-items:start;
 }
 
 .about-text{
@@ -364,15 +366,6 @@ section{
   margin:0 auto;
   text-align:center;
 }
-
-.about-headshot > img{
-  width:440px;
-  height:440px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:var(--shadow-md);
-}
-
 
 .about-badges-name{
   margin-top:5px;
@@ -1597,11 +1590,6 @@ figcaption.caption-below[lang="ar"]{
   .brand-logos img,
   .footer-logos img{
     height:26px;
-  }
-
-  .about-headshot > img{
-    width:300px;
-    height:300px;
   }
 
   .about-badges,

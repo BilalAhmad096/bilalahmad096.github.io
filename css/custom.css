@@ -2244,16 +2244,24 @@ figcaption.caption-below[lang="ar"]{
     padding: 32px 0;
   }
 
+  /* Side by side rather than stacked: two rows of buttons made the divider
+     the tallest thing on the screen, and the line is centred on whatever
+     they add up to. */
   .connect-divider__actions {
-    flex-direction: column;
-    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    gap: 10px;
+    padding: 0 14px;
   }
-
 
   .connect-divider__action,
   .connect-divider__action--primary {
-    min-width: 220px;
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    gap: 9px;
     height: 54px;
+    padding: 6px 14px 6px 6px;
     font-size: 14px;
   }
 
@@ -2262,6 +2270,7 @@ figcaption.caption-below[lang="ar"]{
     width: 38px;
     height: 38px;
   }
+
 
   .connect-divider__action .ti svg,
   .connect-divider__action--primary .ti svg {
@@ -2272,6 +2281,24 @@ figcaption.caption-below[lang="ar"]{
   .connect-divider__action[data-tooltip]::after,
   .connect-divider__action[data-tooltip]::before {
     display: none !important;
+  }
+}
+
+/* Below 360 a row of two is genuinely too tight — at 320px "Download CV"
+   clears the pill's edge by 5px, which one font fallback would eat — so the
+   very small screens keep the stack. Must sit after the 640 block to win. */
+@media (max-width: 360px) {
+  .connect-divider__actions {
+    flex-direction: column;
+    width: auto;
+    gap: 10px;
+    padding: 0;
+  }
+
+  .connect-divider__action,
+  .connect-divider__action--primary {
+    flex: 0 0 auto;
+    min-width: 210px;
   }
 }
 

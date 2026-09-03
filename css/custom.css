@@ -1965,6 +1965,9 @@ figcaption.caption-below[lang="ar"]{
 .connect-divider {
   /* gap between each half of the split line and the buttons it frames */
   --connect-gap: 26px;
+  /* how far the rule runs. Wider than the 1080px content column so it still
+     reads as a page-level divider, but no longer out into the margins. */
+  --rule-width: 1200px;
   /* It sits between the two sections rather than inside either one, and
      paints the seam itself: About above the line, Education below it. */
   background: linear-gradient(
@@ -1988,10 +1991,13 @@ figcaption.caption-below[lang="ar"]{
    distance clear of the buttons whatever height the row happens to be. */
 .connect-divider__line {
   grid-area: stage;
+  /* stretched vertically — the translate that parts the halves is a
+     percentage of this box — but held to the rule width across */
   align-self: stretch;
-  justify-self: stretch;
+  justify-self: center;
   position: relative;
   width: 100%;
+  max-width: var(--rule-width);
   pointer-events: none;
   /* closing: the two halves shut back together like a shutter */
   transition: transform .38s cubic-bezier(.55, 0, .68, .3);

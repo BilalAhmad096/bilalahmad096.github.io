@@ -17,6 +17,10 @@
   --container:1080px;
   --container-wide:1280px;
 
+  /* connect divider rule: core under the button, edge out at the margins */
+  --rule-core:rgba(10,33,82,.22);
+  --rule-edge:rgba(10,33,82,.07);
+
   --shadow-sm:0 6px 20px rgba(12,18,28,.06);
   --shadow-md:0 10px 30px rgba(12,18,28,.09);
 
@@ -336,7 +340,8 @@ section{
    4) About
 ===================================================== */
 .section-about{
-  padding:20px 0;
+  /* no bottom padding: the connect divider below owns the seam spacing */
+  padding:20px 0 0;
 }
 
 .about-grid{
@@ -607,7 +612,8 @@ section{
    6) Education
 ===================================================== */
 .section-education{
-  padding:40px 0;
+  /* no top padding: the connect divider above owns the seam spacing */
+  padding:0 0 40px;
 }
 
 .edu-list{
@@ -1971,7 +1977,7 @@ figcaption.caption-below[lang="ar"]{
   justify-items: center;
   align-items: center;
   width: 100%;
-  padding: 67px 0;
+  padding: 40px 0;
 }
 
 /* Both halves stretch over the button row and draw their rule across its
@@ -1998,12 +2004,15 @@ figcaption.caption-below[lang="ar"]{
   right: 0;
   top: 50%;
   height: 1px;
+  /* One hue at three weights: densest under the button, thinning out to
+     nothing at the margins, so the rule has a centre rather than an edge. */
   background: linear-gradient(
     to right,
-    transparent,
-    var(--ring) 15%,
-    var(--ring) 85%,
-    transparent
+    transparent 0%,
+    var(--rule-edge) 20%,
+    var(--rule-core) 50%,
+    var(--rule-edge) 80%,
+    transparent 100%
   );
 }
 
@@ -2226,7 +2235,7 @@ figcaption.caption-below[lang="ar"]{
 @media (max-width: 640px) {
   .connect-divider {
     --connect-gap: 20px;
-    padding: 53px 0;
+    padding: 32px 0;
   }
 
   .connect-divider__actions {

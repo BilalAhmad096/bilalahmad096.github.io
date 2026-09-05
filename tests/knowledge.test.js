@@ -146,6 +146,26 @@ test("commit-activity questions retrieve the GitHub record and no invented total
   assert.equal(/\b\d{2,}\b/.test([record.summary, ...record.details].join(" ")), false);
 });
 
+test("relationship questions reach the one cleared personal record and stop there", () => {
+  for (const query of [
+    "Is Bilal married?",
+    "What is his relationship status?",
+    "Does he have a wife?",
+    "Is he single?",
+    "Does Bilal have a girlfriend?"
+  ]) {
+    const asked = searchKnowledgeBase({ query, categories: [], limit: 2 });
+    assert.equal(asked.results[0].id, "personal-relationship-status", `missed for: ${query}`);
+  }
+
+  const record = searchKnowledgeBase({ query: "married", categories: [], limit: 1 }).results[0];
+  assert.match(record.summary, /happily married/i);
+
+  // The status is the whole of what he cleared. Anything more specific here
+  // would be something the assistant could then repeat as verified.
+  assert.match(record.details.join(" "), /no spouse name, no wedding date/i);
+});
+
 test("generic orientation questions fall back to the category the phrasing implies", () => {
   const work = searchKnowledgeBase({ query: "Where does Bilal work?", categories: [], limit: 3 });
   assert.equal(work.matchType, "orientation");

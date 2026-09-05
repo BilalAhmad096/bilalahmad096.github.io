@@ -520,6 +520,19 @@
       "status": "verified_limited"
     },
     {
+      "id": "personal-relationship-status",
+      "category": "PROFILE",
+      "title": "Relationship status",
+      "summary": "Bilal is happily married.",
+      "details": [
+        "Bilal has cleared this one personal detail for the assistant to share when a visitor asks.",
+        "Nothing else about his personal life is on record: no spouse name, no wedding date, no family details and no relationship history. Answer the status and decline anything beyond it."
+      ],
+      "keywords": ["married", "marriage", "wife", "husband", "spouse", "partner", "relationship", "relationship status", "single", "unmarried", "dating", "girlfriend", "boyfriend", "family", "personal life", "private life"],
+      "source": { "label": "About Bilal", "url": "/#about" },
+      "status": "verified"
+    },
+    {
       "id": "contact-public",
       "category": "CONTACT",
       "title": "Public contact information",

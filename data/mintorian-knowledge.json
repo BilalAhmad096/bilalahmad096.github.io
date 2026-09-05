@@ -8,6 +8,7 @@
     { "id": "about", "label": "About", "url": "/#about" },
     { "id": "education", "label": "Education", "url": "/#education" },
     { "id": "skills", "label": "Technical skills", "url": "/#skills" },
+    { "id": "activity", "label": "Commit activity", "url": "/#activity" },
     { "id": "recognition", "label": "Recognition and projects", "url": "/#recognition" },
     { "id": "experience", "label": "Experience", "url": "/experience/" },
     { "id": "publications", "label": "Publications", "url": "/publications/" },
@@ -251,6 +252,20 @@
       "details": ["Listed languages: Python, MATLAB, Java, JavaScript, HTML and CSS."],
       "keywords": ["skills", "software engineering", "full stack", "agentic ai", "python", "matlab", "java", "javascript", "html", "css", "reproducibility"],
       "source": { "label": "Technical skills", "url": "/#skills" },
+      "status": "verified"
+    },
+    {
+      "id": "skills-public-code-activity",
+      "category": "TECHNICAL_SKILLS",
+      "title": "Public code activity on GitHub",
+      "summary": "Bilal's public code work is on GitHub at https://github.com/BilalAhmad096. The Mintorian home page shows his GitHub contribution calendar for the last twelve months under Commit Activity.",
+      "details": [
+        "The calendar counts what GitHub itself counts across public work: commits, pull requests, reviews and issues.",
+        "It is rebuilt once a day from GitHub rather than read live, so the current day can trail GitHub's own figure by up to a day.",
+        "This record deliberately states no contribution total, because any number written here would be stale within a day. Read the current figure from the calendar itself."
+      ],
+      "keywords": ["github", "commit", "commits", "commit activity", "contribution", "contributions", "contribution graph", "calendar", "heatmap", "open source", "public code", "repositories", "repos"],
+      "source": { "label": "Commit activity", "url": "/#activity" },
       "status": "verified"
     },
     {

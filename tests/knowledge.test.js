@@ -131,6 +131,21 @@ test("the icSmartGrid presentation is retrievable and every category now has ent
   assert.match(asked.results[0].details.join(" "), /10\.1109\/icsmartgrid66138\.2025\.11071830/);
 });
 
+test("commit-activity questions retrieve the GitHub record and no invented total", () => {
+  // "Show me his commit activity" returned nothing at all before this record.
+  for (const query of ["Show me his commit activity", "How active is Bilal on GitHub?", "contribution graph"]) {
+    const asked = searchKnowledgeBase({ query, categories: [], limit: 3 });
+    assert.equal(asked.results[0].id, "skills-public-code-activity", `missed for: ${query}`);
+  }
+
+  const record = searchKnowledgeBase({ query: "github commit activity", categories: [], limit: 1 }).results[0];
+  assert.match(record.summary, /github\.com\/BilalAhmad096/);
+
+  // The calendar is rebuilt daily, so any figure written into the knowledge base
+  // would be wrong by the next morning. The record must carry no count.
+  assert.equal(/\b\d{2,}\b/.test([record.summary, ...record.details].join(" ")), false);
+});
+
 test("generic orientation questions fall back to the category the phrasing implies", () => {
   const work = searchKnowledgeBase({ query: "Where does Bilal work?", categories: [], limit: 3 });
   assert.equal(work.matchType, "orientation");

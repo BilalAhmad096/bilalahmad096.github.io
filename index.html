@@ -28,7 +28,7 @@
        Styles
   =============================== -->
   <link rel="stylesheet" href="css/styles.css?v=20260903-1">
-  <link rel="stylesheet" href="css/custom.css?v=20260903-1">
+  <link rel="stylesheet" href="css/custom.css?v=20260905-1">
   
 
   <!-- AOS (Animate On Scroll) CSS -->
@@ -397,6 +397,29 @@
     </section>
 
     <!-- ===============================
+         GitHub Activity Section
+         Rendered by js/github-activity.js from data/github-activity.json,
+         which a scheduled GitHub Action rebuilds. No token in the browser.
+    =============================== -->
+    <section id="activity" class="section-activity">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Commit Activity</h2>
+        <p class="activity-lead" data-aos="fade-up">Contributions to my public GitHub work over the last year &mdash; commits, pull requests, reviews and issues. Refreshed daily.</p>
+
+        <div class="gh-activity" id="githubActivity" data-aos="fade-up"
+             data-source="/data/github-activity.json"
+             data-profile="https://github.com/BilalAhmad096">
+          <p class="gh-activity__status" role="status">Loading commit activity&hellip;</p>
+          <noscript>
+            <style>.gh-activity__status{ display:none; }</style>
+            <p class="gh-activity__noscript">The calendar needs JavaScript. The same activity is on my GitHub profile.</p>
+          </noscript>
+          <a class="gh-activity__link" href="https://github.com/BilalAhmad096" target="_blank" rel="noopener noreferrer">@BilalAhmad096 on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================
          Recognition Section
     =============================== -->
     <section id="recognition" class="section-recognition">
@@ -501,6 +524,7 @@
   <script src="js/aos-setup.js?v=20260827-2" defer></script>
 
   <script src="js/backtotop.js?v=20260829-1" defer></script>
+  <script src="js/github-activity.js?v=20260905-1" defer></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 </body>
 </html>

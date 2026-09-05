@@ -17,3 +17,7 @@
 *.woff2 binary
 *.ttf   binary
 *.otf   binary
+
+# Regenerated daily by a workflow that writes LF, so keep it LF everywhere and
+# the "has anything changed?" check stays honest on Windows checkouts.
+data/github-activity.json text eol=lf

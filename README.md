@@ -122,6 +122,31 @@ npx wrangler deploy --dry-run --config worker/wrangler.jsonc
 
 For production, leave `ALLOWED_ORIGINS` restricted to the Mintorian domains and keep the KV binding enabled. Without KV, the Worker uses a best-effort in-memory limiter intended for local development only.
 
+## GitHub commit activity
+
+The home page carries a contribution calendar under **Commit Activity**. The site is
+static on GitHub Pages, so the browser holds no credential and calls no API: it reads
+`data/github-activity.json` from this repository.
+
+That file is rebuilt daily by the `GitHub activity` workflow in
+[`.github/workflows/github-activity.yml`](.github/workflows/github-activity.yml), which
+runs [`scripts/build-github-activity.mjs`](scripts/build-github-activity.mjs) and commits
+the result. The workflow uses the automatic `GITHUB_TOKEN` that Actions mints for each
+run, so no repository secret has to be created or rotated. If that token is missing or
+lacks the scope, the script falls back to the public contributions calendar at
+`https://github.com/users/<login>/contributions`, which needs no credential.
+
+The login comes from `github.repository_owner`, so nothing is hardcoded to one account.
+Run it by hand from the Actions tab (**Run workflow**) or locally:
+
+```powershell
+npm run build:activity
+```
+
+The workflow needs `contents: write`, which it requests itself. If the repository is set
+to *Read repository contents permission* under **Settings → Actions → General → Workflow
+permissions**, that request still applies; the setting only changes the default.
+
 ## Main files
 
 - `js/assistant-loader.js` — lightweight page integration and API-base selection.
@@ -129,4 +154,6 @@ For production, leave `ALLOWED_ORIGINS` restricted to the Mintorian domains and 
 - `css/ask-mintorian.css` — responsive component styles.
 - `data/mintorian-knowledge.json` — verified, auditable source records.
 - `worker/src/` — API, model orchestration, retrieval, email delivery and security controls.
-- `tests/` — retrieval, security, agent, Worker and live-model evaluation coverage.
+- `js/github-activity.js` — contribution calendar rendering, tooltips and keyboard navigation.
+- `scripts/build-github-activity.mjs` — daily rebuild of `data/github-activity.json`.
+- `tests/` — retrieval, security, agent, Worker, activity-calendar and live-model evaluation coverage.

@@ -1,0 +1,56 @@
+# Rebuilds data/github-activity.json, the file the home page reads for the
+# commit-activity calendar, and commits it back to the branch GitHub Pages
+# serves. The site is static, so this is what keeps the calendar current
+# without putting a credential in the browser.
+#
+# It uses the automatic GITHUB_TOKEN, which GitHub mints per run: nothing has
+# to be stored as a repository secret. If that token is ever unavailable the
+# build script falls back to the public contributions calendar, which needs no
+# credential at all.
+
+name: GitHub activity
+
+on:
+  schedule:
+    # 04:20 UTC daily. Off the hour, because the top of the hour is when
+    # scheduled workflows queue worldwide and start running late.
+    - cron: "20 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-activity
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build the contribution calendar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTIVITY_LOGIN: ${{ github.repository_owner }}
+        run: node scripts/build-github-activity.mjs
+
+      - name: Commit the refreshed calendar
+        run: |
+          if [ -z "$(git status --porcelain data/github-activity.json)" ]; then
+            echo "Calendar unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/github-activity.json
+          git commit -m "Refresh the GitHub contribution calendar"
+          # Someone may have pushed while this job was running; rebasing keeps
+          # the daily refresh from failing on a race it can resolve itself.
+          git pull --rebase --autostash
+          git push

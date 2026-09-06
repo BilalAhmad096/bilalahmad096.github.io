@@ -21,8 +21,20 @@ function isPersonalQuestion(text) {
 function acceptsPersonalOffer(messages) {
   const previous = messages.at(-2);
   if (previous?.role !== "assistant" || previous.content.trim() !== PERSONAL_OFFER) return false;
-  const reply = messages.at(-1).content.toLowerCase().replace(/[.!?,;]+/g, " ").replace(/\s+/g, " ").trim();
-  return /^(?:(?:yes|yeah|yep|sure|okay|ok|please|absolutely|of course)\s*)?(?:(?:i insist|go on|tell me|tell me more|tell me that one thing|share it|do tell|what is it|what's the one thing)\s*)?(?:please)?$/.test(reply) && reply.length > 0;
+  const reply = messages.at(-1).content.toLowerCase()
+    .replace(/[’‘]/g, "'")
+    .replace(/[.!?,;]+/g, " ")
+    .replace(/\s+/g, " ").trim();
+  const request = reply
+    .replace(/^(yes|yeah|yep|sure|okay|ok|please|absolutely|of course)(?:\s+|$)/, "")
+    .replace(/(?:^|\s+)please$/, "").trim();
+  if (!request) return reply.length > 0;
+  return [
+    /^(?:i insist|go on|go ahead|do tell|i'm listening|i am listening)$/,
+    /^(?:(?:can|could|would|will) you )?(?:tell me|share)(?: (?:more|it|that|that one thing|the one thing|one thing|that detail|the detail))?$/,
+    /^what(?: is|'s) (?:it|that|the one thing|that one thing|the thing|that thing|the detail|that detail)$/,
+    /^which (?:thing|one|detail)$/
+  ].some(pattern => pattern.test(request));
 }
 
 function withoutPersonalRecord(result) {

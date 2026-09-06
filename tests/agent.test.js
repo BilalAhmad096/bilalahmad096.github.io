@@ -22,7 +22,11 @@ test("personal questions offer a reveal first, even when the first question insi
 });
 
 test("clear acceptance of the preceding offer reveals only the approved fact", async () => {
-  for (const acceptance of ["Go on!", "I insist.", "Yes, tell me.", "yes", "please", "Sure, tell me more!"]) {
+  for (const acceptance of [
+    "Go on!", "I insist.", "Yes, tell me.", "yes", "please", "Sure, tell me more!",
+    "what is that?", "What's that?", "What’s that?", "What is it?", "What's the one thing?",
+    "Which thing?", "Go ahead", "Can you tell me?", "Could you share that detail, please?", "I'm listening."
+  ]) {
     const reply = await replyTo([user("Tell me about his personal life"), assistant(personalOffer), user(acceptance)]);
     assert.equal(reply.text, "He's happily married. That's where my personal-life briefing ends!");
   }
@@ -42,14 +46,17 @@ test("declines, topic changes and an unrelated yes do not unlock the record", as
   });
   for (const messages of [
     [user("Yes")],
+    [user("what is that?")],
     [assistant(personalOffer), user("No thanks")],
+    [assistant(personalOffer), user("Don't tell me")],
+    [assistant(personalOffer), user("What is that research about?")],
     [assistant(personalOffer), user("Yes, tell me about his research")],
     [assistant(personalOffer), user("What does he research?"), assistant("Would you like his publications?"), user("Yes")]
   ]) {
     const reply = await replyTo(messages);
     assert.doesNotMatch(reply.text, /happily married/);
   }
-  assert.equal(requests.filter(body => body.stream).length, 4);
+  assert.equal(requests.filter(body => body.stream).length, 7);
   for (const body of requests.filter(body => !body.tool_choice)) {
     // Includes both answer generation and suggested follow-up generation.
     assert.doesNotMatch(JSON.stringify(body.input), /personal-relationship-status|happily married/);

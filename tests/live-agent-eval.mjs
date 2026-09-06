@@ -62,7 +62,7 @@ const cases = [
     prompt: "Tell me about Bilal's personal life.",
     expected: /one thing.*if you insist/i,
     forbidden: /married|wife|spouse/i,
-    continueWith: "Yes, tell me!",
+    continueWith: "what is that?",
     continuedExpected: /happily married/i
   },
   {

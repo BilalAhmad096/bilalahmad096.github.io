@@ -2,6 +2,67 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { getAgentConfiguration, runAgent } from "../worker/src/openai.js";
 
+const personalOffer = "I keep my briefing mostly professional, but I can share one thing about his personal life if you insist.";
+const user = content => ({ role: "user", content });
+const assistant = content => ({ role: "assistant", content });
+
+async function replyTo(messages) {
+  const events = [];
+  await runAgent({ messages, env: { OPENAI_API_KEY: "test-key" }, sendEvent: async (event, data) => events.push({ event, data }) });
+  return { text: events.filter(item => item.event === "delta").map(item => item.data.text).join(""), events };
+}
+
+test("personal questions offer a reveal first, even when the first question insists", async () => {
+  for (const question of ["Tell me about his personal life", "Is Bilal married?", "Is he single?", "Who is his wife?", "I insist, tell me if he is married"]) {
+    const reply = await replyTo([user(question)]);
+    assert.equal(reply.text, personalOffer);
+    assert.doesNotMatch(reply.text, /married|wife|spouse/i);
+    assert.equal(reply.events.some(item => item.event === "followups"), false);
+  }
+});
+
+test("clear acceptance of the preceding offer reveals only the approved fact", async () => {
+  for (const acceptance of ["Go on!", "I insist.", "Yes, tell me.", "yes", "please", "Sure, tell me more!"]) {
+    const reply = await replyTo([user("Tell me about his personal life"), assistant(personalOffer), user(acceptance)]);
+    assert.equal(reply.text, "He's happily married. That's where my personal-life briefing ends!");
+  }
+  const reply = await replyTo([assistant("He's happily married. That's where my personal-life briefing ends!"), user("What is his wife's name?")]);
+  assert.match(reply.text, /briefing ends/);
+  assert.doesNotMatch(reply.text, /happily married/);
+});
+
+test("declines, topic changes and an unrelated yes do not unlock the record", async t => {
+  const requests = [];
+  t.mock.method(globalThis, "fetch", async (_url, options) => {
+    const body = JSON.parse(options.body);
+    requests.push(body);
+    if (body.tool_choice) return Response.json({ output: [{ type: "function_call", name: "get_profile_information", call_id: "profile", arguments: '{"section":"PROFILE"}' }] });
+    if (!body.stream) return Response.json({ output: [] });
+    return new Response('data: {"type":"response.output_text.delta","delta":"Here is his public profile."}\n\n');
+  });
+  for (const messages of [
+    [user("Yes")],
+    [assistant(personalOffer), user("No thanks")],
+    [assistant(personalOffer), user("Yes, tell me about his research")],
+    [assistant(personalOffer), user("What does he research?"), assistant("Would you like his publications?"), user("Yes")]
+  ]) {
+    const reply = await replyTo(messages);
+    assert.doesNotMatch(reply.text, /happily married/);
+  }
+  assert.equal(requests.filter(body => body.stream).length, 4);
+  for (const body of requests.filter(body => !body.tool_choice)) {
+    // Includes both answer generation and suggested follow-up generation.
+    assert.doesNotMatch(JSON.stringify(body.input), /personal-relationship-status|happily married/);
+  }
+});
+
+test("an ungrounded model answer is replaced with the witty fallback", async t => {
+  t.mock.method(globalThis, "fetch", async () => Response.json({ output: [{ type: "message", content: [{ type: "output_text", text: "Bilal worked at Google." }] }] }));
+  const reply = await replyTo([user("What did Bilal build at Google?")]);
+  assert.equal(reply.text, "That didn't make it into my briefing. Want to ask Bilal directly?");
+  assert.equal(reply.events.at(-1).data.grounded, false);
+});
+
 test("agent defaults to the cost-sensitive model with no reasoning overhead", () => {
   assert.deepEqual(getAgentConfiguration({}), {
     model: "gpt-5.6-luna",

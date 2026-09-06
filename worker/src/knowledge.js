@@ -263,9 +263,9 @@ export function searchKnowledgeBase({ query, categories = [], limit = 5 } = {}) 
       : undefined,
     guidance: ranked.length
       ? orientation
-        ? "The question named no specific topic, so these are general records for the area its phrasing implies. Use them only if they genuinely answer the question, and say there is not enough verified information otherwise."
+        ? "The question named no specific topic, so these are general records for the area its phrasing implies. Use them only if they answer the question. Otherwise acknowledge the gap in the assistant's brief, witty style and offer a useful next step without speculating."
         : "Use only these returned records for factual claims."
-      : "No matching verified public record was found. Say that there is not enough verified information and do not speculate."
+      : "No matching verified public record was found. Acknowledge the gap in the assistant's brief, witty style and offer a useful next step. Do not speculate or confirm the visitor's premise."
   };
 }
 

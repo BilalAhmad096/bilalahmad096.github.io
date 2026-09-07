@@ -147,6 +147,32 @@ The workflow needs `contents: write`, which it requests itself. If the repositor
 to *Read repository contents permission* under **Settings → Actions → General → Workflow
 permissions**, that request still applies; the setting only changes the default.
 
+## GB grid strip
+
+The home page carries a live band under **About**: current carbon intensity, the
+past 24 hours, the national generation mix and transmission-metered output.
+
+Unlike the calendar above, this one is genuinely live. Both feeds send
+`Access-Control-Allow-Origin: *`, so the browser calls them directly and the page
+stays static with no key, no build step and no Worker in the path:
+
+- `api.carbonintensity.org.uk` — intensity now, `pt24h` history and the national
+  mix. Its mix includes embedded solar and small wind, so its **shares** are the
+  headline.
+- `data.elexon.co.uk` — half-hourly metered output in MW. Elexon meters
+  transmission only, so its totals exclude that embedded generation. The two are
+  rendered in separate blocks, labelled as such, and never added together.
+
+Each feed is settled independently, so the strip still renders on whichever ones
+answered. It re-reads every five minutes, but only while the tab is in front.
+
+The seven fuel colours in `css/custom.css` are a validated categorical set: they
+were assigned in the fixed segment order used by `js/grid-now.js` and checked
+pair by pair for colour-vision separation, including the orders left over when a
+fuel reads zero and its neighbours meet. That is also why the bar is never sorted
+by share, and why it draws seven segments while the details table under it lists
+all nine fuels the feed reports. Re-run that check before changing any of them.
+
 ## Main files
 
 - `js/assistant-loader.js` — lightweight page integration and API-base selection.
@@ -155,5 +181,6 @@ permissions**, that request still applies; the setting only changes the default.
 - `data/mintorian-knowledge.json` — verified, auditable source records.
 - `worker/src/` — API, model orchestration, retrieval, email delivery and security controls.
 - `js/github-activity.js` — contribution calendar rendering, tooltips and keyboard navigation.
+- `js/grid-now.js` — live grid strip: feed parsing, the mix bar and the 24-hour sparkline.
 - `scripts/build-github-activity.mjs` — daily rebuild of `data/github-activity.json`.
-- `tests/` — retrieval, security, agent, Worker, activity-calendar and live-model evaluation coverage.
+- `tests/` — retrieval, security, agent, Worker, activity-calendar, grid-strip and live-model evaluation coverage.

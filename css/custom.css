@@ -36,6 +36,7 @@
   --section-researchgroup:  #eef2f8;  /* soft, distinct from publications */
   --section-recognition:    #f4f7fb;  /* sits between skills and education */
   --section-activity:       #f8fafd;  /* lifts back up after the cooler skills band */
+  --section-grid:           #edf1f8;  /* cools straight after About, before Education lifts */
 
   /* Contribution calendar: the accent ramped down to the empty-day ring, so the
      graph reads as part of this palette rather than as GitHub's green. */
@@ -2235,6 +2236,385 @@ section{
 @media (prefers-reduced-motion: reduce){
   .gh-day,
   .gh-tip{
+    transition:none;
+  }
+}
+
+/* =====================================================
+   GB Grid, Right Now
+   Live band under About. Fuel colours are a validated
+   categorical set: assigned in the fixed segment order
+   used by js/grid-now.js and checked pair by pair for
+   colour-vision separation, including the orders that
+   remain when a fuel reads zero and its neighbours meet.
+   Re-run the check before changing any of these seven.
+===================================================== */
+:root{
+  --fuel-wind:    #2a78d6;
+  --fuel-solar:   #eda100;
+  --fuel-nuclear: #4a3aa7;
+  --fuel-biomass: #008300;
+  --fuel-gas:     #e34948;
+  --fuel-imports: #1baf7a;
+  --fuel-other:   #e87ba4;
+
+  /* Reserved status steps, kept distinct from the fuels above so a carbon
+     band never impersonates a segment. Always shown beside its index word. */
+  --status-good:     #0ca30c;
+  --status-warning:  #fab219;
+  --status-serious:  #ec835a;
+  --status-critical: #d03b3b;
+}
+
+.section-grid{
+  background:var(--section-grid);
+  padding:40px 0;
+}
+
+.section-grid .section-title{
+  margin-bottom:8px;
+}
+
+.grid-lead{
+  margin:8px 0 0;
+  color:var(--ink-muted);
+}
+
+.grid-now{
+  position:relative;
+  margin-top:22px;
+  padding:22px 24px 18px;
+  background:var(--card);
+  border:1px solid var(--ring);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+}
+
+.grid-now__status{
+  margin:0;
+  color:var(--ink-muted);
+  font-size:14px;
+}
+
+/* Hero number and the 24-hour line share a row on desktop and stack on a
+   phone, where the line keeps its full width rather than shrinking. */
+.grid-now__top{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:18px 36px;
+}
+
+.grid-now__label{
+  margin:0;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+}
+
+.grid-now__hero{
+  flex:0 0 auto;
+}
+
+.grid-now__value{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  margin:6px 0 0;
+}
+
+.grid-now__value strong{
+  font-size:44px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.grid-now__unit{
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.grid-now__index{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin:8px 0 0;
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.grid-now__word{
+  text-transform:capitalize;
+}
+
+.grid-now__dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--ink-muted);
+  flex:0 0 auto;
+}
+
+.grid-now__dot[data-status="good"]{     background:var(--status-good); }
+.grid-now__dot[data-status="warning"]{  background:var(--status-warning); }
+.grid-now__dot[data-status="serious"]{  background:var(--status-serious); }
+.grid-now__dot[data-status="critical"]{ background:var(--status-critical); }
+
+.grid-now__spark{
+  flex:1 1 260px;
+  min-width:0;
+  margin:0;
+}
+
+.spark{
+  display:block;
+  width:100%;
+  height:60px;
+  margin-top:6px;
+  overflow:visible;
+}
+
+.spark__line{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  /* The viewBox is stretched to the container width, so an unscaled stroke
+     would thin out with it. */
+  vector-effect:non-scaling-stroke;
+}
+
+.spark__now{
+  fill:var(--accent);
+  stroke:var(--card);
+  stroke-width:2;
+}
+
+.grid-now__range{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin:4px 0 0;
+  font-size:12px;
+  color:var(--ink-muted);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- generation mix ---------- */
+
+.grid-now__mix{
+  margin-top:24px;
+}
+
+.grid-now__mixhead{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.grid-now__zero{
+  margin:0;
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.mixbar{
+  display:flex;
+  gap:2px;              /* the surface showing through separates the fills */
+  height:26px;
+  margin-top:8px;
+  border-radius:var(--radius-sm);
+  overflow:hidden;
+}
+
+.mixbar__segment{
+  min-width:4px;
+  border-radius:2px;
+  background:var(--ink-muted);
+  transition:filter .15s ease;
+}
+
+.mixbar__segment.is-active{
+  filter:saturate(1.35) brightness(1.06);
+}
+
+.mixbar__segment[data-fuel="wind"],    .mixlegend__swatch[data-fuel="wind"]{    background:var(--fuel-wind); }
+.mixbar__segment[data-fuel="solar"],   .mixlegend__swatch[data-fuel="solar"]{   background:var(--fuel-solar); }
+.mixbar__segment[data-fuel="nuclear"], .mixlegend__swatch[data-fuel="nuclear"]{ background:var(--fuel-nuclear); }
+.mixbar__segment[data-fuel="biomass"], .mixlegend__swatch[data-fuel="biomass"]{ background:var(--fuel-biomass); }
+.mixbar__segment[data-fuel="gas"],     .mixlegend__swatch[data-fuel="gas"]{     background:var(--fuel-gas); }
+.mixbar__segment[data-fuel="imports"], .mixlegend__swatch[data-fuel="imports"]{ background:var(--fuel-imports); }
+.mixbar__segment[data-fuel="other"],   .mixlegend__swatch[data-fuel="other"]{   background:var(--fuel-other); }
+
+/* Every segment is direct-labelled with its own value here, so colour never
+   carries identity by itself - which is what lets three of the seven sit
+   below 3:1 against the card. */
+.mixlegend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 18px;
+  margin:12px 0 0;
+  padding:0;
+  list-style:none;
+}
+
+.mixlegend__item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  color:var(--ink-muted);
+  border-radius:var(--radius-sm);
+  transition:color .15s ease;
+}
+
+.mixlegend__item.is-active{
+  color:var(--ink);
+}
+
+.mixlegend__swatch{
+  width:10px;
+  height:10px;
+  border-radius:2px;
+  flex:0 0 auto;
+}
+
+.mixlegend__value{
+  font-weight:600;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.grid-now__table{
+  margin-top:14px;
+  font-size:13px;
+}
+
+.grid-now__table summary{
+  cursor:pointer;
+  color:var(--ink-muted);
+  width:fit-content;
+}
+
+.grid-now__table summary:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-radius:var(--radius-sm);
+}
+
+.grid-now__tablewrap{
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+}
+
+.grid-now__table table{
+  border-collapse:collapse;
+  margin-top:10px;
+  min-width:220px;
+}
+
+.grid-now__table th,
+.grid-now__table td{
+  padding:5px 18px 5px 0;
+  text-align:left;
+  font-weight:400;
+  color:var(--ink-muted);
+  border-bottom:1px solid var(--ring);
+}
+
+.grid-now__table thead th{
+  font-size:11.5px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.grid-now__table .is-numeric{
+  text-align:right;
+  padding-right:0;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- transmission-metered stats ---------- */
+
+.grid-now__metered{
+  margin-top:24px;
+  padding-top:20px;
+  border-top:1px solid var(--ring);
+}
+
+.grid-now__stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px 44px;
+  margin:10px 0 0;
+}
+
+.grid-now__stat dt{
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.grid-now__stat dd{
+  margin:2px 0 0;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.grid-now__note,
+.grid-now__foot{
+  margin:12px 0 0;
+  font-size:12.5px;
+  line-height:1.55;
+  color:var(--ink-muted);
+}
+
+.grid-now__foot a{
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:border-color .18s ease;
+}
+
+.grid-now__foot a:hover,
+.grid-now__foot a:focus-visible{
+  border-bottom-color:var(--accent);
+}
+
+@media (max-width:720px){
+  .grid-now{
+    padding:18px 16px 16px;
+  }
+
+  .grid-now__value strong{
+    font-size:36px;
+  }
+
+  .grid-now__stats{
+    gap:14px 28px;
+  }
+
+  .grid-now__stat dd{
+    font-size:19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .mixbar__segment,
+  .mixlegend__item{
     transition:none;
   }
 }

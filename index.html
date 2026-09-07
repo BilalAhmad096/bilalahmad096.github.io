@@ -252,6 +252,27 @@
     </div>
 
     <!-- ===============================
+         GB Grid Section
+    =============================== -->
+    <section id="grid" class="section-grid">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-up">GB Grid, Right Now</h2>
+        <p class="grid-lead" data-aos="fade-up">The network my research is about, as it is running this
+          half hour &mdash; carbon intensity, where the power is coming from, and what the transmission
+          system is metering. Read live from public feeds each time this page loads.</p>
+
+        <div class="grid-now" id="gridNow" data-aos="fade-up">
+          <p class="grid-now__status" role="status">Reading the grid feeds&hellip;</p>
+          <noscript>
+            <style>.grid-now__status{ display:none; }</style>
+            <p class="grid-now__status">This panel needs JavaScript. The same data is published by
+              <a href="https://carbonintensity.org.uk/">carbonintensity.org.uk</a>.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================
          Education Section
     =============================== -->
     <section id="education" class="section-education">
@@ -525,6 +546,7 @@
 
   <script src="js/backtotop.js?v=20260829-1" defer></script>
   <script src="js/github-activity.js?v=20260905-1" defer></script>
+  <script type="module" src="js/grid-now.js?v=20260907-1"></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 </body>
 </html>

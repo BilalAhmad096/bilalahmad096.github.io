@@ -173,6 +173,40 @@ fuel reads zero and its neighbours meet. That is also why the bar is never sorte
 by share, and why it draws seven segments while the details table under it lists
 all nine fuels the feed reports. Re-run that check before changing any of them.
 
+## Contingency screening demonstration
+
+`/contingency/` carries an interactive N-1 screen on the IEEE 14-bus test system.
+Trip any line and a full Newton-Raphson AC power flow re-solves in the browser -
+one base case plus twenty single-outage cases per interaction, a few milliseconds
+in total, so nothing is precomputed.
+
+The solver is in [`js/lib/powerflow.js`](js/lib/powerflow.js) and is the part that
+has to be right. [`tests/powerflow.test.js`](tests/powerflow.test.js) checks it
+against the case's own published IEEE solution (agreeing to 0.0013 pu and 0.02
+degrees), against the known 13.39 MW of base-case losses, and on the physics that
+should hold regardless: the slack picks up generation, load and losses exactly;
+lossless transformers lose nothing; PV buses hold their setpoint.
+
+The page is deliberately the **classical** screen - the active-power performance
+index - and says so. It makes no claim about the learned, explainable ranking that
+the research is actually about. What it does show is why that research exists:
+raise demand past about 110% and the index starts misordering, sinking outages
+that cause real overloads below ones that cause none. That failure is called
+masking, and it is pinned down by a test rather than asserted in prose.
+
+Two things about the data are worth knowing, and both are stated on the page:
+
+- **Ratings are assumed.** The IEEE case lists every branch limit as 0, so the
+  ratings in `data/case14.json` are ours - round values above base-case flow, set
+  so the intact network is secure with margin and some outages are not.
+- **The voltage band is widened to 0.94-1.10 pu.** The case states 1.06 while
+  scheduling generators at 1.07 and 1.09, so its own published solution breaches
+  that limit at buses 6, 7 and 8. Widening it means a violation on the page is
+  caused by the outage rather than by the data.
+
+Generation does not re-dispatch and generator VAr limits are not enforced, the
+latter matching the default the reference solution was produced under.
+
 ## Main files
 
 - `js/assistant-loader.js` — lightweight page integration and API-base selection.
@@ -182,5 +216,8 @@ all nine fuels the feed reports. Re-run that check before changing any of them.
 - `worker/src/` — API, model orchestration, retrieval, email delivery and security controls.
 - `js/github-activity.js` — contribution calendar rendering, tooltips and keyboard navigation.
 - `js/grid-now.js` — live grid strip: feed parsing, the mix bar and the 24-hour sparkline.
+- `js/lib/powerflow.js` — Newton-Raphson AC power flow, N-1 screen and the severity index.
+- `js/contingency.js` — the demonstration's one-line diagram, interaction and ranked table.
+- `data/case14.json` — IEEE 14-bus case, converted from MATPOWER, with assumed ratings.
 - `scripts/build-github-activity.mjs` — daily rebuild of `data/github-activity.json`.
-- `tests/` — retrieval, security, agent, Worker, activity-calendar, grid-strip and live-model evaluation coverage.
+- `tests/` — retrieval, security, agent, Worker, activity-calendar, grid-strip, power-flow and live-model evaluation coverage.

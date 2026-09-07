@@ -10,6 +10,7 @@
     { "id": "skills", "label": "Technical skills", "url": "/#skills" },
     { "id": "activity", "label": "Commit activity", "url": "/#activity" },
     { "id": "grid", "label": "GB grid, right now", "url": "/#grid" },
+    { "id": "contingency", "label": "Contingency screening demonstration", "url": "/contingency/" },
     { "id": "recognition", "label": "Recognition and projects", "url": "/#recognition" },
     { "id": "experience", "label": "Experience", "url": "/experience/" },
     { "id": "publications", "label": "Publications", "url": "/publications/" },

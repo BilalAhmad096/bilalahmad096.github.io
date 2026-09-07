@@ -1,0 +1,539 @@
+/* =====================================================
+   Contingency screening demo
+   Page-scoped: only /contingency/ loads this file.
+   Colour meaning lives in js/contingency.js, which sets
+   fills and strokes from the solved case; the rules here
+   are layout, weight and the states colour cannot carry
+   on its own.
+===================================================== */
+
+.section-cx{
+  background:var(--section-education);
+  padding:40px 0 56px;
+}
+
+.section-cx .section-title{
+  margin-bottom:8px;
+}
+
+.cx-lead{
+  margin:10px 0 0;
+  max-width:70ch;
+  color:var(--ink-muted);
+}
+
+.cx{
+  margin-top:26px;
+}
+
+.cx__status{
+  margin:0;
+  color:var(--ink-muted);
+}
+
+/* ---------- controls ---------- */
+
+.cx-controls{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:16px 28px;
+  padding:14px 18px;
+  background:var(--card);
+  border:1px solid var(--ring);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm);
+}
+
+.cx-control{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1 1 320px;
+  min-width:0;
+}
+
+.cx-control__label{
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+  white-space:nowrap;
+}
+
+.cx-slider{
+  flex:1 1 auto;
+  min-width:120px;
+  accent-color:var(--accent);
+}
+
+.cx-control__value{
+  min-width:4ch;
+  font-weight:700;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.cx-reset{
+  padding:9px 16px;
+  font:inherit;
+  font-size:13px;
+  font-weight:600;
+  color:var(--accent);
+  background:transparent;
+  border:1px solid var(--ring);
+  border-radius:999px;
+  cursor:pointer;
+  transition:border-color .18s ease, color .18s ease;
+}
+
+.cx-reset:hover:not(:disabled),
+.cx-reset:focus-visible{
+  border-color:var(--accent);
+}
+
+.cx-reset:disabled{
+  color:var(--ink-muted);
+  cursor:default;
+  opacity:.55;
+}
+
+/* ---------- board ---------- */
+
+.cx-board{
+  display:grid;
+  grid-template-columns:minmax(0, 1.55fr) minmax(0, 1fr);
+  gap:20px;
+  margin-top:18px;
+}
+
+.cx-diagramwrap,
+.cx-summary,
+.cx-screen{
+  padding:18px 20px;
+  background:var(--card);
+  border:1px solid var(--ring);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+}
+
+.cx-screen{
+  margin-top:20px;
+}
+
+.cx-diagram{
+  display:block;
+  width:100%;
+  height:auto;
+  overflow:visible;
+}
+
+/* ---------- diagram marks ---------- */
+
+.cx-branch{
+  cursor:pointer;
+}
+
+.cx-branch__hit{
+  stroke:transparent;
+  stroke-width:20;
+  stroke-linecap:round;
+}
+
+.cx-branch__line{
+  stroke-linecap:round;
+  transition:stroke .18s ease, stroke-width .18s ease;
+}
+
+/* Out of service is dashed as well as pale: a tripped line has to be obvious
+   without relying on the colour difference alone. */
+.cx-branch.is-out .cx-branch__line{
+  stroke-dasharray:7 8;
+}
+
+.cx-branch.is-hovered .cx-branch__line{
+  stroke-width:8;
+}
+
+.cx-branch:focus{
+  outline:none;
+}
+
+.cx-branch:focus-visible .cx-branch__hit{
+  stroke:var(--accent);
+  stroke-width:3;
+  stroke-dasharray:4 4;
+}
+
+.cx-branch__tx circle{
+  fill:var(--card);
+  stroke:#5b6b7b;
+  stroke-width:1.6;
+}
+
+.cx-branch.is-out .cx-branch__tx circle{
+  stroke:#c8d2e4;
+}
+
+/* An overloaded circuit gets a second, non-colour cue. */
+.cx-branch.is-over .cx-branch__line{
+  stroke-dasharray:14 5;
+}
+
+.cx-bus__disc{
+  stroke:rgba(10,33,82,.35);
+  stroke-width:1.5;
+  transition:fill .18s ease;
+}
+
+.cx-bus.is-violating .cx-bus__disc{
+  stroke:#d03b3b;
+  stroke-width:3.5;
+}
+
+.cx-bus__number{
+  font-size:14px;
+  font-weight:700;
+  fill:var(--ink);
+  paint-order:stroke;
+  stroke:rgba(255,255,255,.75);
+  stroke-width:3;
+}
+
+.cx-bus__reading{
+  font-size:11.5px;
+  fill:var(--ink-muted);
+  font-variant-numeric:tabular-nums;
+  paint-order:stroke;
+  stroke:var(--card);
+  stroke-width:3;
+}
+
+.cx-bus.is-violating .cx-bus__reading{
+  fill:#b5302f;
+  font-weight:700;
+}
+
+.cx-bus__stub{
+  stroke:#5b6b7b;
+  stroke-width:1.6;
+}
+
+.cx-bus__gen{
+  fill:var(--card);
+  stroke:#5b6b7b;
+  stroke-width:1.6;
+}
+
+.cx-bus__genmark{
+  font-size:12px;
+  font-weight:700;
+  fill:#5b6b7b;
+}
+
+/* ---------- legend ---------- */
+
+.cx-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px 40px;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--ring);
+}
+
+.cx-legend__group{
+  flex:1 1 190px;
+  min-width:0;
+}
+
+.cx-legend__title{
+  margin:0 0 7px;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+}
+
+.cx-legend__ramp{
+  display:flex;
+  align-items:center;
+  gap:3px;
+}
+
+.cx-legend__step{
+  flex:1 1 auto;
+  border-radius:2px;
+}
+
+.cx-legend__step--over{
+  flex:0 0 22px;
+}
+
+.cx-legend__band{
+  display:flex;
+  height:9px;
+  border-radius:2px;
+  overflow:hidden;
+}
+
+.cx-legend__band span{
+  flex:1 1 auto;
+}
+
+.cx-legend__scale{
+  display:flex;
+  justify-content:space-between;
+  margin:5px 0 0;
+  font-size:11.5px;
+  color:var(--ink-muted);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- summary ---------- */
+
+.cx-banner{
+  padding:12px 14px;
+  border-radius:var(--radius-md);
+  border-left:4px solid var(--ink-muted);
+  background:#f6f8fc;
+}
+
+.cx-banner[data-level="good"]{     border-left-color:#0ca30c; }
+.cx-banner[data-level="warning"]{  border-left-color:#fab219; }
+.cx-banner[data-level="serious"]{  border-left-color:#ec835a; }
+.cx-banner[data-level="critical"]{ border-left-color:#d03b3b; }
+
+.cx-banner__title{
+  margin:0;
+  font-size:15px;
+  font-weight:700;
+  color:var(--ink);
+}
+
+.cx-banner__verdict{
+  margin:6px 0 0;
+  font-size:13.5px;
+  line-height:1.55;
+  color:var(--ink-muted);
+}
+
+.cx-stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px 26px;
+  margin:16px 0 0;
+}
+
+.cx-stat dt{
+  font-size:12px;
+  color:var(--ink-muted);
+}
+
+.cx-stat dd{
+  margin:2px 0 0;
+  font-size:17px;
+  font-weight:700;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.cx-violations{
+  margin:16px 0 0;
+  padding:0;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.cx-violations li{
+  display:flex;
+  align-items:baseline;
+  gap:9px;
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.cx-violations__tag{
+  flex:0 0 auto;
+  padding:2px 8px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  color:#b5302f;
+  background:#fdeceb;
+  border-radius:999px;
+}
+
+/* ---------- ranked screen ---------- */
+
+.cx-screen__head h2{
+  margin:0;
+  font-size:17px;
+  color:var(--ink);
+}
+
+.cx-screen__note{
+  margin:5px 0 0;
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.cx-masking{
+  margin:14px 0 0;
+  padding:12px 14px;
+  font-size:13.5px;
+  line-height:1.6;
+  color:var(--ink);
+  background:#fff8e8;
+  border-left:4px solid #fab219;
+  border-radius:var(--radius-md);
+}
+
+.cx-tablewrap{
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  margin-top:14px;
+}
+
+.cx-table{
+  width:100%;
+  min-width:520px;
+  border-collapse:collapse;
+  font-size:13.5px;
+}
+
+.cx-table th,
+.cx-table td{
+  padding:8px 14px 8px 0;
+  text-align:left;
+  border-bottom:1px solid var(--ring);
+  white-space:nowrap;
+}
+
+.cx-table thead th{
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+}
+
+.cx-table .is-numeric{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+
+.cx-table__row{
+  cursor:pointer;
+  transition:background-color .14s ease;
+}
+
+.cx-table__row:hover{
+  background:#f4f7fd;
+}
+
+.cx-table__row:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:-2px;
+}
+
+.cx-table__row.is-applied{
+  background:#eaf1ff;
+  font-weight:600;
+}
+
+.cx-tag{
+  display:inline-block;
+  padding:2px 9px;
+  font-size:11.5px;
+  font-weight:600;
+  border-radius:999px;
+  background:#eef1f6;
+  color:var(--ink-muted);
+}
+
+.cx-tag[data-level="good"]{     background:#e8f6e8; color:#0a6f0a; }
+.cx-tag[data-level="warning"]{  background:#fff3d6; color:#8a5b00; }
+.cx-tag[data-level="serious"]{  background:#fdeee6; color:#a2472a; }
+.cx-tag[data-level="critical"]{ background:#fdeceb; color:#b5302f; }
+
+/* ---------- notes ---------- */
+
+.cx-notes{
+  max-width:76ch;
+  margin-top:34px;
+}
+
+.cx-notes h2{
+  margin:26px 0 8px;
+  font-size:17px;
+  color:var(--ink);
+}
+
+.cx-notes p,
+.cx-notes li{
+  color:var(--ink-muted);
+  line-height:1.65;
+}
+
+.cx-notes p{
+  margin:0 0 10px;
+}
+
+.cx-notes ul{
+  margin:0;
+  padding-left:20px;
+}
+
+.cx-notes li{
+  margin-bottom:8px;
+}
+
+.cx-notes strong{
+  color:var(--ink);
+}
+
+@media (max-width:900px){
+  .cx-board{
+    grid-template-columns:minmax(0, 1fr);
+  }
+}
+
+/* A one-line diagram squeezed onto a phone gives bus discs too small to read
+   or tap, so below this width it keeps a usable size and scrolls - the same
+   trade the contribution calendar makes on the home page. */
+@media (max-width:760px){
+  .cx-diagramscroll{
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+  }
+
+  .cx-diagram{
+    min-width:560px;
+  }
+}
+
+@media (max-width:720px){
+  .cx-diagramwrap,
+  .cx-summary,
+  .cx-screen{
+    padding:16px 14px;
+  }
+
+  .cx-controls{
+    padding:12px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cx-branch__line,
+  .cx-bus__disc,
+  .cx-table__row{
+    transition:none;
+  }
+}

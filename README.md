@@ -173,12 +173,27 @@ fuel reads zero and its neighbours meet. That is also why the bar is never sorte
 by share, and why it draws seven segments while the details table under it lists
 all nine fuels the feed reports. Re-run that check before changing any of them.
 
-## Contingency screening demonstration
+## Research page
 
-`/contingency/` carries an interactive N-1 screen on the IEEE 14-bus test system.
-Trip any line and a full Newton-Raphson AC power flow re-solves in the browser -
-one base case plus twenty single-outage cases per interaction, a few milliseconds
-in total, so nothing is precomputed.
+`/research/` collects the interactive work. It is a list of projects: each one is
+an `<article class="project">` with its own anchor, so adding the next is
+appending a block, and the divider rule keeps the first from wearing a rule above
+nothing. The page shell (`.section-research`, `.project`) lives in `custom.css`
+with the other section styles; a project's own component styles live beside it,
+as `css/contingency.css` does.
+
+This page replaced the Flexible Future Power Networks Group page, which has been
+retired from the site. `/researchgroup/`, `/contingency/` and the two legacy
+`pages/researchgroup*` paths are now redirect stubs, since GitHub Pages has no
+server-side redirects and those URLs were published. `/contingency/` points at
+`/research/#contingency` so shared links still land on the demonstration itself.
+
+### Project 01 - contingency screening
+
+An interactive N-1 screen on the IEEE 14-bus test system. Trip any line and a
+full Newton-Raphson AC power flow re-solves in the browser - one base case plus
+twenty single-outage cases per interaction, a few milliseconds in total, so
+nothing is precomputed.
 
 The solver is in [`js/lib/powerflow.js`](js/lib/powerflow.js) and is the part that
 has to be right. [`tests/powerflow.test.js`](tests/powerflow.test.js) checks it
@@ -187,7 +202,7 @@ degrees), against the known 13.39 MW of base-case losses, and on the physics tha
 should hold regardless: the slack picks up generation, load and losses exactly;
 lossless transformers lose nothing; PV buses hold their setpoint.
 
-The page is deliberately the **classical** screen - the active-power performance
+It is deliberately the **classical** screen - the active-power performance
 index - and says so. It makes no claim about the learned, explainable ranking that
 the research is actually about. What it does show is why that research exists:
 raise demand past about 110% and the index starts misordering, sinking outages

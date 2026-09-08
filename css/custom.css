@@ -37,6 +37,7 @@
   --section-recognition:    #f4f7fb;  /* sits between skills and education */
   --section-activity:       #f8fafd;  /* lifts back up after the cooler skills band */
   --section-grid:           #edf1f8;  /* cools straight after About, before Education lifts */
+  --section-research:       #f7f9fc;  /* the research page's single band */
 
   /* Contribution calendar: the accent ramped down to the empty-day ring, so the
      graph reads as part of this palette rather than as GitHub's green. */
@@ -2674,4 +2675,66 @@ section{
 .demo-card__cta:hover,
 .demo-card__cta:focus-visible{
   filter:brightness(1.08);
+}
+
+/* =====================================================
+   Research page
+   One band holding a list of projects. Each project is an
+   <article class="project"> with its own anchor; adding
+   another is appending one, and the divider rule below
+   keeps the first one from wearing a rule above nothing.
+===================================================== */
+.section-research{
+  background:var(--section-research);
+  padding:40px 0 56px;
+}
+
+.section-research .section-title{
+  margin-bottom:8px;
+}
+
+.research-lead{
+  margin:10px 0 0;
+  max-width:72ch;
+  color:var(--ink-muted);
+}
+
+.project{
+  /* The header is sticky, so an anchored project has to clear it. The global
+     rule only covers <section>, and these are <article>. */
+  scroll-margin-top:84px;
+  margin-top:30px;
+}
+
+.project + .project{
+  margin-top:44px;
+  padding-top:38px;
+  border-top:1px solid var(--rule-edge);
+}
+
+.project__index{
+  margin:0;
+  font-size:11.5px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+
+.project__title{
+  margin:6px 0 0;
+  font-size:24px;
+  line-height:1.25;
+  letter-spacing:-.01em;
+  color:var(--ink);
+}
+
+.project .cx-lead{
+  margin-top:12px;
+}
+
+@media (max-width:720px){
+  .project__title{
+    font-size:20px;
+  }
 }

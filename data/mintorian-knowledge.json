@@ -10,11 +10,10 @@
     { "id": "skills", "label": "Technical skills", "url": "/#skills" },
     { "id": "activity", "label": "Commit activity", "url": "/#activity" },
     { "id": "grid", "label": "GB grid, right now", "url": "/#grid" },
-    { "id": "contingency", "label": "Contingency screening demonstration", "url": "/contingency/" },
+    { "id": "research", "label": "Research and interactive demonstrations", "url": "/research/" },
     { "id": "recognition", "label": "Recognition and projects", "url": "/#recognition" },
     { "id": "experience", "label": "Experience", "url": "/experience/" },
     { "id": "publications", "label": "Publications", "url": "/publications/" },
-    { "id": "research-group", "label": "Research group", "url": "/researchgroup/" },
     { "id": "updates", "label": "Updates", "url": "/updates/" },
     { "id": "contact", "label": "Email Bilal", "url": "mailto:connect@mintorian.com" }
   ],

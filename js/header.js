@@ -3,7 +3,7 @@
     .replace(/\/index\.html$/i, '/')
     .replace(/\.html$/i, '/');
 
-  if (/^\/(experience|publications|researchgroup|updates)$/i.test(cleanPath)) {
+  if (/^\/(experience|publications|research|updates)$/i.test(cleanPath)) {
     cleanPath += '/';
   }
 
@@ -30,7 +30,7 @@
         <li><a href="${base}/" class="nav-link" data-nav="home">Home</a></li>
         <li><a href="${base}/experience/" class="nav-link" data-nav="experience">Experience</a></li>
         <li><a href="${base}/publications/" class="nav-link" data-nav="publications">Publications</a></li>
-        <li><a href="${base}/researchgroup/" class="nav-link" data-nav="researchgroup">Research Group</a></li>
+        <li><a href="${base}/research/" class="nav-link" data-nav="research">Research</a></li>
         <li><a href="${base}/updates/" class="nav-link" data-nav="updates">Updates</a></li>
       </ul>
 
@@ -56,7 +56,9 @@
   const file = (pathParts.at(-1) || 'index').toLowerCase();
   const key = file.includes('experience') ? 'experience'
            : file.includes('publications') ? 'publications'
-           : file.includes('researchgroup') ? 'researchgroup'
+           // 'research' also matches the retired 'researchgroup' path, which is
+           // harmless: that URL now serves a redirect stub carrying no nav.
+           : file.includes('research') ? 'research'
            : file.includes('updates') ? 'updates'
            : 'home';
 

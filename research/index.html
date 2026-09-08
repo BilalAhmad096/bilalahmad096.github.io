@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Research | Bilal Ahmad</title>
+  <meta name="description" content="Interactive research from Bilal Ahmad on power systems: an N-1 contingency screening demonstration on the IEEE 14-bus test system, solving a full AC power flow in the browser." />
+  <link rel="canonical" href="https://mintorian.com/research/" />
+
+  <!-- Favicon / App Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/image/web-app-manifest-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-96x96.png">
+  <link rel="manifest" href="/image/site.webmanifest">
+  <link rel="shortcut icon" href="/image/favicon.ico">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WJW7EH9XYS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-WJW7EH9XYS');
+  </script>
+
+  <link rel="stylesheet" href="/css/styles.css?v=20260903-1">
+  <link rel="stylesheet" href="/css/custom.css?v=20260908-1">
+  <link rel="stylesheet" href="/css/contingency.css?v=20260907-1">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Bilal Ahmad" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:title" content="Research | Bilal Ahmad" />
+  <meta property="og:description" content="Interactive research from Bilal Ahmad on power systems: an N-1 contingency screening demonstration on the IEEE 14-bus test system, solving a full AC power flow in the browser." />
+  <meta property="og:url" content="https://mintorian.com/research/" />
+  <meta property="og:image" content="https://mintorian.com/image/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ahmadbilal096" />
+  <meta name="twitter:title" content="Research | Bilal Ahmad" />
+  <meta name="twitter:description" content="Interactive research from Bilal Ahmad on power systems: an N-1 contingency screening demonstration on the IEEE 14-bus test system, solving a full AC power flow in the browser." />
+  <meta name="twitter:image" content="https://mintorian.com/image/og-image.png" />
+</head>
+
+<body class="page-research">
+
+  <div id="header">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <div class="container-wide">
+        <nav class="primary-nav" id="mainNav" aria-label="Primary">
+          <div class="nav-left">
+
+            <!-- Mobile Hamburger -->
+            <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu brandLogos">
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+
+          <ul class="nav-list" id="navMenu">
+          <li><a href="/" class="nav-link" data-nav="home">Home</a></li>
+          <li><a href="/experience/" class="nav-link" data-nav="experience">Experience</a></li>
+          <li><a href="/publications/" class="nav-link" data-nav="publications">Publications</a></li>
+          <li><a href="/research/" class="nav-link active" data-nav="research" aria-current="page">Research</a></li>
+          <li><a href="/updates/" class="nav-link" data-nav="updates">Updates</a></li>
+          </ul>
+
+          <ul class="brand-logos" id="brandLogos">
+          <li><a href="https://www.bath.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/bath-wordmark.png" alt="University of Bath"></a></li>
+          <li><a href="https://www.royalholloway.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
+          <li><a href="https://www.iitr.ac.in/" target="_blank" rel="noopener noreferrer"><img src="/image/iitr.png" alt="IIT Roorkee"></a></li>
+          <li><a href="https://www.rwth-aachen.de/" target="_blank" rel="noopener noreferrer"><img src="/image/rwth.png" alt="RWTH Aachen University"></a></li>
+          <li><a href="https://www.amu.ac.in/" target="_blank" rel="noopener noreferrer"><img src="/image/amu.jpg" alt="Aligarh Muslim University"></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  </div>
+
+  <main id="main-content">
+    <section class="section-research">
+      <div class="container">
+        <h1 class="section-title" data-aos="fade-up">Research</h1>
+        <p class="research-lead" data-aos="fade-up">I work on power system reliability, optimal and
+          security-constrained power flow, and explainable AI for intelligent contingency screening.
+          This page collects the parts of that work you can pick up and use, rather than only read
+          about. More will appear here as it becomes publishable.</p>
+
+        <article class="project" id="contingency" data-aos="fade-up">
+          <p class="project__index">Project 01</p>
+          <h2 class="project__title">Contingency screening on the IEEE 14-bus system</h2>
+
+          <p class="cx-lead">A power system is planned so that it survives losing any single element
+            &mdash; the N&#8209;1 rule. Checking that means re&#8209;solving the network once for every
+            component that could fail, which is why operators <em>screen</em> first: rank the outages
+            cheaply, then study only the worst. This is that idea, running live.</p>
+
+          <p class="cx-lead">Click any line below to trip it. The AC power flow re-solves in your
+            browser and the diagram redraws: line colour and thickness show loading, bus colour shows
+            voltage. The table underneath ranks all twenty single-line outages by a classical severity
+            index.</p>
+
+          <div class="cx" id="cx">
+          <p class="cx__status" role="status">Loading the network&hellip;</p>
+          <noscript>
+            <style>.cx__status{ display:none; }</style>
+            <p class="cx__status">This demonstration solves a power flow in the browser, so it needs
+              JavaScript enabled.</p>
+          </noscript>
+        </div>
+
+          <div class="cx-notes">
+          <h2>What this is, and what it is not</h2>
+          <p>The network is the <strong>IEEE 14-bus test system</strong>, the standard small case used
+            for teaching and benchmarking. The power flow is a full Newton&ndash;Raphson AC solution,
+            not an approximation: it is checked against the case's own published solution to within
+            0.0013&nbsp;pu, and it converges in four iterations from a flat start.</p>
+
+          <p>The ranking uses the <strong>active-power performance index</strong>, the textbook screen:
+            sum each branch's loading raised to a high power, so one badly overloaded circuit outweighs
+            many comfortable ones. It is deliberately the classical method, not my research. My own work
+            replaces an index like this with a learned ranking that also explains <em>why</em> it flagged
+            a case &mdash; and this page makes no claim about how that performs.</p>
+
+          <p>Watch what happens as you raise demand. Around 110% the index starts getting the order
+            wrong: outages that cause a genuine overload sink below ones that cause none, because a
+            spread of mid-loaded branches out-scores a single overload. That failure has a name
+            &mdash; <em>masking</em> &mdash; and it is the reason this problem is still worth research.</p>
+
+          <h2>Assumptions worth stating</h2>
+          <ul>
+            <li><strong>Line ratings are assumed.</strong> The IEEE case lists every thermal limit as
+              zero, so the ratings here are ours: round values set above base-case flow, so the intact
+              network is secure with margin and some single outages are not.</li>
+            <li><strong>The voltage band is 0.94&ndash;1.10&nbsp;pu.</strong> The case file states 1.06,
+              but schedules generators at 1.07 and 1.09, so its own published solution breaches that.
+              The band was widened to contain the intact solution, so that a violation you see is caused
+              by the outage rather than by the data.</li>
+            <li><strong>Generation does not re-dispatch.</strong> Tripping a line redistributes flow;
+              no optimiser steps in to fix it. A real operator would re-dispatch, and that is the
+              security-constrained OPF problem sitting one layer above this one.</li>
+            <li><strong>Generator VAr limits are not enforced</strong>, matching the default the
+              reference solution was produced under.</li>
+          </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer">
+    <footer class="site-footer">
+      <div class="container-wide">
+        <!-- Top row: collaborators' logos -->
+        <div class="footer-top">
+          <div class="footer-collab-row">
+            <span class="footer-label">Collaborators:</span>
+            <ul class=" footer-logos">
+              <li><a href="https://www.sandia.gov/" target="_blank" rel="noopener noreferrer"><img src="/image/Sandia.png" alt="Sandia National Laboratories"></a></li>
+              <li><a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/manchester.png" alt="University of Manchester"></a></li>
+              <li><a href="https://www.ed.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/Edinburgh.png" alt="University of Edinburgh"></a></li>
+              <li><a href="https://www.ukpowernetworks.co.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/ukpn.png" alt="UK Power Networks"></a></li>
+              <li><a href="https://www.tneigroup.com/" target="_blank" rel="noopener noreferrer"><img src="/image/TNEI-logo.jpg" alt="TNEI Consultancy"></a></li>
+              <li><a href="https://www.psr-inc.com/" target="_blank" rel="noopener noreferrer"><img src="/image/psr-logo (2).jpeg" alt="PSR Inc."></a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- Bottom row: Social Profiles -->
+        <div class="footer-bottom">
+          <div class="footer-right">
+            <a class="social" href="https://www.linkedin.com/in/mintorian" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-linkedin.svg" alt="LinkedIn">
+            </a>
+            <a class="social" href="https://github.com/BilalAhmad096" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-github.svg" alt="GitHub">
+            </a>
+            <a class="social" href="https://scholar.google.com/citations?user=Y-ShcXcAAAAJ" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-scholar.svg" alt="Google Scholar">
+            </a>
+            <a class="social" href="https://x.com/ahmadbilal096" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-x.svg" alt="X (Twitter)">
+            </a>
+            <a class="social" href="https://www.instagram.com/thebilalgram/" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-instagram.svg" alt="Instagram">
+            </a>
+            <a class="social" href="https://leetcode.com/u/mailboxforbilal/" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-leetcode.svg" alt="LeetCode">
+            </a>
+            <a class="social" href="https://www.hackerrank.com/profile/mailboxforbilal" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-hackerrank.svg" alt="HackerRank">
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/js/header.js?v=20260827"></script>
+  <script src="/js/footer.js?v=20260806-1"></script>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="/js/aos-setup.js?v=20260827-2" defer></script>
+
+  <script src="/js/backtotop.js?v=20260829-1" defer></script>
+  <script type="module" src="/js/contingency.js?v=20260907-1"></script>
+  <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
+
+</body>
+
+</html>

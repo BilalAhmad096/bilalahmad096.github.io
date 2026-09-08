@@ -1,20 +1,13 @@
 /* =====================================================
    Contingency screening demo
-   Page-scoped: only /contingency/ loads this file.
+   Page-scoped: only /research/ loads this file. The page
+   shell it sits in (.section-research, .project) lives
+   in custom.css with the other section styles.
    Colour meaning lives in js/contingency.js, which sets
    fills and strokes from the solved case; the rules here
    are layout, weight and the states colour cannot carry
    on its own.
 ===================================================== */
-
-.section-cx{
-  background:var(--section-education);
-  padding:40px 0 56px;
-}
-
-.section-cx .section-title{
-  margin-bottom:8px;
-}
 
 .cx-lead{
   margin:10px 0 0;

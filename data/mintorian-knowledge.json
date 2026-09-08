@@ -79,6 +79,52 @@
       "status": "verified_limited"
     },
     {
+      "id": "research-page",
+      "category": "RESEARCH",
+      "title": "The Research page",
+      "summary": "Mintorian has a Research page at /research/ collecting the parts of Bilal's work a visitor can pick up and use rather than only read about. It currently hosts one item, an interactive N-1 contingency screen on the IEEE 14-bus system.",
+      "details": [
+        "The page states that more will appear there as it becomes publishable. Do not name or promise any item that is not listed on it today.",
+        "This page replaced the earlier Research Group page. The old /researchgroup/ address now redirects here, so link to /research/ rather than to the old path."
+      ],
+      "keywords": ["research page", "research", "demonstrations", "demos", "interactive", "tools", "usable work", "research group", "researchgroup"],
+      "source": { "label": "Research", "url": "/research/" },
+      "status": "verified"
+    },
+    {
+      "id": "research-contingency-demo",
+      "category": "RESEARCH",
+      "title": "Interactive N-1 contingency screen on the IEEE 14-bus system",
+      "summary": "The Research page carries a working N-1 contingency demonstration on the IEEE 14-bus test system. A visitor clicks any circuit to trip it, a full Newton-Raphson AC power flow re-solves in the browser, and a table ranks all twenty single-line outages by a classical severity index.",
+      "details": [
+        "This demonstration is deliberately the classical method, not Bilal's own research. The page says so explicitly. Never describe it as his method, his result, or evidence of how his work performs.",
+        "His research replaces an index like this one with a learned ranking that also explains why it flagged a case. The page makes no claim about how that performs, and neither should you.",
+        "The ranking uses the active-power performance index: each branch's loading raised to a high power and summed, so one badly overloaded circuit outweighs many comfortable ones.",
+        "Raising demand exposes the point of the demonstration. Around 110 per cent the index begins ordering outages wrongly, because a spread of mid-loaded branches out-scores a single genuine overload. That failure is called masking, and the page presents it as the reason the problem is still worth researching.",
+        "The solver is checked against the case's own published solution to within 0.0013 pu and converges in four iterations from a flat start.",
+        "Stated assumptions: line ratings are chosen rather than taken from the case, which lists every thermal limit as zero; the voltage band is widened to 0.94 to 1.10 pu so that the intact solution fits inside it; generation does not re-dispatch after an outage; and generator VAr limits are not enforced.",
+        "It runs entirely in the visitor's browser and needs JavaScript. The older /contingency/ address redirects to /research/#contingency."
+      ],
+      "keywords": ["contingency", "contingency screening", "n-1", "n minus 1", "ieee 14-bus", "14 bus", "test system", "power flow", "ac power flow", "newton raphson", "load flow", "outage", "trip a line", "severity index", "performance index", "masking", "demo", "demonstration", "interactive", "simulation", "browser"],
+      "source": { "label": "Research — contingency screening", "url": "/research/#contingency" },
+      "status": "verified"
+    },
+    {
+      "id": "home-grid-now",
+      "category": "RESEARCH",
+      "title": "GB Grid, Right Now panel",
+      "summary": "The Mintorian home page carries a live panel called GB Grid, Right Now, showing Great Britain's carbon intensity, where the power is coming from, and what the transmission system is metering for the current half hour. It is read from public feeds each time the page loads.",
+      "details": [
+        "The two sources are the Carbon Intensity API at carbonintensity.org.uk for intensity and the national generation mix, and Elexon's BMRS data service for half-hourly metered output in MW.",
+        "The two are shown separately and never added together: the carbon-intensity mix includes embedded solar and small wind, while Elexon meters the transmission system only and so excludes that embedded generation.",
+        "No figure from this panel is in this knowledge base. Never state a current carbon intensity, generation share or metered output. Point the visitor at the panel or at the published sources instead.",
+        "The panel is live third-party grid data, not a research result of Bilal's and not a claim about his work."
+      ],
+      "keywords": ["gb grid", "grid now", "live grid", "carbon intensity", "generation mix", "elexon", "bmrs", "national grid", "electricity", "half hour", "metered", "wind", "solar", "live data", "great britain"],
+      "source": { "label": "GB Grid, Right Now", "url": "/#grid" },
+      "status": "verified"
+    },
+    {
       "id": "phd-bath",
       "category": "PHD",
       "title": "PhD in Power System Reliability",

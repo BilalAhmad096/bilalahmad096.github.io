@@ -166,6 +166,41 @@ test("relationship questions reach the one cleared personal record and stop ther
   assert.match(record.details.join(" "), /no spouse name, no wedding date/i);
 });
 
+test("the contingency demonstration is retrievable and never passes as Bilal's own method", () => {
+  for (const query of [
+    "Can I try his contingency demo?",
+    "IEEE 14-bus test system",
+    "N-1 contingency screening demo",
+    "what is masking"
+  ]) {
+    const asked = searchKnowledgeBase({ query, categories: [], limit: 2 });
+    assert.equal(asked.results[0].id, "research-contingency-demo", `missed for: ${query}`);
+  }
+
+  // Before this record existed, "N-1 contingency screening demo" retrieved
+  // project-xai-scopf, which would have let the classical baseline be described
+  // as his research. The disclaimer has to lead the details, not trail them.
+  const record = searchKnowledgeBase({ query: "contingency demonstration", categories: [], limit: 1 }).results[0];
+  assert.match(record.details[0], /not Bilal's own research/i);
+  assert.match(record.details.join(" "), /makes no claim about how that performs/i);
+});
+
+test("the research page and live grid panel are retrievable without inviting invented figures", () => {
+  const research = searchKnowledgeBase({ query: "What is on his research page?", categories: [], limit: 1 });
+  assert.equal(research.results[0].id, "research-page");
+  assert.match(research.results[0].details.join(" "), /redirects here/i);
+
+  for (const query of ["carbon intensity", "What is the GB grid panel?", "how much wind is on the grid right now"]) {
+    const asked = searchKnowledgeBase({ query, categories: [], limit: 2 });
+    assert.equal(asked.results[0].id, "home-grid-now", `missed for: ${query}`);
+  }
+
+  // The panel is live third-party data. A number written here would be a number
+  // the assistant could quote as though it were current.
+  const grid = searchKnowledgeBase({ query: "gb grid live panel", categories: [], limit: 1 }).results[0];
+  assert.match(grid.details.join(" "), /Never state a current carbon intensity/i);
+});
+
 test("generic orientation questions fall back to the category the phrasing implies", () => {
   const work = searchKnowledgeBase({ query: "Where does Bilal work?", categories: [], limit: 3 });
   assert.equal(work.matchType, "orientation");

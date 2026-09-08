@@ -1516,12 +1516,17 @@ section{
   /* how far the rule runs. Wider than the 1080px content column so it still
      reads as a page-level divider, but no longer out into the margins. */
   --rule-width: 1200px;
-  /* It sits between the two sections rather than inside either one, and
-     paints the seam itself: About above the line, Education below it. */
+  /* It sits between two sections rather than inside either one, and paints the
+     seam itself. These two have to match the sections actually above and below
+     it in the markup, or the divider shows as a band of its own instead of a
+     join - so they are named here rather than buried in the gradient. Move the
+     divider, or insert a section next to it, and these move with it. */
+  --seam-above: var(--section-about);
+  --seam-below: var(--section-grid);
   background: linear-gradient(
     to bottom,
-    var(--section-about) 0 50%,
-    var(--section-education) 50% 100%
+    var(--seam-above) 0 50%,
+    var(--seam-below) 50% 100%
   );
   display: grid;
   grid-template-areas: "stage";

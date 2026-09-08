@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   applyAOS('.pub-list .pub-item', { delayStep: 120 }); // Publications page
   applyAOS('.xp-list .xp-item',   { delayStep: 120 }); // Experience page
   applyAOS('.rec-grid .rec-card', { delayStep: 120 }); // ⬅️ NEW: Recommendations
-  applyAOS('.rg-list .rg-notice', { delayStep: 120 });
 
   // Initialize AOS
   AOS.init({

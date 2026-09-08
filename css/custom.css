@@ -33,7 +33,6 @@
   --section-footer:       #0a1638;  /* existing dark navy footer */
   --section-updates-pro:    #f5f6fa;  /* soft gray-blue */
   --section-updates-person: #f1f3f6;  /* soft lilac/blue */
-  --section-researchgroup:  #eef2f8;  /* soft, distinct from publications */
   --section-recognition:    #f4f7fb;  /* sits between skills and education */
   --section-activity:       #f8fafd;  /* lifts back up after the cooler skills band */
   --section-grid:           #edf1f8;  /* cools straight after About, before Education lifts */
@@ -782,55 +781,6 @@ section{
 }
 
 /* =====================================================
-   10) Research Group Section
-===================================================== */
-.section-researchgroup{
-  background:var(--section-researchgroup);
-  padding:40px 0 100px;
-}
-
-.rg-container{
-  max-width:var(--container);
-}
-
-.rg-title{
-  margin-bottom:6px;
-}
-
-.rg-subtitle{
-  margin:0 0 16px;
-  font-size:20px;
-  font-weight:600;
-  color:var(--ink-muted);
-}
-
-.rg-content{
-  display:grid;
-  gap:16px;
-}
-
-/* Same recipe as .edu-item and .xp-item: two-column grid with a logo, and the
-   card background, radius, shadow and hover from the shared card block. */
-.rg-notice{
-  display:grid;
-  grid-template-columns:72px 1fr;
-  gap:16px;
-  align-items:center;
-  padding:16px;
-  color:var(--ink);
-}
-
-.rg-icon{
-  width:72px;
-  height:72px;
-  object-fit:contain;
-}
-
-.rg-notice p{
-  margin:0;
-}
-
-/* =====================================================
    11) Updates Section
 ===================================================== */
 .page-updates .section-updates--pro{
@@ -1133,7 +1083,6 @@ section{
    - .pub-item (Publications)
    - .rec-card (Recommendations)
    - .update-item (Updates)
-   - .rg-notice (Research group)
 */
 
 .hover-card,
@@ -1142,8 +1091,7 @@ section{
 .skill-card,
 .pub-item,
 .rec-card,
-.update-item,
-.rg-notice {
+.update-item {
   background:var(--card);
   border-radius:var(--radius-md);
   box-shadow:var(--shadow-sm);
@@ -1171,9 +1119,7 @@ section{
 .rec-card:hover,
 .rec-card:focus-visible,
 .update-item:hover,
-.update-item:focus-visible,
-.rg-notice:hover,
-.rg-notice:focus-visible {
+.update-item:focus-visible {
   transform:translateY(-2px) scale(1.03) !important;
   box-shadow:var(--shadow-md);
   background:#ffffff !important;
@@ -1208,7 +1154,6 @@ section{
 .skill-card:hover .skill-icon,
 .pub-item:hover .pub-icon,
 .rec-card:hover .rec-avatar,
-.rg-notice:hover .rg-icon,
 .xp-item:hover .xp-logo{
   transform:scale(1.04);
   transition:transform .22s ease;
@@ -1370,13 +1315,6 @@ section{
     row-gap:8px;
   }
 
-  .rg-subtitle{
-    font-size:18px;
-  }
-
-  .rg-notice{
-    padding:12px 14px;
-  }
 }
 
 /* 500px */
@@ -1441,7 +1379,6 @@ section{
   .pub-item,
   .rec-card,
   .update-item,
-  .rg-notice,
   .scroll-ribbon {
     transition:box-shadow .22s ease, background-color .22s ease, border-color .22s ease;
   }
@@ -1453,7 +1390,6 @@ section{
   .pub-item:hover,
   .rec-card:hover,
   .update-item:hover,
-  .rg-notice:hover,
   .scroll-ribbon:hover {
     transform:none;
   }

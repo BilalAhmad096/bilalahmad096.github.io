@@ -28,7 +28,7 @@
        Styles
   =============================== -->
   <link rel="stylesheet" href="css/styles.css?v=20260903-1">
-  <link rel="stylesheet" href="css/custom.css?v=20260908-1">
+  <link rel="stylesheet" href="css/custom.css?v=20260908-2">
   
 
   <!-- AOS (Animate On Scroll) CSS -->
@@ -268,15 +268,8 @@
               <a href="https://carbonintensity.org.uk/">carbonintensity.org.uk</a>.</p>
           </noscript>
         </div>
-      </div>
-    </section>
 
-    <!-- ===============================
-         Contingency Demo Teaser
-    =============================== -->
-    <section id="demo" class="section-demo">
-      <div class="container">
-        <div class="demo-card" data-aos="fade-up">
+        <div class="demo-card" id="demo" data-aos="fade-up">
           <div class="demo-card__text">
             <p class="skill-micro">Interactive</p>
             <h2 class="demo-card__title">Trip a line and watch the grid re-solve</h2>
@@ -286,6 +279,29 @@
               it gets the order wrong.</p>
           </div>
           <a class="demo-card__cta" href="/research/#contingency">Open the demonstration</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================
+         GitHub Activity Section
+         Rendered by js/github-activity.js from data/github-activity.json,
+         which a scheduled GitHub Action rebuilds. No token in the browser.
+    =============================== -->
+    <section id="activity" class="section-activity">
+      <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Commit Activity</h2>
+        <p class="activity-lead" data-aos="fade-up">Contributions to my public GitHub work over the last year &mdash; commits, pull requests, reviews and issues. Refreshed daily.</p>
+
+        <div class="gh-activity" id="githubActivity" data-aos="fade-up"
+             data-source="/data/github-activity.json"
+             data-profile="https://github.com/BilalAhmad096">
+          <p class="gh-activity__status" role="status">Loading commit activity&hellip;</p>
+          <noscript>
+            <style>.gh-activity__status{ display:none; }</style>
+            <p class="gh-activity__noscript">The calendar needs JavaScript. The same activity is on my GitHub profile.</p>
+          </noscript>
+          <a class="gh-activity__link" href="https://github.com/BilalAhmad096" target="_blank" rel="noopener noreferrer">@BilalAhmad096 on GitHub</a>
         </div>
       </div>
     </section>
@@ -431,29 +447,6 @@
               <li>CSS</li>
             </ul>
           </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===============================
-         GitHub Activity Section
-         Rendered by js/github-activity.js from data/github-activity.json,
-         which a scheduled GitHub Action rebuilds. No token in the browser.
-    =============================== -->
-    <section id="activity" class="section-activity">
-      <div class="container">
-        <h2 class="section-title" data-aos="fade-up">Commit Activity</h2>
-        <p class="activity-lead" data-aos="fade-up">Contributions to my public GitHub work over the last year &mdash; commits, pull requests, reviews and issues. Refreshed daily.</p>
-
-        <div class="gh-activity" id="githubActivity" data-aos="fade-up"
-             data-source="/data/github-activity.json"
-             data-profile="https://github.com/BilalAhmad096">
-          <p class="gh-activity__status" role="status">Loading commit activity&hellip;</p>
-          <noscript>
-            <style>.gh-activity__status{ display:none; }</style>
-            <p class="gh-activity__noscript">The calendar needs JavaScript. The same activity is on my GitHub profile.</p>
-          </noscript>
-          <a class="gh-activity__link" href="https://github.com/BilalAhmad096" target="_blank" rel="noopener noreferrer">@BilalAhmad096 on GitHub</a>
         </div>
       </div>
     </section>

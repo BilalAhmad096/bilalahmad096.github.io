@@ -26,16 +26,16 @@
 
   /* Section-specific backgrounds */
   --section-about:        #f5f6fa;  /* very light bluish-gray */
-  --section-skills:       #eef1f6;  /* cooler gray-blue */
-  --section-education:    #f7f9fc;  /* pale gray with hint of blue */
+  --section-skills:       #f7f9fc;  /* light, lifting after Education's cool band */
+  --section-education:    #eef2f8;  /* cool, so it separates from Activity above it */
   --section-experience:   #f1f3f6;  /* slightly darker gray for contrast */
   --section-publications: #eceff3;  /* clearly distinct light slate */
   --section-footer:       #0a1638;  /* existing dark navy footer */
   --section-updates-pro:    #f5f6fa;  /* soft gray-blue */
   --section-updates-person: #f1f3f6;  /* soft lilac/blue */
-  --section-recognition:    #f4f7fb;  /* sits between skills and education */
-  --section-activity:       #f8fafd;  /* lifts back up after the cooler skills band */
-  --section-grid:           #edf1f8;  /* cools straight after About, before Education lifts */
+  --section-recognition:    #f0f4fa;  /* cool close, dropping away from Skills */
+  --section-activity:       #f8fafd;  /* the lightest band, lifting hard out of the grid */
+  --section-grid:           #edf1f8;  /* cools after About; carries the demo card too */
   --section-research:       #f7f9fc;  /* the research page's single band */
 
   /* Contribution calendar: the accent ramped down to the empty-day ring, so the
@@ -2563,14 +2563,13 @@ section{
 
 /* =====================================================
    Contingency demo teaser
-   A single card on the home page pointing at /contingency/.
+   Sits inside the GB Grid section rather than in a band of
+   its own: the two read as one block, which is how the page
+   is meant to scan. Its spacing therefore comes from here
+   rather than from a section's padding.
 ===================================================== */
-.section-demo{
-  background:var(--section-skills);
-  padding:34px 0;
-}
-
 .demo-card{
+  margin-top:26px;
   display:flex;
   align-items:center;
   justify-content:space-between;

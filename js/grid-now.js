@@ -197,6 +197,21 @@ export function sparkline(points, { width = 340, height = 60, pad = 8 } = {}) {
   };
 }
 
+/**
+ * The reading nearest a position along the line, measured in the same viewBox
+ * units the geometry is drawn in. The chart is stretched to the card, so a
+ * caller scales a pointer's pixel offset into those units before asking.
+ */
+export function nearestIndex(coords, x) {
+  if (!Array.isArray(coords) || !coords.length) return -1;
+
+  let best = 0;
+  for (let index = 1; index < coords.length; index += 1) {
+    if (Math.abs(coords[index].x - x) < Math.abs(coords[best].x - x)) best = index;
+  }
+  return best;
+}
+
 export const formatShare = percent => `${percent.toFixed(1)}%`;
 
 /** Below a gigawatt this reads better as MW; above it, as GW. */
@@ -267,7 +282,16 @@ function renderSpark(points) {
   if (!geometry) return null;
 
   const figure = element('figure', 'grid-now__spark');
-  figure.append(element('figcaption', 'grid-now__label', 'Measured, past 24 hours'));
+
+  // The caption keeps the label and carries the scrub readout beside it, rather
+  // than a tooltip floating over a 60px-tall line: at this size a box near the
+  // cursor covers the very stretch of line being read.
+  const caption = element('figcaption', 'spark__head');
+  caption.append(element('span', 'grid-now__label', 'Measured, past 24 hours'));
+  const readout = element('span', 'spark__readout');
+  readout.setAttribute('aria-live', 'polite');
+  caption.append(readout);
+  figure.append(caption);
 
   const svg = svgElement('svg', {
     class: 'spark',
@@ -287,7 +311,82 @@ function renderSpark(points) {
     cy: geometry.last.y.toFixed(1),
     r: 4
   }));
-  figure.append(svg);
+
+  // The cursor sits in HTML over the chart rather than inside it: the viewBox is
+  // stretched to the card width, so an SVG dot would draw as an ellipse.
+  const plot = element('div', 'spark__plot');
+  plot.append(svg);
+
+  const cursor = element('div', 'spark__cursor');
+  cursor.setAttribute('aria-hidden', 'true');
+  cursor.append(element('div', 'spark__guide'));
+  const dot = element('div', 'spark__dot');
+  cursor.append(dot);
+  plot.append(cursor);
+
+  plot.tabIndex = 0;
+  plot.setAttribute('aria-label',
+    'Carbon intensity half hour by half hour. Use the left and right arrow keys ' +
+    'to read each half hour.');
+
+  let active = -1;
+
+  const show = index => {
+    const point = geometry.coords[index];
+    if (!point || index === active) return;
+    active = index;
+
+    cursor.style.left = `${((point.x / geometry.width) * 100).toFixed(3)}%`;
+    dot.style.top = `${((point.y / geometry.height) * 100).toFixed(3)}%`;
+    cursor.classList.add('is-on');
+    readout.textContent = `${clockOf(point.at)} · ${Math.round(point.value)} gCO₂/kWh`;
+  };
+
+  const clear = () => {
+    active = -1;
+    cursor.classList.remove('is-on');
+    readout.textContent = '';
+  };
+
+  const readAt = event => {
+    const box = plot.getBoundingClientRect();
+    if (!box.width) return;
+    show(nearestIndex(geometry.coords, ((event.clientX - box.left) / box.width) * geometry.width));
+  };
+
+  plot.addEventListener('pointermove', readAt);
+  // A tap reads the half hour under the finger. Nothing calls preventDefault, so
+  // the page still scrolls from a drag that starts on the chart - at which point
+  // the browser cancels the pointer and the cursor clears itself.
+  plot.addEventListener('pointerdown', readAt);
+  plot.addEventListener('pointerleave', clear);
+  plot.addEventListener('pointercancel', clear);
+
+  const KEY_STEPS = {
+    ArrowRight: 1, ArrowUp: 1,
+    ArrowLeft: -1, ArrowDown: -1
+  };
+
+  plot.addEventListener('keydown', event => {
+    const last = geometry.coords.length - 1;
+    const from = active < 0 ? last : active;
+
+    if (event.key === 'Home') show(0);
+    else if (event.key === 'End') show(last);
+    else if (event.key === 'Escape') clear();
+    else if (KEY_STEPS[event.key]) {
+      show(Math.min(last, Math.max(0, from + KEY_STEPS[event.key])));
+    } else return;
+
+    event.preventDefault();
+  });
+
+  // Focus lands on the latest reading, so tabbing here says something before any
+  // key is pressed.
+  plot.addEventListener('focus', () => show(geometry.coords.length - 1));
+  plot.addEventListener('blur', clear);
+
+  figure.append(plot);
 
   // Selective direct labels: the two turning points, never a number per point.
   const range = element('p', 'grid-now__range');

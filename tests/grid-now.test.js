@@ -6,6 +6,7 @@ import {
   foldMix,
   formatPower,
   formatShare,
+  nearestIndex,
   readHistory,
   readIntensity,
   sparkline,
@@ -174,6 +175,31 @@ test("a flat day still draws a line rather than dividing by zero", () => {
   const geometry = sparkline([{ at: "a", value: 120 }, { at: "b", value: 120 }]);
   assert.ok(Number.isFinite(geometry.coords[0].y));
   assert.equal(geometry.coords[0].y, geometry.coords[1].y);
+});
+
+test("scrubbing snaps to the nearest half hour, and clamps past either end", () => {
+  const { coords } = sparkline(
+    [
+      { at: "a", value: 100 },
+      { at: "b", value: 300 },
+      { at: "c", value: 200 }
+    ],
+    { width: 100, height: 50, pad: 5 }
+  );
+
+  // Points sit at x = 5, 50 and 95.
+  assert.equal(nearestIndex(coords, 5), 0);
+  assert.equal(nearestIndex(coords, 26), 0);
+  assert.equal(nearestIndex(coords, 29), 1);
+  assert.equal(nearestIndex(coords, 95), 2);
+  // A pointer past the plot's edge reads the end point rather than nothing.
+  assert.equal(nearestIndex(coords, -40), 0);
+  assert.equal(nearestIndex(coords, 400), 2);
+});
+
+test("with no line there is nothing to scrub", () => {
+  assert.equal(nearestIndex([], 10), -1);
+  assert.equal(nearestIndex(null, 10), -1);
 });
 
 test("a line needs two points", () => {

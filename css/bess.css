@@ -1,0 +1,362 @@
+/* css/bess.css
+   The storage-siting demonstration. Shares the page tokens defined in
+   custom.css and the visual grammar of the 14-bus diagram: voltage in the bus
+   fill, loading in the branch weight, red only for a genuine limit breach. */
+
+.bx {
+  margin-top: 28px;
+}
+
+/* ---------- live status line ---------- */
+
+.bx-status {
+  border: 1px solid var(--ring);
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+
+.bx-status__line {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.bx-status__line strong { font-weight: 650; }
+
+.bx-status__foot {
+  margin: 6px 0 0;
+  font-size: .85rem;
+  color: var(--ink-muted);
+}
+
+.bx-status__warn {
+  margin: 8px 0 0;
+  font-size: .85rem;
+  color: #8a4b2a;
+  background: #fdf3ec;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+/* ---------- one-line diagram ---------- */
+
+.bx-diagramwrap {
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.bx-diagram {
+  display: block;
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+}
+
+.bx-bus { cursor: pointer; }
+.bx-bus--source { cursor: default; }
+
+.bx-bus:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+.bx-bus:not(.bx-bus--source):hover circle {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.bx-buslabel {
+  font: 600 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  pointer-events: none;
+}
+
+.bx-batterylabel {
+  font: 650 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  fill: #fff;
+  pointer-events: none;
+}
+
+.bx-battery { pointer-events: none; }
+
+/* ---------- controls ---------- */
+
+.bx-layout { margin-top: 18px; }
+
+.bx-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+}
+
+.bx-control {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.bx-control__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.bx-control__label {
+  font-size: .82rem;
+  font-weight: 650;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 0;
+}
+
+.bx-control__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.bx-slider { width: 100%; accent-color: var(--accent); }
+
+.bx-select {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ring);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: .92rem;
+}
+
+.bx-modes {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 4px 20px;
+  border-top: 1px solid var(--ring);
+  padding-top: 16px;
+}
+
+.bx-modes legend {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+.bx-mode {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 9px;
+  align-items: start;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.bx-mode input { margin-top: 3px; accent-color: var(--accent); }
+
+.bx-mode__label {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.bx-mode__blurb {
+  grid-column: 2;
+  font-size: .82rem;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+/* ---------- 24-hour strip ---------- */
+
+.bx-stripwrap {
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.bx-strip {
+  display: block;
+  width: 100%;
+  min-width: 620px;
+  height: auto;
+}
+
+/* ---------- verdict ---------- */
+
+.bx-verdict {
+  margin-top: 26px;
+  border: 1px solid var(--ring);
+  border-left: 5px solid #8f9bb0;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+}
+
+.bx-verdict--yes      { border-left-color: #2e9e6b; }
+.bx-verdict--partial  { border-left-color: #c98a2e; }
+.bx-verdict--no       { border-left-color: #d03b3b; }
+.bx-verdict--marginal { border-left-color: #8f9bb0; }
+
+.bx-verdict__binding {
+  margin: 0 0 4px;
+  font-size: .78rem;
+  font-weight: 650;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.bx-verdict__headline {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.bx-verdict__reason {
+  margin: 0;
+  max-width: 68ch;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* ---------- stat grids ---------- */
+
+.bx-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.bx-stat {
+  background: #f7f9fc;
+  border: 1px solid var(--ring);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.bx-stat__label {
+  margin: 0 0 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  line-height: 1.35;
+}
+
+.bx-stat__value {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.bx-stat__note {
+  margin: 6px 0 0;
+  font-size: .78rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+/* ---------- panels ---------- */
+
+.bx-panel {
+  margin-top: 26px;
+  border: 1px solid var(--ring);
+  background: var(--card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+}
+
+.bx-panel__title {
+  margin: 26px 0 10px;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.bx-panel .bx-panel__title { margin-top: 0; }
+
+.bx-panel__lead {
+  margin: 0;
+  max-width: 72ch;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.bx-panel__foot {
+  margin: 14px 0 0;
+  font-size: .82rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+.bx-carbon__headline {
+  margin: 16px 0 0;
+  font-size: 1.2rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.bx-carbon__headline--down { color: #1f7a52; }
+.bx-carbon__headline--up   { color: #b03636; }
+
+@media (max-width: 640px) {
+  .bx-verdict, .bx-panel { padding: 16px; }
+  .bx-verdict__headline { font-size: 1.2rem; }
+  .bx-stat__value { font-size: 1.2rem; }
+}
+
+/* ---------- article copy ----------
+   Mirrors the note typography of the 14-bus project so the two read as one
+   page rather than as two bolted together. */
+
+.bx-lead {
+  margin: 10px 0 0;
+  max-width: 70ch;
+  color: var(--ink-muted);
+}
+
+.bx-notes {
+  max-width: 76ch;
+  margin-top: 34px;
+}
+
+.bx-notes h2 {
+  margin: 26px 0 8px;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.bx-notes p,
+.bx-notes li {
+  color: var(--ink-muted);
+  line-height: 1.65;
+}
+
+.bx-notes p { margin: 0 0 10px; }
+.bx-notes ul { margin: 0; padding-left: 20px; }
+.bx-notes li { margin-bottom: 8px; }
+.bx-notes strong { color: var(--ink); }

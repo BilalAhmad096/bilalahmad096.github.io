@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-09-02",
+  "lastVerified": "2026-09-10",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -82,12 +82,13 @@
       "id": "research-page",
       "category": "RESEARCH",
       "title": "The Research page",
-      "summary": "Mintorian has a Research page at /research/ collecting the parts of Bilal's work a visitor can pick up and use rather than only read about. It currently hosts one item, an interactive N-1 contingency screen on the IEEE 14-bus system.",
+      "summary": "Mintorian has a Research page at /research/ collecting the parts of Bilal's work a visitor can pick up and use rather than only read about. It hosts two interactive demonstrations: an N-1 contingency screen on the IEEE 14-bus system, and a battery siting study on a 33-bus distribution feeder driven by live GB data.",
       "details": [
         "The page states that more will appear there as it becomes publishable. Do not name or promise any item that is not listed on it today.",
-        "This page replaced the earlier Research Group page. The old /researchgroup/ address now redirects here, so link to /research/ rather than to the old path."
+        "This page replaced the earlier Research Group page. The old /researchgroup/ address now redirects here, so link to /research/ rather than to the old path.",
+        "Both demonstrations run entirely in the visitor's browser and need JavaScript, and both use the same Newton-Raphson AC power-flow solver."
       ],
-      "keywords": ["research page", "research", "demonstrations", "demos", "interactive", "tools", "usable work", "research group", "researchgroup"],
+      "keywords": ["research page", "research", "demonstrations", "demos", "interactive", "tools", "usable work", "research group", "researchgroup", "battery", "storage", "siting"],
       "source": { "label": "Research", "url": "/research/" },
       "status": "verified"
     },
@@ -107,6 +108,25 @@
       ],
       "keywords": ["contingency", "contingency screening", "n-1", "n minus 1", "ieee 14-bus", "14 bus", "test system", "power flow", "ac power flow", "newton raphson", "load flow", "outage", "trip a line", "severity index", "performance index", "masking", "demo", "demonstration", "interactive", "simulation", "browser"],
       "source": { "label": "Research — contingency screening", "url": "/research/#contingency" },
+      "status": "verified"
+    },
+    {
+      "id": "research-storage-siting",
+      "category": "RESEARCH",
+      "title": "Interactive battery siting study on a 33-bus distribution feeder",
+      "summary": "The Research page carries a live battery siting demonstration. A visitor picks a GB distribution licence area, clicks a bus on a 33-bus radial feeder to place a battery, sets its power and energy and chooses a dispatch rule. The feeder is re-solved for every half-hour of the last twenty-four against live GB data, and the page reports whether the siting is deliverable, what it is worth and to whom, and which way the carbon moves.",
+      "details": [
+        "The network is the 33-bus radial feeder of Baran and Wu, used exactly as published, and the solver reproduces its published solution. The page states plainly that this is not a real UK feeder: no GB distribution circuit is published with full impedances under a licence that could be verified. What is British is the live data driving it.",
+        "Three live sources: regional carbon intensity per distribution licence area from the National Energy System Operator's carbon API, national demand from Elexon, and the half-hourly system price from Elexon. If a feed fails the page says so rather than substituting silently.",
+        "The three dispatch rules - price-following, carbon-following and network-support - are deliberately simple heuristics. They are not optimisers and not Bilal's research, and the page says so. Never describe them as his method or as evidence of how his work performs.",
+        "Two results come from the physics rather than from any choice made in the demonstration: location dominates, because a battery near the substation displaces current that never travelled far enough to lose anything; and a battery is a load half the time, so charging at full power into a weak point can itself be the binding constraint.",
+        "Stated assumptions: nodal demand is measured nowhere and is scaled from the published case by live GB demand; the primary busbar is held at 1.02 pu rather than the published 1.00 pu, a realistic GB tap position, because at 1.00 pu the feeder is outside the statutory band at every hour of every day; thermal ratings are assumed because the case has none; the battery runs at unity power factor; the 24-hour window closes on itself so that no energy is invented; fault level is not modelled.",
+        "Network value and owner revenue are reported as two separate ledgers and never added, because in GB a distribution network operator buys flexibility rather than owning batteries or trading. The owner figure counts the system price only and the page describes it as a floor.",
+        "It is a retrospective over the last twenty-four hours that slides forward as the feeds publish. It is not a forecast, and it is not a connection study.",
+        "Never quote a figure or a verdict from this panel. Everything on it changes with live GB conditions, and a siting that reads as recommended at one moment can read differently an hour later. Point the visitor at the panel instead."
+      ],
+      "keywords": ["battery", "bess", "battery storage", "energy storage", "storage siting", "siting", "sizing", "where to put a battery", "33-bus", "baran wu", "distribution feeder", "distribution network", "dno", "licence area", "carbon intensity", "regional carbon", "elexon", "system price", "dispatch", "arbitrage", "peak shaving", "losses", "voltage", "voltage rise", "reverse power flow", "demo", "demonstration", "interactive", "live data", "browser"],
+      "source": { "label": "Research — battery siting", "url": "/research/#storage" },
       "status": "verified"
     },
     {

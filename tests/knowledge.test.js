@@ -166,6 +166,32 @@ test("relationship questions reach the one cleared personal record and stop ther
   assert.match(record.details.join(" "), /no spouse name, no wedding date/i);
 });
 
+test("the storage siting demonstration is retrievable and carries no frozen figures", () => {
+  for (const query of [
+    "Can I try the battery siting demo?",
+    "where should a battery go on a feeder",
+    "33-bus distribution feeder",
+    "battery energy storage demonstration"
+  ]) {
+    const asked = searchKnowledgeBase({ query, categories: [], limit: 2 });
+    assert.equal(asked.results[0].id, "research-storage-siting", `missed for: ${query}`);
+  }
+
+  const record = searchKnowledgeBase({ query: "battery siting demonstration", categories: [], limit: 1 }).results[0];
+
+  // The panel is driven by three live feeds and re-solves every half-hour, so a
+  // figure copied in here would be wrong within the hour - and a stale verdict
+  // is worse than a stale number, because it reads as a recommendation.
+  assert.match(record.details.join(" "), /Never quote a figure or a verdict from this panel/i);
+
+  // The same guard the 14-bus demo carries: simple baselines must never be
+  // handed to a visitor as his research.
+  assert.match(record.details.join(" "), /not optimisers and not Bilal's research/i);
+
+  // It must not claim to be a real UK network.
+  assert.match(record.details.join(" "), /not a real UK feeder/i);
+});
+
 test("the contingency demonstration is retrievable and never passes as Bilal's own method", () => {
   for (const query of [
     "Can I try his contingency demo?",

@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Research | Bilal Ahmad</title>
-  <meta name="description" content="Interactive research from Bilal Ahmad on power systems: an N-1 contingency screening demonstration on the IEEE 14-bus test system, solving a full AC power flow in the browser." />
+  <meta name="description" content="Interactive research from Bilal Ahmad on power systems: N-1 contingency screening on the IEEE 14-bus system, and a live storage siting study that solves a 33-bus distribution feeder against real GB carbon intensity, demand and price." />
   <link rel="canonical" href="https://mintorian.com/research/" />
 
   <!-- Favicon / App Icons -->
@@ -28,19 +28,20 @@
   <link rel="stylesheet" href="/css/styles.css?v=20260903-1">
   <link rel="stylesheet" href="/css/custom.css?v=20260908-1">
   <link rel="stylesheet" href="/css/contingency.css?v=20260907-1">
+  <link rel="stylesheet" href="/css/bess.css?v=20260910-1">
 
   <!-- Open Graph / social sharing -->
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Bilal Ahmad" />
   <meta property="og:locale" content="en_GB" />
   <meta property="og:title" content="Research | Bilal Ahmad" />
-  <meta property="og:description" content="Interactive research from Bilal Ahmad on power systems: an N-1 contingency screening demonstration on the IEEE 14-bus test system, solving a full AC power flow in the browser." />
+  <meta property="og:description" content="Interactive research from Bilal Ahmad on power systems: N-1 contingency screening on the IEEE 14-bus system, and a live storage siting study that solves a 33-bus distribution feeder against real GB carbon intensity, demand and price." />
   <meta property="og:url" content="https://mintorian.com/research/" />
   <meta property="og:image" content="https://mintorian.com/image/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@ahmadbilal096" />
   <meta name="twitter:title" content="Research | Bilal Ahmad" />
-  <meta name="twitter:description" content="Interactive research from Bilal Ahmad on power systems: an N-1 contingency screening demonstration on the IEEE 14-bus test system, solving a full AC power flow in the browser." />
+  <meta name="twitter:description" content="Interactive research from Bilal Ahmad on power systems: N-1 contingency screening on the IEEE 14-bus system, and a live storage siting study that solves a 33-bus distribution feeder against real GB carbon intensity, demand and price." />
   <meta name="twitter:image" content="https://mintorian.com/image/og-image.png" />
 </head>
 
@@ -146,6 +147,125 @@
           </ul>
           </div>
         </article>
+
+        <article class="project" id="storage" data-aos="fade-up">
+          <p class="project__index">Project 02</p>
+          <h2 class="project__title">Where should the battery go?</h2>
+
+          <p class="bx-lead">Putting a battery on a distribution network is not one decision but
+            three: <em>where</em> on the feeder, <em>how big</em>, and <em>what it is told to
+            chase</em>. Those three are usually settled by different people optimising different
+            things &mdash; a trader, a carbon target, a network planner &mdash; and they do not
+            agree with each other. This is that disagreement, running live.</p>
+
+          <p class="bx-lead">Pick a distribution licence area, click a bus to put the battery there,
+            set its power and its energy, and choose what the dispatch rule is trying to win. The
+            feeder re-solves for every half-hour of the last twenty-four &mdash; ninety-six AC power
+            flows &mdash; against real GB conditions: the regional carbon intensity for that licence
+            area, national demand, and the half-hourly system price. It then says whether the siting
+            is deliverable, what it is worth and to whom, and which way the carbon actually moves.</p>
+
+          <div class="bx" id="bx">
+            <p class="bx-status__line" role="status">Loading the feeder&hellip;</p>
+            <noscript>
+              <style>.bx-status__line{ display:none; }</style>
+              <p class="bx-status__line">This demonstration solves a power flow in the browser
+                against live data, so it needs JavaScript enabled.</p>
+            </noscript>
+          </div>
+
+          <div class="bx-notes">
+            <h2>What this is, and what it is not</h2>
+
+            <p>The network is the <strong>33-bus radial distribution feeder of Baran and Wu</strong>,
+              the standard case in the storage siting and sizing literature. Its impedances, loads
+              and topology are used exactly as published, and the solver reproduces the published
+              solution: 202.7&nbsp;kW of loss and 0.9131&nbsp;pu at bus&nbsp;18, in four iterations
+              from a flat start. The power flow is the same Newton&ndash;Raphson solver as the
+              14&#8209;bus project above.</p>
+
+            <p><strong>It is not a real UK feeder</strong>, and that matters enough to say plainly.
+              No GB distribution circuit is published with full impedances under a licence I could
+              verify, so rather than put licence-uncertain network data on a public page I used the
+              benchmark the literature uses. What is British here is everything driving it: the
+              carbon intensity is the real figure for the licence area you select, from the National
+              Energy System Operator's regional feed; demand and the system price come from Elexon.
+              The statutory voltage band is the GB one. Swapping in a genuine UK feeder later is a
+              change of data, not of method.</p>
+
+            <p><strong>It is not a connection study.</strong> Voltage, thermal loading, reverse power
+              flow and losses are all here; fault level is not, and in GB fault level is frequently
+              the thing that actually blocks a connection when everything else looks fine. A
+              favourable verdict on this page is not a verdict on connectability.</p>
+
+            <p><strong>The three dispatch rules are deliberately simple.</strong> Each ranks the
+              half-hours by one signal and charges at the bottom and discharges at the top; none of
+              them is an optimiser, and none is my research. They are transparent on purpose, so that
+              when the answers disagree you can see exactly why rather than take an optimiser's word
+              for it. Making that choice properly &mdash; a policy that respects the network, the
+              carbon signal and the revenue at once &mdash; is the open problem, not something this
+              page solves.</p>
+
+            <p>Two results fall out of the physics rather than out of anything I chose. The first is
+              that <strong>location dominates</strong>: the same megawatt at the head of the feeder
+              and near its end differ by more than a factor of ten in the loss it removes, because
+              current displaced next to the substation never travelled far enough to lose anything.
+              The second is that <strong>a battery is a load half the time</strong>. Charging at full
+              rated power into a weak point is the same problem the battery was bought to fix, only
+              pointing the other way, and it is why the most profitable dispatch rule is often the
+              one the network cannot accept.</p>
+
+            <h2>Assumptions worth stating</h2>
+            <ul>
+              <li><strong>Nodal demand is not measured, because nowhere publishes it.</strong> The
+                case's published bus loads are scaled together by live GB demand against the highest
+                half-hour in the window. Real feeders do not move in unison like that. This is the
+                one quantity on the page that is neither a measurement nor a published constant.</li>
+
+              <li><strong>The primary busbar is held at 1.02&nbsp;pu, not the 1.00&nbsp;pu of the
+                published case.</strong> At 1.00&nbsp;pu the far end of the trunk sits at
+                0.913&nbsp;pu and the feeder is outside the GB statutory band at every hour of every
+                day, which would make the demonstration meaningless. A GB primary has an on-load tap
+                changer and targets above nominal for precisely this reason. It is worth drawing the
+                obvious conclusion: <strong>a tap change is the cheapest lever a network operator
+                has</strong>, it lifts the whole feeder at once, and a battery should be judged
+                against a properly tapped network rather than against a neglected one.</li>
+
+              <li><strong>Thermal ratings are assumed.</strong> The published case has none. Each
+                circuit is given the smallest of a set of plausible ratings that leaves at least 35
+                per cent headroom over base-case flow, so the intact feeder is secure at full load
+                and no result on this page is decided by a rating picked to make a point.</li>
+
+              <li><strong>The battery runs at unity power factor.</strong> GB grid-scale storage
+                normally does unless it is contracted for reactive support. Letting it hold voltage
+                instead would flatter every voltage result here.</li>
+
+              <li><strong>The window closes on itself.</strong> The battery ends the twenty-four
+                hours at the state of charge it began them with. Without that constraint a battery
+                that started half full and ended empty would appear to deliver energy nobody charged,
+                quietly inflating both the trading revenue and the carbon saving. One consequence is
+                worth noticing: a short-duration battery never reaches its own power rating across a
+                long evening peak, because it can only give back what it took in.</li>
+
+              <li><strong>Losses and revenue are two ledgers, and they are never added.</strong>
+                Losses avoided and peak removed accrue to the network operator; trading accrues to
+                whoever owns the battery. In GB those are not the same party &mdash; a network
+                operator buys flexibility, it does not trade &mdash; so a single total would imply
+                someone who does not exist. The owner figure counts the system price only, and GB
+                storage earns most of its income in the balancing mechanism and ancillary services,
+                so read it as a floor rather than a business case.</li>
+
+              <li><strong>Embodied carbon is shown as a band, not a number.</strong> Published
+                estimates for lithium storage spread widely with chemistry, factory grid and system
+                boundary. At some sizes that band is wider than the difference between two options,
+                which is itself the useful thing to see.</li>
+
+              <li><strong>This is the last twenty-four hours, not a forecast.</strong> Every figure
+                is what actually happened, re-solved against the network. It is a retrospective that
+                slides forward as the feeds publish, and it makes no claim about tomorrow.</li>
+            </ul>
+          </div>
+        </article>
       </div>
     </section>
   </main>
@@ -206,6 +326,7 @@
 
   <script src="/js/backtotop.js?v=20260829-1" defer></script>
   <script type="module" src="/js/contingency.js?v=20260907-1"></script>
+  <script type="module" src="/js/bess.js?v=20260910-1"></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 
 </body>

@@ -2721,22 +2721,69 @@ section{
   border-top:1px solid var(--rule-edge);
 }
 
+/* Each project opens like a chapter: a large outlined numeral beside the
+   title, and a short accent rule under both. The numeral is decorative - the
+   kicker carries "Project 01" for screen readers - so it is aria-hidden in the
+   markup and outlined rather than filled, so it reads as a mark, not a word. */
+.project__head{
+  position:relative;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  column-gap:22px;
+  align-items:end;
+  padding-bottom:20px;
+}
+
+.project__head::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:64px;
+  height:3px;
+  border-radius:3px;
+  background:var(--accent);
+}
+
+.project__num{
+  font-family:linetoBlack, system-ui;
+  font-size:112px;
+  line-height:.78;
+  letter-spacing:-.04em;
+  color:transparent;
+  -webkit-text-stroke:2px var(--accent);
+  user-select:none;
+}
+
+/* Without text-stroke a transparent numeral would vanish entirely. */
+@supports not (-webkit-text-stroke:1px black){
+  .project__num{ color:#cfdcf7; }
+}
+
 .project__index{
-  margin:0;
+  margin:0 0 6px;
   font-size:11.5px;
   font-weight:700;
-  letter-spacing:.1em;
+  letter-spacing:.12em;
   text-transform:uppercase;
   color:var(--accent);
 }
 
 .project__title{
-  margin:6px 0 0;
-  font-size:24px;
-  line-height:1.25;
-  letter-spacing:-.01em;
+  margin:0;
+  font-family:linetoBlack, system-ui;
+  font-size:32px;
+  line-height:1.12;
+  letter-spacing:-.015em;
   color:var(--ink);
 }
+
+@media (max-width:640px){
+  .project__head{ column-gap:14px; }
+  .project__num{ font-size:72px; }
+  .project__title{ font-size:24px; }
+}
+
 
 .project .cx-lead{
   margin-top:12px;

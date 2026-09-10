@@ -91,9 +91,13 @@
 
 .bx-layout { margin-top: 18px; }
 
+/* Three explicit columns rather than auto-fit. The dispatch-rule row spans the
+   whole grid, and a spanning item stops auto-fit from collapsing the tracks it
+   covers - so on a wide screen auto-fit laid out four narrow columns for three
+   controls, truncating the licence-area names and wrapping the readouts. */
 .bx-controls {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: 1fr;
   gap: 18px;
   background: var(--card);
   border: 1px solid var(--ring);
@@ -127,6 +131,7 @@
 }
 
 .bx-control__value {
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
   font-weight: 650;
   color: var(--ink);
@@ -143,6 +148,10 @@
   color: var(--ink);
   font: inherit;
   font-size: .92rem;
+}
+
+@media (min-width: 760px) {
+  .bx-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 .bx-modes {

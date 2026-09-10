@@ -1,0 +1,164 @@
+/* css/notes.css
+   The prose that sits under each research demonstration.
+
+   Both projects end with the same two things: a passage saying what the
+   demonstration is and is not, and a list of assumptions. Left as bare
+   paragraphs under a heavily carded interactive panel they read as an
+   unstyled appendix, so this gives them the page's own vocabulary - the
+   accent eyebrow of .project__index, the card surface of the panels, the
+   hairline rules of the stat grids - and one structural idea: where a
+   passage opens with a bold term, that term becomes its own line.
+
+   Loaded after contingency.css and bess.css, and deliberately styles both
+   .cx-notes and .bx-notes together so the two projects cannot drift apart. */
+
+/* ---------- the standfirst above each demonstration ---------- */
+
+/* These inherit line-height: normal, which on a geometric face at 16px sets
+   far too tight for a paragraph anyone is expected to read. */
+.research-lead,
+.project .cx-lead,
+.project .bx-lead {
+  line-height: 1.7;
+  max-width: 68ch;
+}
+
+.project .cx-lead + .cx-lead,
+.project .bx-lead + .bx-lead {
+  margin-top: 14px;
+}
+
+/* ---------- the notes block ---------- */
+
+.cx-notes,
+.bx-notes {
+  max-width: none;
+  margin-top: 34px;
+  padding: 26px 30px 28px;
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Section headings become labels with a rule running out to the edge. They
+   are subsections of the project title, so they read as eyebrows rather than
+   competing with it. */
+.cx-notes h2,
+.cx-notes h3,
+.bx-notes h2,
+.bx-notes h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 34px 0 16px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cx-notes > :first-child,
+.bx-notes > :first-child {
+  margin-top: 0;
+}
+
+.cx-notes h2::after,
+.cx-notes h3::after,
+.bx-notes h2::after,
+.bx-notes h3::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--ring);
+}
+
+.cx-notes p,
+.bx-notes p {
+  margin: 0 0 14px;
+  max-width: 74ch;
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+
+.cx-notes p:last-child,
+.bx-notes p:last-child {
+  margin-bottom: 0;
+}
+
+/* Where a passage opens with a bold term, promote it to its own line.
+   In a list item the term genuinely starts the row, so :first-child is safe.
+   In a paragraph it is not: :first-child counts elements only, so a <strong>
+   used mid-sentence after some text is still the first *element* child, and
+   promoting it would break the sentence across lines. Paragraph terms are
+   therefore opted in explicitly with .term, and only where the bold text is a
+   complete sentence that can stand on its own line. */
+.cx-notes li > strong:first-child,
+.bx-notes li > strong:first-child,
+.cx-notes p > strong.term,
+.bx-notes p > strong.term {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+
+/* ---------- assumptions, as separated rows ---------- */
+
+.cx-notes ul,
+.bx-notes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ring);
+}
+
+.cx-notes li,
+.bx-notes li {
+  position: relative;
+  margin: 0;
+  padding: 15px 0 15px 24px;
+  border-bottom: 1px solid var(--ring);
+  max-width: none;
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+
+.cx-notes li::before,
+.bx-notes li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 24px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .4;
+}
+
+/* A row whose lead-in was promoted needs its marker on the term's line. */
+.cx-notes li > strong:first-child ~ *,
+.bx-notes li > strong:first-child ~ * {
+  max-width: 74ch;
+}
+
+.cx-notes strong,
+.bx-notes strong {
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .cx-notes,
+  .bx-notes {
+    padding: 20px 18px 22px;
+    border-radius: var(--radius-sm);
+  }
+
+  .cx-notes li,
+  .bx-notes li {
+    padding-left: 20px;
+  }
+}

@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="/css/custom.css?v=20260908-1">
   <link rel="stylesheet" href="/css/contingency.css?v=20260907-1">
   <link rel="stylesheet" href="/css/bess.css?v=20260910-1">
+  <link rel="stylesheet" href="/css/notes.css?v=20260910-1">
 
   <!-- Open Graph / social sharing -->
   <meta property="og:type" content="article" />
@@ -113,7 +114,7 @@
         </div>
 
           <div class="cx-notes">
-          <h2>What this is, and what it is not</h2>
+          <h3>What this is, and what it is not</h3>
           <p>The network is the <strong>IEEE 14-bus test system</strong>, the standard small case used
             for teaching and benchmarking. The power flow is a full Newton&ndash;Raphson AC solution,
             not an approximation: it is checked against the case's own published solution to within
@@ -130,7 +131,7 @@
             spread of mid-loaded branches out-scores a single overload. That failure has a name
             &mdash; <em>masking</em> &mdash; and it is the reason this problem is still worth research.</p>
 
-          <h2>Assumptions worth stating</h2>
+          <h3>Assumptions worth stating</h3>
           <ul>
             <li><strong>Line ratings are assumed.</strong> The IEEE case lists every thermal limit as
               zero, so the ratings here are ours: round values set above base-case flow, so the intact
@@ -142,7 +143,7 @@
             <li><strong>Generation does not re-dispatch.</strong> Tripping a line redistributes flow;
               no optimiser steps in to fix it. A real operator would re-dispatch, and that is the
               security-constrained OPF problem sitting one layer above this one.</li>
-            <li><strong>Generator VAr limits are not enforced</strong>, matching the default the
+            <li><strong>Generator VAr limits are not enforced.</strong> This matches the default the
               reference solution was produced under.</li>
           </ul>
           </div>
@@ -175,7 +176,7 @@
           </div>
 
           <div class="bx-notes">
-            <h2>What this is, and what it is not</h2>
+            <h3>What this is, and what it is not</h3>
 
             <p>The network is the <strong>33-bus radial distribution feeder of Baran and Wu</strong>,
               the standard case in the storage siting and sizing literature. Its impedances, loads
@@ -184,8 +185,8 @@
               from a flat start. The power flow is the same Newton&ndash;Raphson solver as the
               14&#8209;bus project above.</p>
 
-            <p><strong>It is not a real UK feeder</strong>, and that matters enough to say plainly.
-              No GB distribution circuit is published with full impedances under a licence I could
+            <p><strong class="term">It is not a real UK feeder.</strong> That matters enough to say
+              plainly. No GB distribution circuit is published with full impedances under a licence I could
               verify, so rather than put licence-uncertain network data on a public page I used the
               benchmark the literature uses. What is British here is everything driving it: the
               carbon intensity is the real figure for the licence area you select, from the National
@@ -193,12 +194,12 @@
               The statutory voltage band is the GB one. Swapping in a genuine UK feeder later is a
               change of data, not of method.</p>
 
-            <p><strong>It is not a connection study.</strong> Voltage, thermal loading, reverse power
+            <p><strong class="term">It is not a connection study.</strong> Voltage, thermal loading, reverse power
               flow and losses are all here; fault level is not, and in GB fault level is frequently
               the thing that actually blocks a connection when everything else looks fine. A
               favourable verdict on this page is not a verdict on connectability.</p>
 
-            <p><strong>The three dispatch rules are deliberately simple.</strong> Each ranks the
+            <p><strong class="term">The three dispatch rules are deliberately simple.</strong> Each ranks the
               half-hours by one signal and charges at the bottom and discharges at the top; none of
               them is an optimiser, and none is my research. They are transparent on purpose, so that
               when the answers disagree you can see exactly why rather than take an optimiser's word
@@ -215,7 +216,7 @@
               pointing the other way, and it is why the most profitable dispatch rule is often the
               one the network cannot accept.</p>
 
-            <h2>Assumptions worth stating</h2>
+            <h3>Assumptions worth stating</h3>
             <ul>
               <li><strong>Nodal demand is not measured, because nowhere publishes it.</strong> The
                 case's published bus loads are scaled together by live GB demand against the highest

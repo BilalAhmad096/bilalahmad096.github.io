@@ -12,20 +12,45 @@
    Loaded after contingency.css and bess.css, and deliberately styles both
    .cx-notes and .bx-notes together so the two projects cannot drift apart. */
 
-/* ---------- the standfirst above each demonstration ---------- */
+/* ---------- the standfirst, above the page and above each demonstration ----------
 
-/* These inherit line-height: normal, which on a geometric face at 16px sets
-   far too tight for a paragraph anyone is expected to read. */
+   Carded like everything else on the page, but tinted and given an accent edge
+   rather than the plain white of the interactive panels and the notes block, so
+   the three surfaces stay distinguishable: tinted = what this is, white panel =
+   the thing itself, white card = the caveats. */
+
+.lede {
+  margin: 18px 0 0;
+  padding: 20px 26px;
+  background: #f7f9fc;
+  border: 1px solid var(--ring);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+}
+
+.project .lede {
+  margin-top: 16px;
+}
+
+/* The card runs the full column; the measure is held on the text inside it,
+   because a 74ch line is readable and a full-width one is not. */
+.lede > p {
+  margin: 0;
+  max-width: 74ch;
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+
+.lede > p + p {
+  margin-top: 14px;
+}
+
+/* Left alone these inherit line-height: normal, which on a geometric face at
+   16px sets far too tight for a paragraph anyone is expected to read. */
 .research-lead,
 .project .cx-lead,
 .project .bx-lead {
   line-height: 1.7;
-  max-width: 68ch;
-}
-
-.project .cx-lead + .cx-lead,
-.project .bx-lead + .bx-lead {
-  margin-top: 14px;
 }
 
 /* ---------- the notes block ---------- */
@@ -151,6 +176,11 @@
 }
 
 @media (max-width: 640px) {
+  .lede {
+    padding: 16px 18px;
+    border-radius: var(--radius-sm);
+  }
+
   .cx-notes,
   .bx-notes {
     padding: 20px 18px 22px;

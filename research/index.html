@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="/css/styles.css?v=20260903-1">
   <link rel="stylesheet" href="/css/custom.css?v=20260908-1">
   <link rel="stylesheet" href="/css/contingency.css?v=20260907-1">
-  <link rel="stylesheet" href="/css/bess.css?v=20260910-1">
-  <link rel="stylesheet" href="/css/notes.css?v=20260910-1">
+  <link rel="stylesheet" href="/css/bess.css?v=20260910-2">
+  <link rel="stylesheet" href="/css/notes.css?v=20260910-2">
 
   <!-- Open Graph / social sharing -->
   <meta property="og:type" content="article" />
@@ -85,24 +85,28 @@
     <section class="section-research">
       <div class="container">
         <h1 class="section-title" data-aos="fade-up">Research</h1>
-        <p class="research-lead" data-aos="fade-up">I work on power system reliability, optimal and
+        <div class="lede" data-aos="fade-up">
+          <p class="research-lead">I work on power system reliability, optimal and
           security-constrained power flow, and explainable AI for intelligent contingency screening.
           This page collects the parts of that work you can pick up and use, rather than only read
           about. More will appear here as it becomes publishable.</p>
+        </div>
 
         <article class="project" id="contingency" data-aos="fade-up">
           <p class="project__index">Project 01</p>
           <h2 class="project__title">Contingency screening on the IEEE 14-bus system</h2>
 
-          <p class="cx-lead">A power system is planned so that it survives losing any single element
-            &mdash; the N&#8209;1 rule. Checking that means re&#8209;solving the network once for every
-            component that could fail, which is why operators <em>screen</em> first: rank the outages
-            cheaply, then study only the worst. This is that idea, running live.</p>
+          <div class="lede">
+            <p class="cx-lead">A power system is planned so that it survives losing any single element
+              &mdash; the N&#8209;1 rule. Checking that means re&#8209;solving the network once for every
+              component that could fail, which is why operators <em>screen</em> first: rank the outages
+              cheaply, then study only the worst. This is that idea, running live.</p>
 
-          <p class="cx-lead">Click any line below to trip it. The AC power flow re-solves in your
-            browser and the diagram redraws: line colour and thickness show loading, bus colour shows
-            voltage. The table underneath ranks all twenty single-line outages by a classical severity
-            index.</p>
+            <p class="cx-lead">Click any line below to trip it. The AC power flow re-solves in your
+              browser and the diagram redraws: line colour and thickness show loading, bus colour shows
+              voltage. The table underneath ranks all twenty single-line outages by a classical severity
+              index.</p>
+          </div>
 
           <div class="cx" id="cx">
           <p class="cx__status" role="status">Loading the network&hellip;</p>
@@ -153,18 +157,20 @@
           <p class="project__index">Project 02</p>
           <h2 class="project__title">Where should the battery go?</h2>
 
-          <p class="bx-lead">Putting a battery on a distribution network is not one decision but
-            three: <em>where</em> on the feeder, <em>how big</em>, and <em>what it is told to
-            chase</em>. Those three are usually settled by different people optimising different
-            things &mdash; a trader, a carbon target, a network planner &mdash; and they do not
-            agree with each other. This is that disagreement, running live.</p>
+          <div class="lede">
+            <p class="bx-lead">Putting a battery on a distribution network is not one decision but
+              three: <em>where</em> on the feeder, <em>how big</em>, and <em>what it is told to
+              chase</em>. Those three are usually settled by different people optimising different
+              things &mdash; a trader, a carbon target, a network planner &mdash; and they do not
+              agree with each other. This is that disagreement, running live.</p>
 
-          <p class="bx-lead">Pick a distribution licence area, click a bus to put the battery there,
-            set its power and its energy, and choose what the dispatch rule is trying to win. The
-            feeder re-solves for every half-hour of the last twenty-four &mdash; ninety-six AC power
-            flows &mdash; against real GB conditions: the regional carbon intensity for that licence
-            area, national demand, and the half-hourly system price. It then says whether the siting
-            is deliverable, what it is worth and to whom, and which way the carbon actually moves.</p>
+            <p class="bx-lead">Pick a distribution licence area, click a bus to put the battery there,
+              set its power and its energy, and choose what the dispatch rule is trying to win. The
+              feeder re-solves for every half-hour of the last twenty-four &mdash; ninety-six AC power
+              flows &mdash; against real GB conditions: the regional carbon intensity for that licence
+              area, national demand, and the half-hourly system price. It then says whether the siting
+              is deliverable, what it is worth and to whom, and which way the carbon actually moves.</p>
+          </div>
 
           <div class="bx" id="bx">
             <p class="bx-status__line" role="status">Loading the feeder&hellip;</p>
@@ -327,7 +333,7 @@
 
   <script src="/js/backtotop.js?v=20260829-1" defer></script>
   <script type="module" src="/js/contingency.js?v=20260907-1"></script>
-  <script type="module" src="/js/bess.js?v=20260910-1"></script>
+  <script type="module" src="/js/bess.js?v=20260910-2"></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 
 </body>

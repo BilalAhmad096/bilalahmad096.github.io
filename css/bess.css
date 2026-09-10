@@ -189,8 +189,18 @@
   border: 1px solid var(--ring);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  padding: 10px;
+  padding: 10px 14px 12px;
+}
+
+/* Only the drawing scrolls; the caption below it stays put. */
+.bx-stripcanvas {
   overflow-x: auto;
+}
+
+.bx-stripwrap .bx-panel__foot {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ring);
 }
 
 .bx-strip {

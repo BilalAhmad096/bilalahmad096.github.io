@@ -786,12 +786,16 @@ async function init() {
   root.append(controls);
   buildControls(controls);
 
-  const strip = el('div', 'bx-stripwrap');
-  root.append(el('h3', 'bx-panel__title', 'The last 24 hours'));
-  root.append(strip);
-  root.append(el('p', 'bx-panel__foot',
+  // The caption belongs to the figure, so it lives inside the card rather than
+  // floating under it. drawStrip replaces the canvas only, which is why the two
+  // are separate elements.
+  const stripCard = el('div', 'bx-stripwrap');
+  const strip = el('div', 'bx-stripcanvas');
+  stripCard.append(strip, el('p', 'bx-panel__foot',
     'Solid line: feeder demand. Dashed line: regional carbon intensity. Bars: battery setpoint, '
     + 'blue discharging, red charging. The shaded column is the half-hour drawn above.'));
+  root.append(el('h3', 'bx-panel__title', 'The last 24 hours'));
+  root.append(stripCard);
 
   const verdictHost = el('div', 'bx-verdict');
   const money = el('div', 'bx-panel');

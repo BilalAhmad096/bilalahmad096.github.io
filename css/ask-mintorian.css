@@ -1,4 +1,4 @@
-/* Ask Mintorian — native research and collaboration assistant */
+/* Ask Mintorian, native research and collaboration assistant */
 .mintorian-floating-actions{
   position:fixed;
   right:max(16px, env(safe-area-inset-right));

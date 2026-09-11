@@ -107,7 +107,7 @@
         "The page names no client, partner or collaboration, and neither should you."
       ],
       "keywords": ["resilience", "resilient investment", "does resilience change the investment", "net zero", "net-zero investment", "investment planning", "energy investment", "warehouse", "distribution warehouse", "cold store", "outage", "ride-through", "islanding", "grid connection", "connection capacity", "kva", "diesel generator", "standby generator", "scope 1", "scope 2", "scope 3", "residual emissions", "carbon target", "three pathways", "reactive power", "project 01", "project one", "demonstration"],
-      "source": { "label": "Research — does resilience change the investment?", "url": "/research/#resilient-investment" },
+      "source": { "label": "Research, does resilience change the investment?", "url": "/research/#resilient-investment" },
       "status": "verified"
     },
     {
@@ -125,7 +125,7 @@
         "It runs entirely in the visitor's browser and needs JavaScript. The older /contingency/ address redirects to /research/#contingency."
       ],
       "keywords": ["contingency", "contingency screening", "n-1", "n minus 1", "ieee 14-bus", "14 bus", "test system", "power flow", "ac power flow", "newton raphson", "load flow", "outage", "trip a line", "severity index", "performance index", "masking", "demo", "demonstration", "interactive", "simulation", "browser"],
-      "source": { "label": "Research — contingency screening", "url": "/research/#contingency" },
+      "source": { "label": "Research, contingency screening", "url": "/research/#contingency" },
       "status": "verified"
     },
     {
@@ -144,7 +144,7 @@
         "Never quote a figure or a verdict from this panel. Everything on it changes with live GB conditions, and a siting that reads as recommended at one moment can read differently an hour later. Point the visitor at the panel instead."
       ],
       "keywords": ["battery", "bess", "battery storage", "energy storage", "storage siting", "siting", "sizing", "where to put a battery", "33-bus", "baran wu", "distribution feeder", "distribution network", "dno", "licence area", "carbon intensity", "regional carbon", "elexon", "system price", "dispatch", "arbitrage", "peak shaving", "losses", "voltage", "voltage rise", "reverse power flow", "demo", "demonstration", "interactive", "live data", "browser"],
-      "source": { "label": "Research — battery siting", "url": "/research/#storage" },
+      "source": { "label": "Research, battery siting", "url": "/research/#storage" },
       "status": "verified"
     },
     {
@@ -226,7 +226,7 @@
         "This is the most directly relevant listed publication for machine-learning-assisted power-flow analysis."
       ],
       "keywords": ["publication", "paper", "machine learning", "power flow", "python", "icsmartgrid", "2025", "onyema nduka", "contingency", "scopf"],
-      "source": { "label": "Publications — icSmartGrid 2025", "url": "https://doi.org/10.1109/icsmartgrid66138.2025.11071830" },
+      "source": { "label": "Publications, icSmartGrid 2025", "url": "https://doi.org/10.1109/icsmartgrid66138.2025.11071830" },
       "status": "verified"
     },
     {
@@ -236,7 +236,7 @@
       "summary": "A conference paper by Bilal Ahmad, Syed Muhammad Amrr, M. Nabi, Mohd Rizwan Khalid and M. S. Jamil Asghar, published at IEEE SEFET 2021.",
       "details": ["DOI: 10.1109/sefet48154.2021.9375746"],
       "keywords": ["publication", "paper", "thyristor", "grid-tied inverter", "solar pv", "power electronics", "sefet", "2021"],
-      "source": { "label": "Publications — SEFET 2021", "url": "https://doi.org/10.1109/sefet48154.2021.9375746" },
+      "source": { "label": "Publications, SEFET 2021", "url": "https://doi.org/10.1109/sefet48154.2021.9375746" },
       "status": "verified"
     },
     {
@@ -246,13 +246,13 @@
       "summary": "A conference paper by Mohd Rizwan Khalid, Bilal Ahmad, Adil Sarwar and M. S. Jamil Asghar, published at IEEE I2CT Pune 2019.",
       "details": ["DOI: 10.1109/i2ct45611.2019.9033670"],
       "keywords": ["publication", "paper", "review", "thyristor", "grid-tied inverter", "solar pv", "i2ct", "2019"],
-      "source": { "label": "Publications — I2CT 2019", "url": "https://doi.org/10.1109/i2ct45611.2019.9033670" },
+      "source": { "label": "Publications, I2CT 2019", "url": "https://doi.org/10.1109/i2ct45611.2019.9033670" },
       "status": "verified"
     },
     {
       "id": "publication-forthcoming-ijrer",
       "category": "PUBLICATIONS",
-      "title": "Forthcoming journal paper — title not publicly listed",
+      "title": "Forthcoming journal paper, title not publicly listed",
       "summary": "The Mintorian publications page notes a forthcoming paper in the International Journal of Renewable Energy Research, but does not publicly list a verified title, author list, date or results.",
       "details": ["The assistant must not infer or invent the missing bibliographic details."],
       "keywords": ["publication", "forthcoming", "journal", "ijrer", "international journal of renewable energy research"],
@@ -461,7 +461,7 @@
     {
       "id": "award-icsmartgrid",
       "category": "AWARDS",
-      "title": "Third Best Paper — icSmartGrid 2025",
+      "title": "Third Best Paper, icSmartGrid 2025",
       "summary": "Bilal's profile lists a Third Best Paper award at icSmartGrid 2025 in Glasgow, UK.",
       "details": [],
       "keywords": ["award", "third best paper", "icsmartgrid", "glasgow", "2025"],
@@ -471,7 +471,7 @@
     {
       "id": "presentation-icsmartgrid-2025",
       "category": "PRESENTATIONS",
-      "title": "Conference presentation — icSmartGrid 2025",
+      "title": "Conference presentation, icSmartGrid 2025",
       "summary": "Bilal presented his machine-learning power-flow paper at IEEE icSmartGrid 2025 in Glasgow, UK, where it received the Third Best Paper award.",
       "details": [
         "The paper presented was \"A Comparative Analysis of Machine Learning Based Power Flow Study with Custom Made Open Source Python Codes\", co-authored with Onyema Nduka.",
@@ -488,10 +488,10 @@
       "title": "Publicly listed fellowships",
       "summary": "Bilal's profile lists URSA, DAAD, LSC and MHRD fellowships.",
       "details": [
-        "URSA Fellowship — funded by the University of Bath, United Kingdom.",
-        "DAAD Fellowship — funded by BMZ, Germany.",
-        "LSC Fellowship — funded by the University of London, United Kingdom.",
-        "MHRD Fellowship — funded by the Ministry of Human Resource Development, India."
+        "URSA Fellowship, funded by the University of Bath, United Kingdom.",
+        "DAAD Fellowship, funded by BMZ, Germany.",
+        "LSC Fellowship, funded by the University of London, United Kingdom.",
+        "MHRD Fellowship, funded by the Ministry of Human Resource Development, India."
       ],
       "keywords": ["fellowship", "ursa", "daad", "lsc", "mhrd", "funding", "recognition"],
       "source": { "label": "Recognition", "url": "/#recognition" },
@@ -516,7 +516,7 @@
         "The public Updates page describes it as an intensive course on novel research topics and methods in power systems, with talks from researchers and industrial companies."
       ],
       "keywords": ["event", "conference", "summer school", "dtu", "pes", "technical university of denmark", "copenhagen", "power systems", "18 may 2026", "22 may 2026"],
-      "source": { "label": "Updates — DTU PES Summer School", "url": "/updates/" },
+      "source": { "label": "Updates, DTU PES Summer School", "url": "/updates/" },
       "status": "verified"
     },
     {
@@ -528,7 +528,7 @@
         "The listed attendance was funded by the Supergen Energy Networks Hub."
       ],
       "keywords": ["event", "conference", "ecr", "early career researcher", "net zero", "birmingham", "bcec", "supergen energy networks hub", "march 2026"],
-      "source": { "label": "Updates — ECR Net Zero Conference", "url": "/updates/" },
+      "source": { "label": "Updates, ECR Net Zero Conference", "url": "/updates/" },
       "status": "verified"
     },
     {
@@ -540,7 +540,7 @@
         "The public Updates page describes the Supergen Energy Networks Hub as an EPSRC-funded research project bringing together industry, academia, government and civil society for interdisciplinary energy-networks research."
       ],
       "keywords": ["event", "supergen", "energy innovation", "energy networks", "newcastle", "epsrc", "net zero", "8 december 2025"],
-      "source": { "label": "Updates — Supergen Energy Innovation Event", "url": "/updates/" },
+      "source": { "label": "Updates, Supergen Energy Innovation Event", "url": "/updates/" },
       "status": "verified"
     },
     {
@@ -552,7 +552,7 @@
         "The public Updates page describes GW4 as an alliance of the universities of Bath, Bristol, Cardiff and Exeter."
       ],
       "keywords": ["event", "conference", "exeter energy systems", "gw4", "bath", "bristol", "cardiff", "exeter", "3 december 2025"],
-      "source": { "label": "Updates — Exeter Energy Systems Conference", "url": "/updates/" },
+      "source": { "label": "Updates, Exeter Energy Systems Conference", "url": "/updates/" },
       "status": "verified"
     },
     {
@@ -564,7 +564,7 @@
         "The recommendation appears on Bilal's public Experience page and refers to his M.Tech programme at IIT Roorkee."
       ],
       "keywords": ["recommendation", "testimonial", "bhavesh bhalja", "iit roorkee", "power system modelling", "matlab", "java", "python", "javascript", "mtech"],
-      "source": { "label": "Experience — Recommendations", "url": "/experience/#received" },
+      "source": { "label": "Experience, Recommendations", "url": "/experience/#received" },
       "status": "verified_limited"
     },
     {
@@ -576,7 +576,7 @@
         "The recommendation appears on Bilal's public Experience page."
       ],
       "keywords": ["recommendation", "testimonial", "saad bin arif", "amu", "aligarh muslim university", "power systems", "leadership", "communication", "collaboration"],
-      "source": { "label": "Experience — Recommendations", "url": "/experience/#received" },
+      "source": { "label": "Experience, Recommendations", "url": "/experience/#received" },
       "status": "verified_limited"
     },
     {
@@ -588,7 +588,7 @@
         "The page does not state frequency, recency, proficiency or competitive level for these activities."
       ],
       "keywords": ["extracurricular", "sport", "sports", "cricket", "hockey", "horse riding", "swimming", "snooker", "activities", "interests"],
-      "source": { "label": "Updates — Extracurricular", "url": "/updates/#extracurricular" },
+      "source": { "label": "Updates, Extracurricular", "url": "/updates/#extracurricular" },
       "status": "verified_limited"
     },
     {
@@ -601,7 +601,7 @@
         "The page does not state travel dates, duration, frequency or trip purpose for these destinations."
       ],
       "keywords": ["extracurricular", "travel", "travelling", "traveled", "travelled", "destinations", "countries", "germany", "france", "italy", "netherlands", "switzerland", "belgium", "spain", "england", "scotland", "wales", "ireland", "united states", "usa", "saudi arabia", "united arab emirates", "uae", "turkey", "bahrain", "egypt", "nepal", "indonesia", "malaysia", "denmark", "sweden"],
-      "source": { "label": "Updates — Travelling", "url": "/updates/#travelling" },
+      "source": { "label": "Updates, Travelling", "url": "/updates/#travelling" },
       "status": "verified_limited"
     },
     {

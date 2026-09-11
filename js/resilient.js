@@ -78,7 +78,7 @@ const CONTROLS = [
   {
     key: 'diesel',
     label: 'New diesel generator',
-    hint: 'Often the cheapest resilience — and a new source of Scope 1 emissions.',
+    hint: 'Often the cheapest resilience, and a new source of Scope 1 emissions.',
     options: [
       { value: false, label: 'Not allowed' },
       { value: true, label: 'Allowed' }
@@ -330,7 +330,7 @@ function renderDiagram(host, pickerHost) {
   board.append(svg('rect', { x: x0, y: busY - 4, width: x1 - x0, height: 8, rx: 3, fill: '#0a1a3b' }));
 
   const t1 = svg('text', { x: pocX + 22, y: 30, class: 'rx-svg-strong' });
-  t1.textContent = `Grid, 11 kV — import ${num(Math.round(ac.importKva))} kVA of ${num(r.connection.ascKva)} kVA`;
+  t1.textContent = `Grid, 11 kV, import ${num(Math.round(ac.importKva))} kVA of ${num(r.connection.ascKva)} kVA`;
   // An inline style, not a fill attribute: the text's CSS class sets fill too,
   // and CSS always wins over an SVG presentation attribute.
   if (over) t1.style.fill = RED;
@@ -484,8 +484,8 @@ function renderStrip(host) {
   const res = p.resilience;
   const where = !state.hours ? ''
     : res.pass
-      ? ` Shaded: the tightest ${state.hours}-hour outage, from ${clock(res.tightestStart)} — the start that leaves least in the battery, and still carried in full.`
-      : ` Shaded: the worst ${state.hours}-hour outage, from ${clock(res.worstStart)} — ${kwh(res.worstEnsKwh)} of essential load lost.`;
+      ? ` Shaded: the tightest ${state.hours}-hour outage, from ${clock(res.tightestStart)}, the start that leaves least in the battery, and still carried in full.`
+      : ` Shaded: the worst ${state.hours}-hour outage, from ${clock(res.worstStart)}, ${kwh(res.worstEnsKwh)} of essential load lost.`;
   host.append(el('p', 'rx-caption',
     `${r.scenario.label} scenario, ${formatDate(day.date)} (${r.scenario.weekday}), max ${num(day.tMax, 1)}°C. `
     + `Red: essential load. ${p.plan.pvKwp ? 'Amber dashes: solar. ' : ''}${E ? `Blue: battery state of charge${p.floorKwh > 1e-6 ? ', dashed line the reserve it may not trade below' : ''}. ` : ''}`

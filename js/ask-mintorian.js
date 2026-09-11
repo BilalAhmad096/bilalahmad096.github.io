@@ -522,7 +522,7 @@ class AskMintorian {
       <div class="ask-mintorian-form-heading">
         <span class="ask-mintorian-form-icon">${createIcon(meeting ? "calendar" : "mail")}</span>
         <div><h3>${meeting ? "Request a meeting" : "Send Bilal a message"}</h3>
-        <p>${meeting ? "Suggest a time and topic. This sends a request — it does not book a meeting." : "Share the essentials and Bilal can reply directly by email."}</p></div>
+        <p>${meeting ? "Suggest a time and topic. This sends a request, it does not book a meeting." : "Share the essentials and Bilal can reply directly by email."}</p></div>
       </div>
       <form class="ask-mintorian-contact-form" novalidate>
         <div class="ask-mintorian-field-row">

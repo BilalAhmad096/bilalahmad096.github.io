@@ -558,7 +558,7 @@ export function headline(p2, p3, { hours, diesel = false }) {
     return {
       kind: 'infeasible',
       text: `No plan in this option set meets the engineering requirements${hours ? ` for ${hours === 8 ? 'an' : 'a'} ${hours}-hour ride-through` : ''} on this connection. `
-        + `The next step would be a larger connection${diesel ? '' : ', a standby generator'} or a wider set of options — which is the point: `
+        + `The next step would be a larger connection${diesel ? '' : ', a standby generator'} or a wider set of options, which is the point: `
         + 'the cost-and-carbon plan could not have been built as recommended.'
     };
   }
@@ -589,7 +589,7 @@ export function headline(p2, p3, { hours, diesel = false }) {
     return {
       kind: 'negative',
       text: 'The engineering requirements made no difference here: the cost-and-carbon plan already fits the connection '
-        + 'and passes the resilience test as it stands. Simpler screening would have been enough — which is worth knowing too.'
+        + 'and passes the resilience test as it stands. Simpler screening would have been enough, which is worth knowing too.'
     };
   }
 

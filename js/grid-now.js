@@ -216,7 +216,7 @@ export const formatShare = percent => `${percent.toFixed(1)}%`;
 
 /** Below a gigawatt this reads better as MW; above it, as GW. */
 export function formatPower(mw) {
-  if (!Number.isFinite(mw)) return '—';
+  if (!Number.isFinite(mw)) return 'n/a';
   return Math.abs(mw) >= 1000 ? `${(mw / 1000).toFixed(1)} GW` : `${Math.round(mw)} MW`;
 }
 
@@ -419,7 +419,7 @@ function renderMix(mix) {
     const fill = element('span', 'mixbar__segment');
     fill.dataset.fuel = segment.key;
     fill.style.flexGrow = String(segment.percent);
-    fill.title = `${segment.label} — ${formatShare(segment.percent)}`;
+    fill.title = `${segment.label}, ${formatShare(segment.percent)}`;
     bar.append(fill);
 
     const row = element('li', 'mixlegend__item');
@@ -510,7 +510,7 @@ function renderMetered(metered) {
 
   block.append(element('p', 'grid-now__note',
     'Metered at transmission, so embedded solar and small wind sit outside these ' +
-    'totals — which is why they do not reconcile with the shares above.'));
+    'totals, which is why they do not reconcile with the shares above.'));
 
   return block;
 }

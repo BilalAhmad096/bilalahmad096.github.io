@@ -104,7 +104,7 @@
 
           <div class="lede">
             <p>A site that is electrifying its heat and its fleet has to decide which energy assets to
-              buy &mdash; solar, a battery, backup &mdash; and how to run them. The usual study picks the
+              buy, solar, a battery, backup, and how to run them. The usual study picks the
               cheapest mix that meets a carbon target, from annual energy and carbon figures. It rarely
               asks whether that mix fits the site&rsquo;s grid connection, survives a power flow on the
               site&rsquo;s own network, or keeps essential load running through an outage. This asks
@@ -140,7 +140,7 @@
             <p><strong class="term">It is a sketch of a method, not the method.</strong> The planning is a
               sweep over a few hundred candidate plans on twelve representative weekdays, not a multi-period
               optimisation, and it chooses what to build but not when. The two outage scenarios are named
-              days &mdash; an ordinary one and the hottest weekday of 2023 &mdash; not a statistical model
+              days, an ordinary one and the hottest weekday of 2023, not a statistical model
               of compound weather. Those are exactly the parts a full study would replace.</p>
 
             <p><strong class="term">It is not a connection study or a business case.</strong> The site
@@ -151,7 +151,7 @@
             <p>Two results come from the physics rather than from anything chosen here. The first is that
               <strong>a battery bought to trade is expensive to hold in reserve</strong>: the energy kept
               back for an outage is energy it cannot sell, so a resilience requirement changes how a battery
-              is run as much as what is bought &mdash; and where a new diesel generator is allowed, it is
+              is run as much as what is bought, and where a new diesel generator is allowed, it is
               usually the cheaper answer, at the price of new Scope 1 emissions. The second is that
               <strong>a battery shaves kilowatts but not kilovars</strong>. Planned against a kilowatt limit,
               a site can still breach its kVA connection once the reactive power of its compressors and
@@ -183,9 +183,7 @@
                 a 15-year life and one replacement inside the 20 years. Each representative day is simulated
                 until it repeats itself, so no day borrows energy from the next.</li>
 
-              <li><strong>Only weekdays are modelled.</strong> Each month is represented by a typical weekday
-                &mdash; the one closest to that month&rsquo;s median solar yield and mean temperature
-                &mdash; weighted by the days in the month.</li>
+              <li><strong>Only weekdays are modelled.</strong> Each month is represented by a typical weekday, the one closest to that month&rsquo;s median solar yield and mean temperature, weighted by the days in the month.</li>
 
               <li><strong>Diesel is counted only for testing.</strong> A standby generator&rsquo;s annual
                 Scope 1 here is an hour a month at half load. Any year it actually runs through an outage adds
@@ -224,8 +222,7 @@
           </header>
 
           <div class="lede">
-            <p class="cx-lead">A power system is planned so that it survives losing any single element
-              &mdash; the N&#8209;1 rule. Checking that means re&#8209;solving the network once for every
+            <p class="cx-lead">A power system is planned so that it survives losing any single element, the N&#8209;1 rule. Checking that means re&#8209;solving the network once for every
               component that could fail, which is why operators <em>screen</em> first: rank the outages
               cheaply, then study only the worst. This is that idea, running live.</p>
 
@@ -255,12 +252,11 @@
             sum each branch's loading raised to a high power, so one badly overloaded circuit outweighs
             many comfortable ones. It is deliberately the classical method, not my research. My own work
             replaces an index like this with a learned ranking that also explains <em>why</em> it flagged
-            a case &mdash; and this page makes no claim about how that performs.</p>
+            a case, and this page makes no claim about how that performs.</p>
 
           <p>Watch what happens as you raise demand. Around 110% the index starts getting the order
             wrong: outages that cause a genuine overload sink below ones that cause none, because a
-            spread of mid-loaded branches out-scores a single overload. That failure has a name
-            &mdash; <em>masking</em> &mdash; and it is the reason this problem is still worth research.</p>
+            spread of mid-loaded branches out-scores a single overload. That failure has a name, <em>masking</em>, and it is the reason this problem is still worth research.</p>
 
           <h3>Assumptions worth stating</h3>
           <ul>
@@ -293,13 +289,13 @@
             <p class="bx-lead">Putting a battery on a distribution network is not one decision but
               three: <em>where</em> on the feeder, <em>how big</em>, and <em>what it is told to
               chase</em>. Those three are usually settled by different people optimising different
-              things &mdash; a trader, a carbon target, a network planner &mdash; and they do not
+              things, a trader, a carbon target, a network planner, and they do not
               agree with each other. This is that disagreement, running live.</p>
 
             <p class="bx-lead">Pick a distribution licence area, click a bus to put the battery there,
               set its power and its energy, and choose what the dispatch rule is trying to win. The
-              feeder re-solves for every half-hour of the last twenty-four &mdash; ninety-six AC power
-              flows &mdash; against real GB conditions: the regional carbon intensity for that licence
+              feeder re-solves for every half-hour of the last twenty-four, ninety-six AC power
+              flows, against real GB conditions: the regional carbon intensity for that licence
               area, national demand, and the half-hourly system price. It then says whether the siting
               is deliverable, what it is worth and to whom, and which way the carbon actually moves.</p>
           </div>
@@ -341,8 +337,8 @@
               half-hours by one signal and charges at the bottom and discharges at the top; none of
               them is an optimiser, and none is my research. They are transparent on purpose, so that
               when the answers disagree you can see exactly why rather than take an optimiser's word
-              for it. Making that choice properly &mdash; a policy that respects the network, the
-              carbon signal and the revenue at once &mdash; is the open problem, not something this
+              for it. Making that choice properly, a policy that respects the network, the
+              carbon signal and the revenue at once, is the open problem, not something this
               page solves.</p>
 
             <p>Two results fall out of the physics rather than out of anything I chose. The first is
@@ -388,8 +384,8 @@
 
               <li><strong>Losses and revenue are two ledgers, and they are never added.</strong>
                 Losses avoided and peak removed accrue to the network operator; trading accrues to
-                whoever owns the battery. In GB those are not the same party &mdash; a network
-                operator buys flexibility, it does not trade &mdash; so a single total would imply
+                whoever owns the battery. In GB those are not the same party, a network
+                operator buys flexibility, it does not trade, so a single total would imply
                 someone who does not exist. The owner figure counts the system price only, and GB
                 storage earns most of its income in the balancing mechanism and ancillary services,
                 so read it as a floor rather than a business case.</li>
@@ -464,9 +460,9 @@
   <script src="/js/aos-setup.js?v=20260827-2" defer></script>
 
   <script src="/js/backtotop.js?v=20260829-1" defer></script>
-  <script type="module" src="/js/contingency.js?v=20260907-1"></script>
-  <script type="module" src="/js/resilient.js?v=20260911-1"></script>
-  <script type="module" src="/js/bess.js?v=20260910-2"></script>
+  <script type="module" src="/js/contingency.js?v=20260911-2"></script>
+  <script type="module" src="/js/resilient.js?v=20260911-2"></script>
+  <script type="module" src="/js/bess.js?v=20260911-2"></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 
 </body>

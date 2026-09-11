@@ -1538,14 +1538,14 @@ section{
 
 /* Both halves stretch over the button row and draw their rule across its
    middle, so at rest they sit on top of each other and read as one line
-   running through the section — hidden only where the opaque button covers
+   running through the section, hidden only where the opaque button covers
    it. Expanding translates each half out past the buttons; because the
    translation is a percentage of the stretched box, the halves land the same
    distance clear of the buttons whatever height the row happens to be. */
 .connect-divider__line {
   grid-area: stage;
-  /* stretched vertically — the translate that parts the halves is a
-     percentage of this box — but held to the rule width across */
+  /* stretched vertically, the translate that parts the halves is a
+     percentage of this box, but held to the rule width across */
   align-self: stretch;
   justify-self: center;
   position: relative;
@@ -1832,8 +1832,8 @@ section{
   }
 }
 
-/* Below 360 a row of two is genuinely too tight — at 320px "Download CV"
-   clears the pill's edge by 5px, which one font fallback would eat — so the
+/* Below 360 a row of two is genuinely too tight, at 320px "Download CV"
+   clears the pill's edge by 5px, which one font fallback would eat, so the
    very small screens keep the stack. Must sit after the 640 block to win. */
 @media (max-width: 360px) {
   .connect-divider__actions {

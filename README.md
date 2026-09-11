@@ -156,10 +156,10 @@ Unlike the calendar above, this one is genuinely live. Both feeds send
 `Access-Control-Allow-Origin: *`, so the browser calls them directly and the page
 stays static with no key, no build step and no Worker in the path:
 
-- `api.carbonintensity.org.uk` — intensity now, `pt24h` history and the national
+- `api.carbonintensity.org.uk`, intensity now, `pt24h` history and the national
   mix. Its mix includes embedded solar and small wind, so its **shares** are the
   headline.
-- `data.elexon.co.uk` — half-hourly metered output in MW. Elexon meters
+- `data.elexon.co.uk`, half-hourly metered output in MW. Elexon meters
   transmission only, so its totals exclude that embedded generation. The two are
   rendered in separate blocks, labelled as such, and never added together.
 
@@ -224,15 +224,15 @@ latter matching the default the reference solution was produced under.
 
 ## Main files
 
-- `js/assistant-loader.js` — lightweight page integration and API-base selection.
-- `js/ask-mintorian.js` — dialog, streaming chat, forms and accessible interactions.
-- `css/ask-mintorian.css` — responsive component styles.
-- `data/mintorian-knowledge.json` — verified, auditable source records.
-- `worker/src/` — API, model orchestration, retrieval, email delivery and security controls.
-- `js/github-activity.js` — contribution calendar rendering, tooltips and keyboard navigation.
-- `js/grid-now.js` — live grid strip: feed parsing, the mix bar and the 24-hour sparkline.
-- `js/lib/powerflow.js` — Newton-Raphson AC power flow, N-1 screen and the severity index.
-- `js/contingency.js` — the demonstration's one-line diagram, interaction and ranked table.
-- `data/case14.json` — IEEE 14-bus case, converted from MATPOWER, with assumed ratings.
-- `scripts/build-github-activity.mjs` — daily rebuild of `data/github-activity.json`.
-- `tests/` — retrieval, security, agent, Worker, activity-calendar, grid-strip, power-flow and live-model evaluation coverage.
+- `js/assistant-loader.js`, lightweight page integration and API-base selection.
+- `js/ask-mintorian.js`, dialog, streaming chat, forms and accessible interactions.
+- `css/ask-mintorian.css`, responsive component styles.
+- `data/mintorian-knowledge.json`, verified, auditable source records.
+- `worker/src/`, API, model orchestration, retrieval, email delivery and security controls.
+- `js/github-activity.js`, contribution calendar rendering, tooltips and keyboard navigation.
+- `js/grid-now.js`, live grid strip: feed parsing, the mix bar and the 24-hour sparkline.
+- `js/lib/powerflow.js`, Newton-Raphson AC power flow, N-1 screen and the severity index.
+- `js/contingency.js`, the demonstration's one-line diagram, interaction and ranked table.
+- `data/case14.json`, IEEE 14-bus case, converted from MATPOWER, with assumed ratings.
+- `scripts/build-github-activity.mjs`, daily rebuild of `data/github-activity.json`.
+- `tests/`, retrieval, security, agent, Worker, activity-calendar, grid-strip, power-flow and live-model evaluation coverage.

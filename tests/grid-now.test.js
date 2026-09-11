@@ -212,7 +212,7 @@ test("power reads as MW below a gigawatt and GW above it", () => {
   assert.equal(formatPower(714), "714 MW");
   assert.equal(formatPower(12143), "12.1 GW");
   assert.equal(formatPower(1000), "1.0 GW");
-  assert.equal(formatPower(NaN), "—");
+  assert.equal(formatPower(NaN), "n/a");
 });
 
 test("shares always carry one decimal", () => {

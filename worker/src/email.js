@@ -90,7 +90,7 @@ async function sendViaResend(env, message, idempotencyKey) {
 }
 
 export async function sendContactMessage(env, data, idempotencyKey) {
-  const subject = `[Mintorian enquiry] ${data.reason} — ${data.name}`;
+  const subject = `[Mintorian enquiry] ${data.reason}, ${data.name}`;
   const text = [
     "New Mintorian website enquiry",
     "",

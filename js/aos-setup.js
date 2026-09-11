@@ -120,7 +120,7 @@ function expandConnectDivider() {
 /**
  * Magnetic pills: the Connect button and its two actions lean a few pixels
  * toward the pointer while it is over them, and settle back on the way out.
- * Pointer devices only — there is nothing to lean toward on a touchscreen —
+ * Pointer devices only, there is nothing to lean toward on a touchscreen,
  * and skipped when the visitor has asked for less motion.
  */
 (function () {

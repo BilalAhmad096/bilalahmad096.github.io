@@ -272,9 +272,9 @@ function renderSummary(result, found) {
 
   let verdict;
   if (result.islanded) {
-    verdict = `Splits the network — bus ${result.stranded.join(', ')} is left with no path to the rest of the system, so there is no power flow to solve.`;
+    verdict = `Splits the network, bus ${result.stranded.join(', ')} is left with no path to the rest of the system, so there is no power flow to solve.`;
   } else if (!result.converged) {
-    verdict = 'The power flow did not converge. At this loading the network has no steady state the solver can find — in practice, voltage collapse.';
+    verdict = 'The power flow did not converge. At this loading the network has no steady state the solver can find, in practice, voltage collapse.';
   } else if (found.count === 0) {
     verdict = 'Secure: every bus is inside its voltage band and no circuit is above its rating.';
   } else {
@@ -346,7 +346,7 @@ function renderScreen(ranked) {
     alert.append(document.createTextNode(
       `Losing ${harmful.from}–${harmful.to} overloads a circuit but ranks ${lastHarmful + 1}, ` +
       `below ${clean.from}–${clean.to} at ${firstClean + 1}, which overloads nothing. ` +
-      'A spread of mid-loaded circuits out-scores a single genuine overload — this is masking, ' +
+      'A spread of mid-loaded circuits out-scores a single genuine overload, this is masking, ' +
       'and a screen that does it will hand the operator the wrong shortlist.'));
     panel.append(alert);
   }
@@ -387,9 +387,9 @@ function renderScreen(ranked) {
     row.append(name);
 
     row.append(element('td', 'is-numeric',
-      entry.islanded || !entry.converged ? '—' : entry.pi.toFixed(2)));
+      entry.islanded || !entry.converged ? 'n/a' : entry.pi.toFixed(2)));
     row.append(element('td', 'is-numeric',
-      entry.islanded || !entry.converged ? '—' : pct(entry.worstLoading)));
+      entry.islanded || !entry.converged ? 'n/a' : pct(entry.worstLoading)));
 
     const outcome = element('td');
     const tag = element('span', 'cx-tag');
@@ -478,7 +478,7 @@ function redraw() {
     if (isOut || !flow || flow.out) {
       shape.line.setAttribute('stroke', '#c8d2e4');
       shape.line.setAttribute('stroke-width', '2.2');
-      shape.label.textContent = `Line ${branch.from}–${branch.to} — out of service`;
+      shape.label.textContent = `Line ${branch.from}–${branch.to}, out of service`;
     } else {
       shape.line.setAttribute('stroke', loadingColour(flow.loading));
       shape.line.setAttribute('stroke-width', String(loadingWidth(flow.loading)));
@@ -497,7 +497,7 @@ function redraw() {
       shape.disc.setAttribute('fill', '#eef1f6');
       shape.reading.textContent = '';
       shape.group.classList.remove('is-violating');
-      shape.caption.textContent = `Bus ${shape.id} — no solution`;
+      shape.caption.textContent = `Bus ${shape.id}, no solution`;
       return;
     }
     // The fill runs from pale neutral to saturated red or blue, so the bus

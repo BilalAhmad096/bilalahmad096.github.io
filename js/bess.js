@@ -499,7 +499,7 @@ function renderVerdict(host) {
   grid.append(statCard(
     'Lowest voltage, worst half-hour',
     `${after.vmin.toFixed(3)} pu`,
-    `was ${before.vmin.toFixed(3)} pu at bus ${before.vminBus} — limit ${state.net.bus[1].vmin}`
+    `was ${before.vmin.toFixed(3)} pu at bus ${before.vminBus}, limit ${state.net.bus[1].vmin}`
   ));
   grid.append(statCard(
     'Lowest voltage at demand peak',
@@ -559,7 +559,7 @@ function renderMoney(host) {
     worth.peakReducedMw >= 0 ? 'Peak demand removed' : 'Peak demand added',
     `${Math.abs(worth.peakReducedMw).toFixed(2)} MW`,
     worth.peakReducedMw >= 0
-      ? 'at the primary substation — what a case for deferring reinforcement would be argued from'
+      ? 'at the primary substation, what a case for deferring reinforcement would be argued from'
       : 'at the primary substation. This rule charges into the peak it was meant to relieve'
   ));
   grid.append(statCard(
@@ -666,7 +666,7 @@ function buildControls(root) {
   REGIONS.forEach(region => {
     const option = document.createElement('option');
     option.value = String(region.id);
-    option.textContent = `${region.name} — ${region.dno}`;
+    option.textContent = `${region.name}, ${region.dno}`;
     if (region.id === state.regionId) option.selected = true;
     select.append(option);
   });

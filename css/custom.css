@@ -2647,9 +2647,9 @@ section{
   margin-bottom:8px;
 }
 
+/* Full column width, like the other section leads on this page. */
 .projects-lead{
   margin:8px 0 0;
-  max-width:72ch;
   color:var(--ink-muted);
 }
 
@@ -2800,7 +2800,6 @@ section{
 
 .research-lead{
   margin:10px 0 0;
-  max-width:72ch;
   color:var(--ink-muted);
 }
 

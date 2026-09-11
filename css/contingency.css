@@ -11,7 +11,6 @@
 
 .cx-lead{
   margin:10px 0 0;
-  max-width:70ch;
   color:var(--ink-muted);
 }
 
@@ -458,7 +457,6 @@
 /* ---------- notes ---------- */
 
 .cx-notes{
-  max-width:76ch;
   margin-top:34px;
 }
 

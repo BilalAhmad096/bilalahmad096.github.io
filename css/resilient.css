@@ -125,7 +125,6 @@
 
 .rx-headline__text {
   margin: 0;
-  max-width: 72ch;
   font-size: 1.12rem;
   line-height: 1.55;
   color: var(--ink);

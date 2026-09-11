@@ -32,11 +32,9 @@
   margin-top: 16px;
 }
 
-/* The card runs the full column; the measure is held on the text inside it,
-   because a 74ch line is readable and a full-width one is not. */
+/* Text runs the full column, like every other section on the site. */
 .lede > p {
   margin: 0;
-  max-width: 74ch;
   line-height: 1.7;
   color: var(--ink-muted);
 }
@@ -109,7 +107,6 @@
 .bx-notes p,
 .rx-notes p {
   margin: 0 0 14px;
-  max-width: 74ch;
   line-height: 1.7;
   color: var(--ink-muted);
 }
@@ -175,13 +172,6 @@
   border-radius: 50%;
   background: var(--accent);
   opacity: .4;
-}
-
-/* A row whose lead-in was promoted needs its marker on the term's line. */
-.cx-notes li > strong:first-child ~ *,
-.bx-notes li > strong:first-child ~ *,
-.rx-notes li > strong:first-child ~ * {
-  max-width: 74ch;
 }
 
 .cx-notes strong,

@@ -166,6 +166,28 @@ test("relationship questions reach the one cleared personal record and stop ther
   assert.match(record.details.join(" "), /no spouse name, no wedding date/i);
 });
 
+test("the resilient-investment demonstration is retrievable, generic and carries no frozen figures", () => {
+  for (const query of [
+    "Does resilience change the investment?",
+    "net zero investment warehouse demo",
+    "resilience and grid connection investment planning",
+    "diesel generator or battery for outage ride-through"
+  ]) {
+    const asked = searchKnowledgeBase({ query, categories: [], limit: 2 });
+    assert.equal(asked.results[0].id, "research-resilient-investment", `missed for: ${query}`);
+  }
+
+  const record = searchKnowledgeBase({ query: "resilient investment demonstration", categories: [], limit: 1 }).results[0];
+  const text = record.details.join(" ");
+
+  // Every figure on the panel depends on the settings the visitor chooses.
+  assert.match(text, /Never quote a figure or a verdict from this panel/i);
+  // A sweep on representative days must never be handed over as his research.
+  assert.match(text, /not Bilal's research method/i);
+  // The public page names no client or collaboration, and the assistant must not either.
+  assert.doesNotMatch([record.summary, text].join(" "), /\bEY\b|Ernst|Yasir/i);
+});
+
 test("the storage siting demonstration is retrievable and carries no frozen figures", () => {
   for (const query of [
     "Can I try the battery siting demo?",

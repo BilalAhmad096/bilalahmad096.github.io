@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Research | Bilal Ahmad</title>
-  <meta name="description" content="Interactive research from Bilal Ahmad on power systems: N-1 contingency screening on the IEEE 14-bus system, and a live storage siting study that solves a 33-bus distribution feeder against real GB carbon intensity, demand and price." />
+  <meta name="description" content="Interactive research from Bilal Ahmad on power systems: whether resilience and grid limits change a site's net-zero investment, N-1 contingency screening on the IEEE 14-bus system, and live battery siting on a 33-bus distribution feeder." />
   <link rel="canonical" href="https://mintorian.com/research/" />
 
   <!-- Favicon / App Icons -->
@@ -29,20 +29,21 @@
   <link rel="stylesheet" href="/css/custom.css?v=20260910-2">
   <link rel="stylesheet" href="/css/contingency.css?v=20260907-1">
   <link rel="stylesheet" href="/css/bess.css?v=20260910-3">
-  <link rel="stylesheet" href="/css/notes.css?v=20260910-2">
+  <link rel="stylesheet" href="/css/resilient.css?v=20260911-1">
+  <link rel="stylesheet" href="/css/notes.css?v=20260911-1">
 
   <!-- Open Graph / social sharing -->
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Bilal Ahmad" />
   <meta property="og:locale" content="en_GB" />
   <meta property="og:title" content="Research | Bilal Ahmad" />
-  <meta property="og:description" content="Interactive research from Bilal Ahmad on power systems: N-1 contingency screening on the IEEE 14-bus system, and a live storage siting study that solves a 33-bus distribution feeder against real GB carbon intensity, demand and price." />
+  <meta property="og:description" content="Interactive research from Bilal Ahmad on power systems: whether resilience and grid limits change a site's net-zero investment, N-1 contingency screening on the IEEE 14-bus system, and live battery siting on a 33-bus distribution feeder." />
   <meta property="og:url" content="https://mintorian.com/research/" />
   <meta property="og:image" content="https://mintorian.com/image/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@ahmadbilal096" />
   <meta name="twitter:title" content="Research | Bilal Ahmad" />
-  <meta name="twitter:description" content="Interactive research from Bilal Ahmad on power systems: N-1 contingency screening on the IEEE 14-bus system, and a live storage siting study that solves a 33-bus distribution feeder against real GB carbon intensity, demand and price." />
+  <meta name="twitter:description" content="Interactive research from Bilal Ahmad on power systems: whether resilience and grid limits change a site's net-zero investment, N-1 contingency screening on the IEEE 14-bus system, and live battery siting on a 33-bus distribution feeder." />
   <meta name="twitter:image" content="https://mintorian.com/image/og-image.png" />
 </head>
 
@@ -92,11 +93,132 @@
           about. More will appear here as it becomes publishable.</p>
         </div>
 
-        <article class="project" id="contingency" data-aos="fade-up">
+        <article class="project" id="resilient-investment" data-aos="fade-up">
           <header class="project__head">
             <span class="project__num" aria-hidden="true">01</span>
             <div>
               <p class="project__index">Project<span class="visually-hidden"> 01</span></p>
+              <h2 class="project__title">Does resilience change the investment?</h2>
+            </div>
+          </header>
+
+          <div class="lede">
+            <p>A site that is electrifying its heat and its fleet has to decide which energy assets to
+              buy &mdash; solar, a battery, backup &mdash; and how to run them. The usual study picks the
+              cheapest mix that meets a carbon target, from annual energy and carbon figures. It rarely
+              asks whether that mix fits the site&rsquo;s grid connection, survives a power flow on the
+              site&rsquo;s own network, or keeps essential load running through an outage. This asks
+              whether those questions change the answer, and by how much.</p>
+            <p>One distribution warehouse, three pathways: the site as it runs today; the cheapest plan
+              that meets the carbon target on energy and carbon alone; and the same plan once it must also
+              fit the connection, pass an AC power flow and carry the cold store and IT through an outage.
+              Change the ride-through requirement, the outage conditions, the connection or the diesel
+              policy, and the page re-plans all three and says what, if anything, changed.</p>
+          </div>
+
+          <div class="rx" id="rx">
+            <p class="rx-status" role="status">Loading the site model&hellip;</p>
+            <noscript>
+              <style>.rx-status{ display:none; }</style>
+              <p class="rx-status">This demonstration plans and solves the site in the browser, so it
+                needs JavaScript enabled.</p>
+            </noscript>
+          </div>
+
+          <div class="rx-notes">
+            <h3>What this is, and what it is not</h3>
+
+            <p>The site is <strong>a representative distribution warehouse near Daventry</strong>, in the
+              Midlands logistics belt. The warehouse itself is synthetic: its loads follow a short recipe,
+              written down in full in the case file, for operations, a cold store, IT, heat pumps and a
+              thirty-van electric fleet. Everything around it is real. Solar output and temperature are
+              PVGIS hourly data for 2023 at the site; grid carbon intensity is the GB half-hourly actual
+              for the same days; prices, emission factors and costs are the latest published at build
+              time. Because weather, solar and grid carbon come from the same days, any correlation
+              between them is the real one.</p>
+
+            <p><strong class="term">It is a sketch of a method, not the method.</strong> The planning is a
+              sweep over a few hundred candidate plans on twelve representative weekdays, not a multi-period
+              optimisation, and it chooses what to build but not when. The two outage scenarios are named
+              days &mdash; an ordinary one and the hottest weekday of 2023 &mdash; not a statistical model
+              of compound weather. Those are exactly the parts a full study would replace.</p>
+
+            <p><strong class="term">It is not a connection study or a business case.</strong> The site
+              network is checked for import, transformer and cable loading and voltage; fault level,
+              protection and the G99 islanding study are not modelled. Costs are indicative, and several
+              are assumptions, listed below with the rest.</p>
+
+            <p>Two results come from the physics rather than from anything chosen here. The first is that
+              <strong>a battery bought to trade is expensive to hold in reserve</strong>: the energy kept
+              back for an outage is energy it cannot sell, so a resilience requirement changes how a battery
+              is run as much as what is bought &mdash; and where a new diesel generator is allowed, it is
+              usually the cheaper answer, at the price of new Scope 1 emissions. The second is that
+              <strong>a battery shaves kilowatts but not kilovars</strong>. Planned against a kilowatt limit,
+              a site can still breach its kVA connection once the reactive power of its compressors and
+              heat pumps is counted, which is why the AC check returns a tighter limit to the plan rather
+              than simply passing or failing it.</p>
+
+            <h3>Assumptions worth stating</h3>
+            <ul>
+              <li><strong>Electrification is given, and not costed.</strong> Pathways 2 and 3 both run heat
+                pumps and electric vans; neither pays for them, because they are common to both and the
+                question is what energy assets to add. That is why the existing site&rsquo;s bill is shown
+                but not set against their 20-year cost.</li>
+
+              <li><strong>The carbon target is assumed.</strong> Scope 1 and 2 must fall at least 50 per cent
+                below today. Emissions are for the first operating year, location-based, with DESNZ 2026
+                factors; market-based Scope 2 needs supply contracts the site does not have.</li>
+
+              <li><strong>A battery or solar array only helps in an outage if the site can island.</strong>
+                Grid-following inverters disconnect when the grid does. Riding through needs a battery built
+                to form its own grid, with transfer switchgear and islanding protection, or a generator;
+                the plan pays for that capability when it chooses it.</li>
+
+              <li><strong>Essential load is the cold store and IT.</strong> Refrigeration rises 3 per cent for
+                each degree of ambient temperature, the midpoint of the 2&ndash;4 per cent the Carbon Trust
+                gives per degree of condensing temperature. The outage test starts at every half-hour of the
+                scenario day and must carry essential load for the full duration from each one.</li>
+
+              <li><strong>The battery runs at unity power factor.</strong> It has an 88 per cent round trip,
+                a 15-year life and one replacement inside the 20 years. Each representative day is simulated
+                until it repeats itself, so no day borrows energy from the next.</li>
+
+              <li><strong>Only weekdays are modelled.</strong> Each month is represented by a typical weekday
+                &mdash; the one closest to that month&rsquo;s median solar yield and mean temperature
+                &mdash; weighted by the days in the month.</li>
+
+              <li><strong>Diesel is counted only for testing.</strong> A standby generator&rsquo;s annual
+                Scope 1 here is an hour a month at half load. Any year it actually runs through an outage adds
+                more.</li>
+
+              <li><strong>Costs are 20-year present values at 7 per cent real.</strong> Residual value is
+                credited for assets that outlast the period. The value of lost load, &pound;17,000/MWh, is
+                shown per outage event only: turning it into an annual cost would need an outage frequency
+                this page does not claim to know.</li>
+            </ul>
+
+            <h3>Sources</h3>
+            <ul class="rx-sources">
+              <li><a href="https://re.jrc.ec.europa.eu/pvg_tools/en/" target="_blank" rel="noopener">PVGIS 5.3</a>, European Commission Joint Research Centre: hourly PV output and temperature, 2023.</li>
+              <li><a href="https://carbonintensity.org.uk/" target="_blank" rel="noopener">Carbon Intensity API</a>, National Energy System Operator: GB half-hourly actual intensity, 2023.</li>
+              <li><a href="https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026" target="_blank" rel="noopener">DESNZ greenhouse gas conversion factors 2026</a>: electricity, grid losses, well-to-tank, gas, diesel and vans.</li>
+              <li><a href="https://www.gov.uk/government/statistical-data-sets/gas-and-electricity-prices-in-the-non-domestic-sector" target="_blank" rel="noopener">DESNZ non-domestic energy prices, Table 3.4.1</a>: 2025 medium-band electricity, small-band gas and the Climate Change Levy.</li>
+              <li><a href="https://www.gov.uk/government/statistics/weekly-road-fuel-prices" target="_blank" rel="noopener">DESNZ weekly road fuel prices</a>: diesel, week commencing 7 September 2026.</li>
+              <li><a href="https://www.gov.uk/government/statistics/solar-pv-cost-data" target="_blank" rel="noopener">DESNZ solar PV cost data</a> and <a href="https://www.gov.uk/government/publications/onshore-wind-and-solar-cost-and-technical-assumptions" target="_blank" rel="noopener">Arup for DESNZ (2025)</a>: the two bounds the assumed solar cost sits between, and solar O&amp;M and lifetime.</li>
+              <li><a href="https://atb.nrel.gov/electricity/2024/commercial_battery_storage" target="_blank" rel="noopener">NREL Annual Technology Baseline 2024</a>: commercial battery fixed O&amp;M.</li>
+              <li><a href="https://www.ise.fraunhofer.de/en/press-media/press-releases/2021/european-glass-glass-photovoltaic-modules-are-particularly-climate-friendly.html" target="_blank" rel="noopener">M&uuml;ller et al. (2021), Fraunhofer ISE</a> and <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11603021/" target="_blank" rel="noopener">Peiseler et al. (2024), Nature Communications</a>: embodied carbon of PV modules and LFP cells.</li>
+              <li><a href="https://www.frontiersin.org/journals/sustainable-food-systems/articles/10.3389/fsufs.2023.1250646/full" target="_blank" rel="noopener">Frontiers in Sustainable Food Systems (2023)</a>, citing the Carbon Trust: refrigeration energy and condensing temperature.</li>
+              <li><a href="https://ofgem.gov.uk/ofgem-publications/82293/london-economics-value-lost-load-electricity-gbpdf" target="_blank" rel="noopener">London Economics for Ofgem (2013)</a>: the value of lost load.</li>
+              <li>Assumed, and labelled as such in the case file: the warehouse and its loads, the battery, islanding and generator costs, the export price, the discount rate and the carbon target.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="project" id="contingency" data-aos="fade-up">
+          <header class="project__head">
+            <span class="project__num" aria-hidden="true">02</span>
+            <div>
+              <p class="project__index">Project<span class="visually-hidden"> 02</span></p>
               <h2 class="project__title">Contingency screening on the IEEE 14-bus system</h2>
             </div>
           </header>
@@ -160,9 +282,9 @@
 
         <article class="project" id="storage" data-aos="fade-up">
           <header class="project__head">
-            <span class="project__num" aria-hidden="true">02</span>
+            <span class="project__num" aria-hidden="true">03</span>
             <div>
-              <p class="project__index">Project<span class="visually-hidden"> 02</span></p>
+              <p class="project__index">Project<span class="visually-hidden"> 03</span></p>
               <h2 class="project__title">Where should the battery go?</h2>
             </div>
           </header>
@@ -343,6 +465,7 @@
 
   <script src="/js/backtotop.js?v=20260829-1" defer></script>
   <script type="module" src="/js/contingency.js?v=20260907-1"></script>
+  <script type="module" src="/js/resilient.js?v=20260911-1"></script>
   <script type="module" src="/js/bess.js?v=20260910-2"></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 

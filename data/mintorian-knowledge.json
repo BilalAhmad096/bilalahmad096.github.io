@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-09-10",
+  "lastVerified": "2026-09-11",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -82,14 +82,32 @@
       "id": "research-page",
       "category": "RESEARCH",
       "title": "The Research page",
-      "summary": "Mintorian has a Research page at /research/ collecting the parts of Bilal's work a visitor can pick up and use rather than only read about. It hosts two interactive demonstrations: an N-1 contingency screen on the IEEE 14-bus system, and a battery siting study on a 33-bus distribution feeder driven by live GB data.",
+      "summary": "Mintorian has a Research page at /research/ collecting the parts of Bilal's work a visitor can pick up and use rather than only read about. It hosts three interactive demonstrations: whether resilience and grid limits change a site's net-zero investment, an N-1 contingency screen on the IEEE 14-bus system, and a battery siting study on a 33-bus distribution feeder driven by live GB data.",
       "details": [
         "The page states that more will appear there as it becomes publishable. Do not name or promise any item that is not listed on it today.",
         "This page replaced the earlier Research Group page. The old /researchgroup/ address now redirects here, so link to /research/ rather than to the old path.",
-        "Both demonstrations run entirely in the visitor's browser and need JavaScript, and both use the same Newton-Raphson AC power-flow solver."
+        "All three demonstrations run entirely in the visitor's browser and need JavaScript, and all three use the same Newton-Raphson AC power-flow solver."
       ],
-      "keywords": ["research page", "research", "demonstrations", "demos", "interactive", "tools", "usable work", "research group", "researchgroup", "battery", "storage", "siting"],
+      "keywords": ["research page", "research", "demonstrations", "demos", "interactive", "tools", "usable work", "research group", "researchgroup", "battery", "storage", "siting", "resilience", "net zero", "investment"],
       "source": { "label": "Research", "url": "/research/" },
+      "status": "verified"
+    },
+    {
+      "id": "research-resilient-investment",
+      "category": "RESEARCH",
+      "title": "Does resilience change the investment? - interactive site demonstration",
+      "summary": "The Research page opens with a demonstration asking whether engineering requirements change a site's net-zero investment. For a representative distribution warehouse it compares three pathways - the existing arrangement, the cheapest plan that meets a carbon target on energy and carbon figures alone, and the same plan once it must also fit the grid connection, pass an AC power flow on the site network and carry essential load through an outage - and states what, if anything, changed.",
+      "details": [
+        "The warehouse is synthetic and its load recipe is published in the case file. The weather, solar output (PVGIS, 2023) and half-hourly GB grid carbon intensity (Carbon Intensity API, 2023) are real, and prices, emission factors and costs come from DESNZ and other cited sources, with every assumption labelled.",
+        "It is a sketch of a method, not the method, and not Bilal's research method or results. The planning is a sweep over candidate plans on representative days rather than an optimisation, it does not choose investment timing, and its two outage scenarios are named days rather than a model of compound weather. The page says so. Never describe it as his framework or as evidence of how his work performs.",
+        "The visitor changes four settings: the ride-through requirement, whether the outage is independent of the weather or correlated with a heatwave, an 800 kVA or 1,200 kVA grid connection, and whether a new diesel generator is allowed. The page re-plans all three pathways and computes a sentence saying what changed.",
+        "Two results come from the physics rather than from choices made in the demonstration: a battery bought to trade is expensive to hold in reserve, so resilience changes how it is run as much as what is bought; and a battery shaves kilowatts but not kilovars, so a plan built to a kilowatt limit can still breach its kVA connection, which the AC power flow catches and returns to the plan as a tighter limit.",
+        "It is not a connection study or a business case: fault level, protection and the G99 islanding study are not modelled, and costs are indicative. Electrification equipment - heat pumps, chargers, vans - is common to the two new pathways and is not costed.",
+        "Never quote a figure or a verdict from this panel. Every number on it depends on the settings the visitor chooses. Point the visitor at the panel instead.",
+        "The page names no client, partner or collaboration, and neither should you."
+      ],
+      "keywords": ["resilience", "resilient investment", "does resilience change the investment", "net zero", "net-zero investment", "investment planning", "energy investment", "warehouse", "distribution warehouse", "cold store", "outage", "ride-through", "islanding", "grid connection", "connection capacity", "kva", "diesel generator", "standby generator", "scope 1", "scope 2", "scope 3", "residual emissions", "carbon target", "three pathways", "reactive power", "project 01", "project one", "demonstration"],
+      "source": { "label": "Research — does resilience change the investment?", "url": "/research/#resilient-investment" },
       "status": "verified"
     },
     {

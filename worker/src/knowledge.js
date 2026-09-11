@@ -273,8 +273,11 @@ export function searchPublications(args = {}) {
   return searchKnowledgeBase({ ...args, categories: ["PUBLICATIONS"] });
 }
 
+// Visitors call the Research page studies "projects" as readily as the older engineering
+// projects, and the page numbers them, so this has to reach both categories. Scoped to
+// PROJECTS alone, it could not see a single Research page study.
 export function getProjectDetails({ project_name: projectName } = {}) {
-  return searchKnowledgeBase({ query: projectName, categories: ["PROJECTS"], limit: 4 });
+  return searchKnowledgeBase({ query: projectName, categories: ["PROJECTS", "RESEARCH"], limit: 4 });
 }
 
 export function getProfileInformation({ section = "PROFILE" } = {}) {

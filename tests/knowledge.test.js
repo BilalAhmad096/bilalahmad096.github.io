@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   getKnowledgeMetadata,
   getProfileInformation,
+  getProjectDetails,
   searchKnowledgeBase,
   searchPublications
 } from "../worker/src/knowledge.js";
@@ -303,5 +304,26 @@ test("newly aliased acronyms reach their records", () => {
       result.results.some(record => record.id === expectedId),
       `${query} did not retrieve ${expectedId}`
     );
+  }
+});
+
+test("project questions reach the numbered Research page studies", () => {
+  for (const [name, expectedId] of [
+    ["Project 01", "research-resilient-investment"],
+    ["Project 02", "research-contingency-demo"],
+    ["Project 03", "research-storage-siting"],
+    ["battery siting project on the 33-bus feeder", "research-storage-siting"],
+    ["N-1 contingency demo", "research-contingency-demo"]
+  ]) {
+    assert.equal(getProjectDetails({ project_name: name }).results[0]?.id, expectedId, name);
+  }
+
+  // Unfiltered too: a bare "01" would otherwise match the 2019 in an older publication.
+  for (const [query, expectedId] of [
+    ["Project 01", "research-resilient-investment"],
+    ["Project 02", "research-contingency-demo"],
+    ["Project 03", "research-storage-siting"]
+  ]) {
+    assert.equal(searchKnowledgeBase({ query, categories: [], limit: 3 }).results[0].id, expectedId, query);
   }
 });

@@ -96,7 +96,7 @@ const toolDefinitions = [
         query: { type: "string", description: "A concise factual search query based on the visitor's question." },
         categories: {
           type: "array",
-          description: "Relevant category filters. Use an empty array to search all categories.",
+          description: "Relevant category filters. Prefer an empty array, and filter only when the question clearly belongs to one category. The Research page, its numbered studies and interactive demonstrations, and the live GB grid panel on the home page are all filed under RESEARCH.",
           items: { type: "string", enum: KNOWLEDGE_CATEGORIES }
         },
         limit: { type: "integer", minimum: 1, maximum: 8 }
@@ -123,7 +123,7 @@ const toolDefinitions = [
   {
     type: "function",
     name: "get_project_details",
-    description: "Find verified details about a named or described research or engineering project.",
+    description: "Find verified details about a named or described project, including the numbered studies and interactive demonstrations on the Research page as well as the earlier engineering projects.",
     strict: true,
     parameters: {
       type: "object",

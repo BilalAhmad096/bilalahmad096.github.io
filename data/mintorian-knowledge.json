@@ -97,7 +97,7 @@
       "id": "research-resilient-investment",
       "category": "RESEARCH",
       "title": "Does resilience change the investment? - interactive site demonstration",
-      "summary": "The Research page opens with a demonstration asking whether engineering requirements change a site's net-zero investment. For a representative distribution warehouse it compares three pathways - the existing arrangement, the cheapest plan that meets a carbon target on energy and carbon figures alone, and the same plan once it must also fit the grid connection, pass an AC power flow on the site network and carry essential load through an outage - and states what, if anything, changed.",
+      "summary": "Project 01, which opens the Research page, is a demonstration asking whether engineering requirements change a site's net-zero investment. For a representative distribution warehouse it compares three pathways - the existing arrangement, the cheapest plan that meets a carbon target on energy and carbon figures alone, and the same plan once it must also fit the grid connection, pass an AC power flow on the site network and carry essential load through an outage - and states what, if anything, changed.",
       "details": [
         "The warehouse is synthetic and its load recipe is published in the case file. The weather, solar output (PVGIS, 2023) and half-hourly GB grid carbon intensity (Carbon Intensity API, 2023) are real, and prices, emission factors and costs come from DESNZ and other cited sources, with every assumption labelled.",
         "It is a sketch of a method, not the method, and not Bilal's research method or results. The planning is a sweep over candidate plans on representative days rather than an optimisation, it does not choose investment timing, and its two outage scenarios are named days rather than a model of compound weather. The page says so. Never describe it as his framework or as evidence of how his work performs.",
@@ -115,7 +115,7 @@
       "id": "research-contingency-demo",
       "category": "RESEARCH",
       "title": "Interactive N-1 contingency screen on the IEEE 14-bus system",
-      "summary": "The Research page carries a working N-1 contingency demonstration on the IEEE 14-bus test system. A visitor clicks any circuit to trip it, a full Newton-Raphson AC power flow re-solves in the browser, and a table ranks all twenty single-line outages by a classical severity index.",
+      "summary": "Project 02 on the Research page is a working N-1 contingency demonstration on the IEEE 14-bus test system. A visitor clicks any circuit to trip it, a full Newton-Raphson AC power flow re-solves in the browser, and a table ranks all twenty single-line outages by a classical severity index.",
       "details": [
         "This demonstration is deliberately the classical method, not Bilal's own research. The page says so explicitly. Never describe it as his method, his result, or evidence of how his work performs.",
         "His research replaces an index like this one with a learned ranking that also explains why it flagged a case. The page makes no claim about how that performs, and neither should you.",
@@ -125,7 +125,7 @@
         "Stated assumptions: line ratings are chosen rather than taken from the case, which lists every thermal limit as zero; the voltage band is widened to 0.94 to 1.10 pu so that the intact solution fits inside it; generation does not re-dispatch after an outage; and generator VAr limits are not enforced.",
         "It runs entirely in the visitor's browser and needs JavaScript. The older /contingency/ address redirects to /research/#contingency."
       ],
-      "keywords": ["contingency", "contingency screening", "n-1", "n minus 1", "ieee 14-bus", "14 bus", "test system", "power flow", "ac power flow", "newton raphson", "load flow", "outage", "trip a line", "severity index", "performance index", "masking", "demo", "demonstration", "interactive", "simulation", "browser"],
+      "keywords": ["project 02", "project two", "contingency", "contingency screening", "n-1", "n minus 1", "ieee 14-bus", "14 bus", "test system", "power flow", "ac power flow", "newton raphson", "load flow", "outage", "trip a line", "severity index", "performance index", "masking", "demo", "demonstration", "interactive", "simulation", "browser"],
       "source": { "label": "Research, contingency screening", "url": "/research/#contingency" },
       "status": "verified"
     },
@@ -133,7 +133,7 @@
       "id": "research-storage-siting",
       "category": "RESEARCH",
       "title": "Interactive battery siting study on a 33-bus distribution feeder",
-      "summary": "The Research page carries a live battery siting demonstration. A visitor picks a GB distribution licence area, clicks a bus on a 33-bus radial feeder to place a battery, sets its power and energy and chooses a dispatch rule. The feeder is re-solved for every half-hour of the last twenty-four against live GB data, and the page reports whether the siting is deliverable, what it is worth and to whom, and which way the carbon moves.",
+      "summary": "Project 03 on the Research page is a live battery siting demonstration. A visitor picks a GB distribution licence area, clicks a bus on a 33-bus radial feeder to place a battery, sets its power and energy and chooses a dispatch rule. The feeder is re-solved for every half-hour of the last twenty-four against live GB data, and the page reports whether the siting is deliverable, what it is worth and to whom, and which way the carbon moves.",
       "details": [
         "The network is the 33-bus radial feeder of Baran and Wu, used exactly as published, and the solver reproduces its published solution. The page states plainly that this is not a real UK feeder: no GB distribution circuit is published with full impedances under a licence that could be verified. What is British is the live data driving it.",
         "Three live sources: regional carbon intensity per distribution licence area from the National Energy System Operator's carbon API, national demand from Elexon, and the half-hourly system price from Elexon. If a feed fails the page says so rather than substituting silently.",
@@ -144,7 +144,7 @@
         "It is a retrospective over the last twenty-four hours that slides forward as the feeds publish. It is not a forecast, and it is not a connection study.",
         "Never quote a figure or a verdict from this panel. Everything on it changes with live GB conditions, and a siting that reads as recommended at one moment can read differently an hour later. Point the visitor at the panel instead."
       ],
-      "keywords": ["battery", "bess", "battery storage", "energy storage", "storage siting", "siting", "sizing", "where to put a battery", "33-bus", "baran wu", "distribution feeder", "distribution network", "dno", "licence area", "carbon intensity", "regional carbon", "elexon", "system price", "dispatch", "arbitrage", "peak shaving", "losses", "voltage", "voltage rise", "reverse power flow", "demo", "demonstration", "interactive", "live data", "browser"],
+      "keywords": ["project 03", "project three", "battery", "bess", "battery storage", "energy storage", "storage siting", "siting", "sizing", "where to put a battery", "33-bus", "baran wu", "distribution feeder", "distribution network", "dno", "licence area", "carbon intensity", "regional carbon", "elexon", "system price", "dispatch", "arbitrage", "peak shaving", "losses", "voltage", "voltage rise", "reverse power flow", "demo", "demonstration", "interactive", "live data", "browser"],
       "source": { "label": "Research, battery siting", "url": "/research/#storage" },
       "status": "verified"
     },

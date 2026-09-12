@@ -9,7 +9,9 @@
 //
 // The feed is public and needs no credential. Each run re-reads today and
 // yesterday, because a half hour settles after it ends, and backfills any day a
-// missed run left uncovered.
+// missed run left uncovered. Only a half hour that lands after the last one
+// folded can move the record, and only by beating it outright, so the pair is
+// never re-derived from history.
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -76,8 +78,8 @@ async function main() {
 
   const records = mergeRecords(base, readings, { since: since || today });
 
-  // Left alone rather than restamped, so the scheduled run only produces a
-  // commit on a day the record actually moved.
+  // Left alone rather than restamped, so a run that beat nothing produces no
+  // commit at all.
   if (sameRecord(stored, records)) {
     console.log(`No change: ${out} already holds the record through ${records.through}.`);
     return;

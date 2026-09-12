@@ -50,7 +50,7 @@ test("a first run records today, and counts the London day's 23:00Z opener", () 
 
   assert.equal(records.schema, RECORDS_SCHEMA);
   assert.equal(records.since, "2026-09-12");
-  assert.equal(records.through, "2026-09-12");
+  assert.equal(records.through, "2026-09-12T12:30Z", "the newest half hour folded in");
   assert.deepEqual(records.lowest, { at: "2026-09-12T12:30Z", value: 29, index: "low" });
   assert.deepEqual(records.highest, { at: "2026-09-11T23:00Z", value: 137, index: "moderate" });
 });
@@ -80,8 +80,45 @@ test("a new day only moves the halves it actually beats", () => {
   assert.equal(next.lowest.value, 24);
   assert.equal(next.highest.value, 137, "137 still stands");
   assert.equal(next.since, "2026-09-12", "the start date never moves");
-  assert.equal(next.through, "2026-09-13");
+  assert.equal(next.through, "2026-09-13T18:00Z");
   assert.equal(sameRecord(first, next), false);
+});
+
+test("only a half hour that lands after the last one can move the record", () => {
+  const held = mergeRecords(null, readingsFrom(dayPayload), { since: "2026-09-12" });
+  assert.equal(held.through, "2026-09-12T12:30Z");
+
+  // A reading from earlier in the covered span, settling late and lower than
+  // the record, is not folded: the record is not re-derived from history.
+  const older = mergeRecords(held, [{ at: "2026-09-12T09:00Z", value: 12, index: "very low" }]);
+  assert.equal(older.lowest.value, 29);
+  assert.equal(sameRecord(held, older), true);
+
+  // One that lands after it, and beats it outright, does move it.
+  const beaten = mergeRecords(held, [{ at: "2026-09-12T13:00Z", value: 27, index: "low" }]);
+  assert.equal(beaten.lowest.value, 27);
+  assert.equal(beaten.lowest.at, "2026-09-12T13:00Z");
+  assert.equal(beaten.highest.value, 137, "the other half is left alone");
+});
+
+test("matching the record is not beating it", () => {
+  const held = mergeRecords(null, readingsFrom(dayPayload), { since: "2026-09-12" });
+  const level = mergeRecords(held, [
+    { at: "2026-09-12T13:00Z", value: 29, index: "low" },
+    { at: "2026-09-12T13:30Z", value: 137, index: "moderate" }
+  ]);
+
+  assert.equal(level.lowest.at, "2026-09-12T12:30Z", "the first half hour to reach it keeps it");
+  assert.equal(level.highest.at, "2026-09-11T23:00Z");
+  assert.equal(sameRecord(held, level), true, "so the file is left alone");
+});
+
+test("a run that beat nothing does not rewrite the file for its own sake", () => {
+  const held = mergeRecords(null, readingsFrom(dayPayload), { since: "2026-09-12" });
+  const later = mergeRecords(held, [{ at: "2026-09-12T14:00Z", value: 60, index: "low" }]);
+
+  assert.equal(later.through, "2026-09-12T14:00Z", "the run did see a newer half hour");
+  assert.equal(sameRecord(held, later), true, "but the record itself has not moved");
 });
 
 test("a tie belongs to the half hour that reached it first", () => {
@@ -109,6 +146,11 @@ test("each run re-reads yesterday, and backfills a gap it finds", () => {
   assert.deepEqual(
     datesToFetch({ since: "2026-09-01", through: "2026-09-08" }, "2026-09-12"),
     ["2026-09-08", "2026-09-09", "2026-09-10", "2026-09-11", "2026-09-12"]);
+
+  // A through that is a timestamp names the day it falls in.
+  assert.deepEqual(
+    datesToFetch({ since: "2026-09-01", through: "2026-09-08T18:30Z" }, "2026-09-10"),
+    ["2026-09-08", "2026-09-09", "2026-09-10"]);
 
   // A file left stale for a year asks for a capped window, not a year of calls.
   assert.equal(datesToFetch({ since: "2025-09-12", through: "2025-09-12" }, "2026-09-12").length, 14);

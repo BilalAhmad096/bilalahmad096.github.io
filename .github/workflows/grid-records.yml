@@ -5,9 +5,8 @@
 #
 # The carbon intensity feed is public, so no token and no repository secret is
 # involved. The build re-reads today and yesterday on every run, because a half
-# hour settles after it ends, and writes only when the record or the day it runs
-# through has actually moved, so a quiet week produces a commit a day rather
-# than one per run.
+# hour settles after it ends, and writes only when a half hour has actually
+# beaten the record as it landed, so a quiet week produces no commits at all.
 
 name: Grid records
 

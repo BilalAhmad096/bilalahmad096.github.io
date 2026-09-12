@@ -55,7 +55,8 @@ export function previousDate(date) {
 export function datesToFetch(records, today = londonDate(), maxDays = 14) {
   if (!DATE_PATTERN.test(String(today))) throw new GridRecordsError(`${today} is not a date`);
 
-  const covered = records?.through ?? records?.since ?? today;
+  const held = records?.through ?? records?.since ?? today;
+  const covered = DATE_PATTERN.test(String(held)) ? held : londonDate(held);
   const yesterday = previousDate(today);
   const from = covered < yesterday ? covered : yesterday;
 
@@ -94,14 +95,13 @@ export function readingsFrom(payload) {
 }
 
 /**
- * Readings folded into the stored record. Ties keep the earlier half hour: the
- * record belongs to the first time the grid reached it, not the latest time it
- * matched, so re-reading a covered day changes nothing.
+ * Readings folded into the stored record.
  *
- * Coverage is tracked by settlement day rather than by the last half hour seen.
- * A timestamp would differ on every run and commit a file nobody's reading
- * changed; a day means the file moves when the record moves, or once at
- * midnight.
+ * Only a half hour that has landed since the last one folded is considered, and
+ * it has to beat the record outright: strictly below the lowest, or strictly
+ * above the highest, at the moment it lands. So the pair is never re-derived
+ * from history, and re-reading a day cannot restate it. Ties change nothing
+ * either, which keeps a record with the first half hour that reached it.
  */
 export function mergeRecords(records, readings, { since } = {}) {
   const start = records?.since ?? since ?? londonDate();
@@ -115,18 +115,15 @@ export function mergeRecords(records, readings, { since } = {}) {
     .filter(reading =>
       Number.isFinite(reading?.value) &&
       typeof reading?.at === "string" &&
-      londonDate(reading.at) >= start)
+      londonDate(reading.at) >= start &&
+      // Landed since the last run, rather than read back out of a covered day.
+      (!records?.through || reading.at > records.through))
     .forEach(reading => {
-      const held = { at: reading.at, value: reading.value, index: reading.index || null };
-      const day = londonDate(held.at);
+      const landed = { at: reading.at, value: reading.value, index: reading.index || null };
 
-      if (!lowest || held.value < lowest.value ||
-        (held.value === lowest.value && held.at < lowest.at)) lowest = held;
-
-      if (!highest || held.value > highest.value ||
-        (held.value === highest.value && held.at < highest.at)) highest = held;
-
-      if (!through || day > through) through = day;
+      if (!lowest || landed.value < lowest.value) lowest = landed;
+      if (!highest || landed.value > highest.value) highest = landed;
+      if (!through || landed.at > through) through = landed.at;
     });
 
   if (!lowest || !highest) throw new GridRecordsError("no settled readings to record");
@@ -154,6 +151,9 @@ export function serialise(records, updated = new Date()) {
 export function sameRecord(stored, next) {
   if (!stored || !next) return false;
   const same = (a, b) => a?.value === b?.value && a?.at === b?.at;
-  return stored.since === next.since && stored.through === next.through &&
+  // How far the reading has got is deliberately not part of this: a run that
+  // beat nothing leaves the file alone, rather than committing a new high water
+  // mark for a record that has not moved.
+  return stored.since === next.since &&
     same(stored.lowest, next.lowest) && same(stored.highest, next.highest);
 }

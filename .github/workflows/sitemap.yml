@@ -1,0 +1,58 @@
+# Keeps sitemap.xml in step with the pages: which ones exist, and the date git
+# last changed each. It was hand-edited before this, and its dates fell weeks
+# behind the pages twice.
+#
+# Runs when a page changes. It commits with the automatic GITHUB_TOKEN, and a
+# push made with that token does not trigger workflows, so its own commit
+# cannot set it off again.
+
+name: Sitemap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/index.html"
+      - "index.html"
+      - "scripts/build-sitemap.mjs"
+      - "scripts/lib/sitemap.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sitemap
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # lastmod comes from each page's last commit; a shallow clone would
+          # date every page to the newest commit instead.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Rebuild the sitemap
+        run: node scripts/build-sitemap.mjs
+
+      - name: Commit the rebuilt sitemap
+        run: |
+          if [ -z "$(git status --porcelain sitemap.xml)" ]; then
+            echo "Sitemap unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git commit -m "Rebuild the sitemap"
+          # Someone may have pushed while this job was running; rebasing keeps
+          # the rebuild from failing on a race it can resolve itself.
+          git pull --rebase --autostash
+          git push

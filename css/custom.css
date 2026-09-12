@@ -747,7 +747,7 @@ section{
 .pub-title{
   font-family:linetoBold, system-ui;
   font-size:18px;
-  margin-bottom:4px;
+  margin:0 0 4px;
   color:var(--ink);
 }
 

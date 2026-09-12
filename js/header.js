@@ -54,7 +54,10 @@
   // highlight active page
   const pathParts = location.pathname.split('/').filter(Boolean);
   const file = (pathParts.at(-1) || 'index').toLowerCase();
-  const key = file.includes('experience') ? 'experience'
+  // 404.html is served at whatever address was missing, so its path says
+  // nothing about which page it is; it marks itself instead.
+  const key = document.body.classList.contains('page-404') ? '404'
+           : file.includes('experience') ? 'experience'
            : file.includes('publications') ? 'publications'
            // 'research' also matches the retired 'researchgroup' path, which is
            // harmless: that URL now serves a redirect stub carrying no nav.

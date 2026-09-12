@@ -383,7 +383,7 @@
       "from": 1,
       "to": 2,
       "r": 0.005752591161723931,
-      "x": 0.002976123627052402,
+      "x": 0.002932448856844086,
       "b": 0,
       "ratio": 0,
       "shift": 0,
@@ -733,6 +733,6 @@
     }
   ],
   "ratingsNote": "Thermal ratings are not part of the Baran-Wu data, which lists none. These are assumed: the smallest of a set of plausible steps (1.5, 2.5, 4, 6, 8 MVA) that leaves at least 35 per cent headroom over base-case flow, so the intact feeder at full load is within limits and the demonstration is not decided by a rating chosen to make a point.",
-  "voltageBandNote": "The band is 0.94-1.06 pu, the GB statutory limit for a nominal HV network. One value is changed from the published case: the primary substation busbar is held at 1.02 pu rather than 1.00 pu, because a GB primary has an on-load tap changer and targets above nominal to hold the far end of the feeder up. At 1.00 pu the published case sits at 0.913 pu at bus 18 and is outside the GB band at every hour of every day, which would make the demonstration meaningless. At 1.02 pu the feeder is inside limits at ordinary demand and breaches only when demand is high - the constraint pattern a distribution planner actually works against. Impedances, loads and topology are unaltered.",
-  "tapNote": "Worth stating plainly: a tap change is the cheapest lever a DNO has. Moving the primary from 1.00 to 1.02 pu lifts the whole feeder by about 0.022 pu and costs nothing. A battery should be judged against that baseline, not against an untapped network."
+  "voltageBandNote": "The band is 0.94-1.06 pu, the GB statutory limit for a high-voltage supply below 132 kV (ESQCR 2002, regulation 27), applied as though this 12.66 kV case were an 11 kV GB circuit. One value is changed from the published case: the primary substation busbar is held at 1.02 pu rather than 1.00 pu, because a GB primary has an on-load tap changer and targets above nominal to hold the far end of the feeder up. At 1.00 pu the published case sits at 0.913 pu at bus 18 at full load and falls below the band whenever load is above about 71 per cent of the published case. At 1.02 pu it falls below the band only above about 95 per cent - the constraint pattern a distribution planner actually works against. Impedances, loads and the radial topology are unaltered.",
+  "tapNote": "Worth stating plainly: a tap change is the cheapest lever a DNO has. Moving the primary from 1.00 to 1.02 pu lifts the whole feeder by 0.020 to 0.022 pu, using equipment that is already installed. A battery should be judged against that baseline, not against an untapped network."
 }

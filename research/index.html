@@ -402,10 +402,12 @@
 
             <p class="bx-lead">Pick a distribution licence area, click a bus to put the battery there,
               set its power and its energy, and choose what the dispatch rule is trying to win. The
-              feeder re-solves for every half-hour of the last twenty-four, ninety-six AC power
-              flows, against real GB conditions: the regional carbon intensity for that licence
-              area, national demand, and the half-hourly system price. It then says whether the siting
-              is deliverable, what it is worth and to whom, and which way the carbon actually moves.</p>
+              feeder re-solves for each of the last forty-eight finished half-hours, with and without
+              the battery, ninety-six AC power flows, against GB conditions: the regional carbon
+              intensity for that licence area, GB national demand, and the half-hourly system price. It then
+              says whether the siting keeps the feeder inside its voltage and thermal limits, what it
+              is worth and to whom, and what it does to emissions counted at the regional average
+              intensity.</p>
           </div>
 
           <div class="bx" id="bx">
@@ -420,21 +422,29 @@
           <div class="bx-notes">
             <h3>What this is, and what it is not</h3>
 
-            <p>The network is the <strong>33-bus radial distribution feeder of Baran and Wu</strong>,
-              the standard case in the storage siting and sizing literature. Its impedances, loads
-              and topology are used exactly as published, and the solver reproduces the published
-              solution: 202.7&nbsp;kW of loss and 0.9131&nbsp;pu at bus&nbsp;18, in four iterations
-              from a flat start. The power flow is the same Newton&ndash;Raphson solver as the
-              14&#8209;bus project above.</p>
+            <p>The network is the <strong>33-bus radial distribution feeder of Baran and Wu</strong>
+              (1989), a 12.66&nbsp;kV case widely used in the storage siting and sizing literature. It
+              is often called the IEEE 33-bus system because it appeared in <em>IEEE Transactions on
+              Power Delivery</em>, but it is not one of the IEEE distribution test feeders, so it is
+              named here by its authors. Its line impedances and loads are the published values, as
+              MATPOWER distributes them, and it runs in its normal radial configuration with the five
+              tie switches open. With the source held at the published 1.00&nbsp;pu, the solver
+              reproduces the published solution: 202.7&nbsp;kW of loss and 0.9131&nbsp;pu at
+              bus&nbsp;18, in four iterations from a flat start. The page itself changes the source
+              voltage, the load level and the ratings, each set out under the assumptions below. The
+              power flow is the same Newton&ndash;Raphson solver as the 14&#8209;bus project
+              above.</p>
 
             <p><strong class="term">It is not a real UK feeder.</strong> That matters enough to say
               plainly. No GB distribution circuit is published with full impedances under a licence I could
               verify, so rather than put licence-uncertain network data on a public page I used the
               benchmark the literature uses. What is British here is everything driving it: the
-              carbon intensity is the real figure for the licence area you select, from the National
-              Energy System Operator's regional feed; demand and the system price come from Elexon.
-              The statutory voltage band is the GB one. Swapping in a genuine UK feeder later is a
-              change of data, not of method.</p>
+              carbon intensity is the National Energy System Operator's regional figure for the
+              licence area you select, which that feed publishes as a forecast rather than a
+              measurement; national demand outturn and the system price come from Elexon. The voltage band
+              is the GB statutory one for high-voltage supplies, &plusmn;6 per cent, applied as though
+              this 12.66&nbsp;kV case were an 11&nbsp;kV GB circuit. Swapping in a genuine UK feeder
+              later is a change of data, not of method.</p>
 
             <p><strong class="term">It is not a connection study.</strong> Voltage, thermal loading, reverse power
               flow and losses are all here; fault level is not, and in GB fault level is frequently
@@ -442,42 +452,55 @@
               favourable verdict on this page is not a verdict on connectability.</p>
 
             <p><strong class="term">The three dispatch rules are deliberately simple.</strong> Each ranks the
-              half-hours by one signal and charges at the bottom and discharges at the top; none of
-              them is an optimiser, and none is my research. They are transparent on purpose, so that
+              half-hours of the window by one signal and charges at the bottom and discharges at the
+              top. Because the window is already over, each rule sees the whole day at once, which no
+              real battery can. None of them is an optimiser, and none is my research. They are transparent on purpose, so that
               when the answers disagree you can see exactly why rather than take an optimiser's word
               for it. Making that choice properly, a policy that respects the network, the
               carbon signal and the revenue at once, is the open problem, not something this
               page solves.</p>
 
             <p>Two results fall out of the physics rather than out of anything I chose. The first is
-              that <strong>location dominates</strong>: the same megawatt at the head of the feeder
-              and near its end differ by more than a factor of ten in the loss it removes, because
-              current displaced next to the substation never travelled far enough to lose anything.
-              The second is that <strong>a battery is a load half the time</strong>. Charging at full
-              rated power into a weak point is the same problem the battery was bought to fix, only
-              pointing the other way, and it is why the most profitable dispatch rule is often the
-              one the network cannot accept.</p>
+              that <strong>location dominates</strong>: a battery removes loss mainly from the
+              circuits between it and the substation, so a few hundred kilowatts injected at the end
+              of the main trunk, bus&nbsp;18, removes around twenty times the loss the same injection
+              removes at the head of the feeder. Location is not simply distance, though. The gap
+              narrows as the battery grows, because a large injection overshoots the load near it and
+              pushes power back up the feeder, and on a lightly loaded spur such as bus&nbsp;22 a
+              1&nbsp;MW injection adds loss rather than removing it. The second is that <strong>a
+              battery is a load whenever it charges</strong>. Charging at full rated power into a
+              weak point is the same problem the battery was bought to fix, only pointing the other
+              way, and it is why the most profitable dispatch rule can be the one the network cannot
+              accept.</p>
 
             <h3>Assumptions worth stating</h3>
             <ul>
               <li><strong>Nodal demand is not measured, because nowhere publishes it.</strong> The
-                case's published bus loads are scaled together by live GB demand against the highest
-                half-hour in the window. Real feeders do not move in unison like that. This is the
-                one quantity on the page that is neither a measurement nor a published constant.</li>
+                case's published bus loads, real and reactive, are scaled together by GB national
+                demand (Elexon's initial national demand outturn) against the highest half-hour in the
+                window, so that half-hour runs at exactly the published load. Real feeders do not move
+                in unison like that, and national demand is metered at transmission level, so
+                generation embedded in the distribution networks shows up in it only as lower
+                demand.</li>
 
               <li><strong>The primary busbar is held at 1.02&nbsp;pu, not the 1.00&nbsp;pu of the
                 published case.</strong> At 1.00&nbsp;pu the far end of the trunk sits at
-                0.913&nbsp;pu and the feeder is outside the GB statutory band at every hour of every
-                day, which would make the demonstration meaningless. A GB primary has an on-load tap
-                changer and targets above nominal for precisely this reason. It is worth drawing the
-                obvious conclusion: <strong>a tap change is the cheapest lever a network operator
-                has</strong>, it lifts the whole feeder at once, and a battery should be judged
-                against a properly tapped network rather than against a neglected one.</li>
+                0.913&nbsp;pu at full load, and falls below the GB band whenever load is above about
+                71 per cent of the published case, which on a typical day is most of it. At
+                1.02&nbsp;pu it falls below the band only above about 95 per cent, in the busiest
+                half-hours. A GB primary has an on-load tap changer and targets
+                above nominal for precisely this reason. It is worth drawing the obvious conclusion:
+                <strong>a tap change is the cheapest lever a network operator has</strong>, it lifts
+                the whole feeder at once, by 0.020 to 0.022&nbsp;pu here, and a battery should be
+                judged against a properly tapped network rather than against a neglected one.</li>
 
               <li><strong>Thermal ratings are assumed.</strong> The published case has none. Each
-                circuit is given the smallest of a set of plausible ratings that leaves at least 35
-                per cent headroom over base-case flow, so the intact feeder is secure at full load
-                and no result on this page is decided by a rating picked to make a point.</li>
+                circuit is given the smallest of a set of plausible ratings, 1.5 to 8&nbsp;MVA, that
+                leaves at least 35 per cent headroom over its flow at full published load, so the
+                intact feeder is secure at full load and no result on this page is decided by a
+                rating picked to make a point. Loading is apparent power against that rating, the
+                MATPOWER convention; a thermal limit is really a current limit, and at 0.94&nbsp;pu
+                apparent power understates current by about 6 per cent.</li>
 
               <li><strong>The battery runs at unity power factor.</strong> GB grid-scale storage
                 normally does unless it is contracted for reactive support. Letting it hold voltage
@@ -487,25 +510,39 @@
                 hours at the state of charge it began them with. Without that constraint a battery
                 that started half full and ended empty would appear to deliver energy nobody charged,
                 quietly inflating both the trading revenue and the carbon saving. One consequence is
-                worth noticing: a short-duration battery never reaches its own power rating across a
-                long evening peak, because it can only give back what it took in.</li>
+                worth noticing: when a short-duration battery cannot give back enough to cover every
+                half-hour its rule picked, the rule scales the discharge down evenly across all of
+                them, so it does not reach its rated power even at the peak. A dispatch that
+                concentrated the energy in the peak half-hour would.</li>
 
               <li><strong>Losses and revenue are two ledgers, and they are never added.</strong>
                 Losses avoided and peak removed accrue to the network operator; trading accrues to
                 whoever owns the battery. In GB those are not the same party, a network
                 operator buys flexibility, it does not trade, so a single total would imply
-                someone who does not exist. The owner figure counts the system price only, and GB
-                storage earns most of its income in the balancing mechanism and ancillary services,
-                so read it as a floor rather than a business case.</li>
+                someone who does not exist. The owner figure trades the system price with hindsight,
+                which flatters that one stream, and it leaves out the balancing mechanism and
+                ancillary services, where GB storage earns most of its income. It is an illustration,
+                not a floor and not a business case.</li>
+
+              <li><strong>Carbon is counted at average intensity, not marginal.</strong> Energy
+                charged and discharged, and loss removed, are each valued at the regional average
+                intensity of their half-hour. That is attribution, a way of sharing out emissions
+                that already happened. The change a battery actually causes depends on the marginal
+                plant that responds to it, which can differ from the average and even move the other
+                way, so the carbon figure is not a measured or modelled change in GB emissions.</li>
 
               <li><strong>Embodied carbon is shown as a band, not a number.</strong> Published
                 estimates for lithium storage spread widely with chemistry, factory grid and system
                 boundary. At some sizes that band is wider than the difference between two options,
                 which is itself the useful thing to see.</li>
 
-              <li><strong>This is the last twenty-four hours, not a forecast.</strong> Every figure
-                is what actually happened, re-solved against the network. It is a retrospective that
-                slides forward as the feeds publish, and it makes no claim about tomorrow.</li>
+              <li><strong>This is the last twenty-four hours, not tomorrow.</strong> The window is
+                the forty-eight most recent finished half-hours, re-solved against the network, and it
+                slides forward as the feeds publish. Demand and the system price are outturn. Regional
+                carbon intensity is the regional feed's own forecast for each half-hour, because it
+                publishes no measured regional figure. A half-hour a feed has not yet published takes
+                its neighbour's value, and a feed that does not answer at all is replaced by a stated
+                stand-in profile, named on the panel.</li>
             </ul>
           </div>
         </article>
@@ -570,7 +607,7 @@
   <script src="/js/backtotop.js?v=20260829-1" defer></script>
   <script type="module" src="/js/contingency.js?v=20260911-2"></script>
   <script type="module" src="/js/resilient.js?v=20260911-2"></script>
-  <script type="module" src="/js/bess.js?v=20260911-2"></script>
+  <script type="module" src="/js/bess.js?v=20260913-1"></script>
   <script src="/js/assistant-loader.js?v=20260902-3" defer></script>
 
 </body>

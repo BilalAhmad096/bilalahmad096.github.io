@@ -4,8 +4,9 @@
 //
 // The feeder is a published test case with fixed impedances. Everything driving
 // it is live: regional carbon intensity and generation mix from the National
-// Energy System Operator's carbon API, GB demand and the half-hourly system
-// price from Elexon. The visitor picks a licence area, a node, a size and a
+// Energy System Operator's carbon API, which publishes regional figures as
+// forecasts only, and GB demand outturn and the half-hourly system price from
+// Elexon. The visitor picks a licence area, a node, a size and a
 // dispatch rule; the page solves the feeder ninety-six times and says whether
 // the siting works and what it is worth.
 //
@@ -13,6 +14,7 @@
 // are tested separately. This file is the drawing and the wiring.
 
 import {
+  DIESEL_KG_PER_KWH,
   MODES,
   REGIONS,
   ROUND_TRIP,
@@ -28,7 +30,11 @@ import {
 const CASE_URL = '/data/feeder33.json';
 
 const API_CARBON = 'https://api.carbonintensity.org.uk/regional/intensity';
-const API_DEMAND = 'https://data.elexon.co.uk/bmrs/api/v1/demand/outturn/summary?format=json';
+// Initial National Demand Outturn: half-hourly, transmission-metered, and
+// published within fifteen minutes of each half-hour ending. Not the
+// /demand/outturn/summary endpoint, which Elexon describes as a down-sampled
+// summary of instantaneous generation for charts rather than a demand dataset.
+const API_DEMAND = 'https://data.elexon.co.uk/bmrs/api/v1/demand/outturn';
 const API_PRICE = 'https://data.elexon.co.uk/bmrs/api/v1/balancing/settlement/system-prices';
 
 const REQUEST_TIMEOUT_MS = 9000;
@@ -105,10 +111,28 @@ async function getJson(url) {
   }
 }
 
-/** The 48 half-hour boundaries ending with the one we are currently inside. */
+/**
+ * The 48 half-hour boundaries ending with the last half-hour that has finished.
+ * Not the one we are inside: its demand is only partly in, and its system price
+ * is not published until it ends, so it would have to be borrowed from the half
+ * hour before and presented as its own.
+ */
 export function slotStarts(now = Date.now()) {
-  const current = Math.floor(now / HALF_HOUR_MS) * HALF_HOUR_MS;
-  return Array.from({ length: SLOTS }, (_, i) => current - (SLOTS - 1 - i) * HALF_HOUR_MS);
+  const last = Math.floor(now / HALF_HOUR_MS) * HALF_HOUR_MS - HALF_HOUR_MS;
+  return Array.from({ length: SLOTS }, (_, i) => last - (SLOTS - 1 - i) * HALF_HOUR_MS);
+}
+
+const londonDay = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit'
+});
+
+/**
+ * The settlement dates a window touches. Elexon files each half-hour under the
+ * London date it falls in, so in summer the 23:00-24:00 UTC hour belongs to the
+ * next day's file, and asking by UTC date would miss it.
+ */
+export function settlementDates(starts) {
+  return [...new Set(starts.map(ms => londonDay.format(new Date(ms))))];
 }
 
 /**
@@ -157,16 +181,19 @@ async function fetchCarbon(regionId, starts) {
 }
 
 async function fetchDemand(starts) {
-  const rows = await getJson(API_DEMAND);
+  const days = settlementDates(starts);
+  const payload = await getJson(
+    `${API_DEMAND}?settlementDateFrom=${days[0]}&settlementDateTo=${days[days.length - 1]}&format=json`
+  );
+  const rows = Array.isArray(payload?.data) ? payload.data : [];
   return align(
-    (Array.isArray(rows) ? rows : []).map(row => ({ t: Date.parse(row.startTime), v: row.demand })),
+    rows.map(row => ({ t: Date.parse(row.startTime), v: row.initialDemandOutturn })),
     starts
   );
 }
 
 async function fetchPrice(starts) {
-  const day = ms => new Date(ms).toISOString().slice(0, 10);
-  const days = [...new Set([day(starts[0]), day(starts[SLOTS - 1])])];
+  const days = settlementDates(starts);
   const payloads = await Promise.all(days.map(d => getJson(`${API_PRICE}/${d}?format=json`)));
   const rows = payloads.flatMap(payload => payload?.data ?? []);
   return align(
@@ -565,8 +592,9 @@ function renderMoney(host) {
   grid.append(statCard(
     'To whoever owns the battery',
     `${fmtGbp(worth.arbitrage)} / day`,
-    'buying and selling at the system price. GB storage earns most of its income in the balancing '
-    + 'mechanism and ancillary services, none of which is counted here, so read this as a floor'
+    'buying and selling at the system price, choosing the half-hours with hindsight. That flatters '
+    + 'this one stream, while the balancing mechanism and ancillary services, where GB storage earns '
+    + 'most of its income, are not counted at all. It is an illustration, not a floor or a business case'
   ));
   host.append(grid);
 }
@@ -579,16 +607,18 @@ function renderCarbon(host) {
   const net = worth.netOperationalKg;
   const better = net < 0;
 
-  host.append(el('h3', 'bx-panel__title', 'Carbon, in the direction it actually moves'));
+  host.append(el('h3', 'bx-panel__title', 'Carbon, at the regional average intensity'));
   host.append(el('p', 'bx-panel__lead',
-    `A battery loses about ${((1 - ROUND_TRIP) * 100).toFixed(0)} per cent of everything it stores. It only `
-    + 'reduces emissions if the intensity gap it moves energy across is wider than that loss. Charging adds, '
-    + 'discharging avoids, and the two do not have to net out in your favour.'));
+    `A battery loses about ${((1 - ROUND_TRIP) * 100).toFixed(0)} per cent of everything it stores. `
+    + 'Counted at average intensity, it only comes out ahead if the intensity gap it moves energy across is '
+    + 'wider than that loss. Average intensity is an accounting convention, not the plant that actually '
+    + 'responds: that is the marginal generator, which can differ from the average and even move the other '
+    + 'way, so read this as attribution rather than as the change in emissions.'));
 
   const headline = el('p', `bx-carbon__headline bx-carbon__headline--${better ? 'down' : 'up'}`);
   headline.textContent = better
-    ? `Reducing emissions: ${fmt(Math.abs(net))} kg CO₂e avoided over the window`
-    : `Increasing emissions: ${fmt(Math.abs(net))} kg CO₂e added over the window`;
+    ? `Lower at average intensity: ${fmt(Math.abs(net))} kg CO₂e over the window`
+    : `Higher at average intensity: ${fmt(Math.abs(net))} kg CO₂e over the window`;
   host.append(headline);
 
   const grid = el('div', 'bx-stats');
@@ -600,7 +630,7 @@ function renderCarbon(host) {
   grid.append(statCard(
     'Losses avoided on the feeder',
     `${signed(-worth.lossCarbonKg)} kg`,
-    'copper that no longer heats up, at the live regional intensity'
+    'loss no longer incurred on the feeder, at the regional intensity'
   ));
   grid.append(statCard(
     'Embodied, amortised',
@@ -610,7 +640,8 @@ function renderCarbon(host) {
   grid.append(statCard(
     'Same energy from a diesel set',
     `${fmt(worth.dieselKg)} kg`,
-    `the ${worth.dischargedMwh.toFixed(2)} MWh discharged, generated at 0.27 kg/kWh instead`
+    `the ${worth.dischargedMwh.toFixed(2)} MWh discharged, generated at ${DIESEL_KG_PER_KWH.toFixed(2)} kg/kWh `
+    + 'instead: 0.27 litres per kWh at 2.58 kg per litre'
   ));
   host.append(grid);
 
@@ -736,14 +767,16 @@ function renderStatus() {
   const line = el('p', 'bx-status__line');
   line.append(el('strong', null, live.regionName || region.name));
   line.append(document.createTextNode(
-    ` · ${Math.round(nowCarbon)} gCO₂/kWh · GB demand ${fmt(nowDemand)} MW `
+    ` · ${Math.round(nowCarbon)} gCO₂/kWh forecast · GB demand ${fmt(nowDemand)} MW `
     + `· system price ${fmtGbp(nowPrice)}/MWh`
   ));
   dom.status.append(line);
 
   const foot = el('p', 'bx-status__foot');
-  foot.textContent = `Half-hour beginning ${stamp.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
-    + `, ${stamp.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}. `
+  const london = { timeZone: 'Europe/London' };
+  foot.textContent = `Latest finished half-hour, beginning `
+    + `${stamp.toLocaleTimeString('en-GB', { ...london, hour: '2-digit', minute: '2-digit' })}`
+    + `, ${stamp.toLocaleDateString('en-GB', { ...london, day: 'numeric', month: 'short' })}. `
     + `Feeder solved ${SLOTS * 2} times for this window.`;
   dom.status.append(foot);
 

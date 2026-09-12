@@ -5,7 +5,7 @@
 // battery, and a 24-hour window of live GB data, so it can be tested in Node
 // and moved to a Worker without change.
 //
-// The network solve is js/lib/powerflow.js, unchanged from Project 01.
+// The network solve is js/lib/powerflow.js, the same solver as Project 02.
 
 import { solvePowerFlow, violations } from './powerflow.js';
 
@@ -22,8 +22,16 @@ export const HOURS_PER_SLOT = 0.5;
 export const ROUND_TRIP = 0.88;
 const ONE_WAY = Math.sqrt(ROUND_TRIP);
 
-/** Diesel gen-set, kg CO2e per kWh generated, for the backup comparison. */
-export const DIESEL_KG_PER_KWH = 0.27;
+/**
+ * Diesel gen-set, kg CO2e per kWh of electricity generated, for the comparison
+ * card. Built from the two factors Project 01 already uses, so the site gives
+ * one answer: 0.27 litres of diesel per kWh generated, at 2.58354 kg CO2e per
+ * litre (average biofuel blend, 2026 UK government conversion factors).
+ * 0.27 on its own is the litres figure, not the carbon one.
+ */
+export const DIESEL_LITRES_PER_KWH = 0.27;
+export const DIESEL_KG_PER_LITRE = 2.58354;
+export const DIESEL_KG_PER_KWH = DIESEL_LITRES_PER_KWH * DIESEL_KG_PER_LITRE;
 
 /**
  * Embodied carbon of lithium storage, kg CO2e per kWh of installed capacity.
@@ -102,8 +110,13 @@ function extremes(series, n) {
  * price signal is all it sees. A network operator would not: charging is load,
  * and a full-rated draw at a weak point on the feeder is the same problem the
  * battery was bought to solve, only pointing the other way. Network-support
- * therefore charges at half power over twice as long - same energy, a quarter
- * of the loss, and far less voltage drop.
+ * therefore charges at half power over twice as long, for the same energy.
+ *
+ * What that buys is the depth of the voltage dip, which roughly halves. It buys
+ * much less on losses than a pure I-squared argument suggests: the battery's
+ * current adds to load current already on the feeder, and that cross term is
+ * linear in the battery's current, so spreading the charge leaves it unchanged.
+ * At bus 18 the extra loss from charging falls by less than a fifth.
  */
 const CHARGE_FRACTION = { price: 1, carbon: 1, network: 0.5 };
 
@@ -373,7 +386,9 @@ export function verdict({ assessment, worth, net, setpoints }) {
   const before = assessment.base;
   const after = assessment.withBattery;
   const band = { min: net.bus[1].vmin, max: net.bus[1].vmax };
-  const pct = share => `${(share * 100).toFixed(share < 0.1 ? 1 : 0)} per cent`;
+  // A size, never signed: the sentence around it carries the direction.
+  const pct = share => `${(Math.abs(share) * 100).toFixed(Math.abs(share) < 0.1 ? 1 : 0)} per cent`;
+  const lossesMove = share => (share >= 0 ? `losses fall ${pct(share)}` : `losses rise ${pct(share)}`);
 
   const lossShare = before.lossesMwh ? worth.lossMwhSaved / before.lossesMwh : 0;
   const exports = after.minHeadMw < 0;
@@ -384,10 +399,13 @@ export function verdict({ assessment, worth, net, setpoints }) {
   const chargingAtWorstV = setpoints[after.vminSlot] < -1e-9;
   const chargingAtWorstLoad = setpoints[after.worstLoadingSlot] < -1e-9;
 
+  // atPeak holds the lowest voltage anywhere on the feeder in the peak
+  // half-hour, which need not sit at the same bus before and after, so the
+  // sentence names the feeder rather than a bus.
   const peakGain = assessment.atPeak.withBattery - assessment.atPeak.base;
   const helpsAtPeak = peakGain > 0.0005;
   const peakLine = helpsAtPeak
-    ? `At the demand peak it does what it was bought for: bus ${after.vminBus} rises from `
+    ? 'At the demand peak it does what it was bought for: the lowest voltage on the feeder rises from '
       + `${assessment.atPeak.base.toFixed(3)} to ${assessment.atPeak.withBattery.toFixed(3)} pu. `
     : '';
 
@@ -396,9 +414,9 @@ export function verdict({ assessment, worth, net, setpoints }) {
       level: 'no',
       headline: 'Not recommended at this size',
       reason: peakLine
-        + `But a circuit reaches ${(after.worstLoading * 100).toFixed(0)} per cent of rating `
+        + `But a circuit reaches ${(after.worstLoading * 100).toFixed(0)} per cent of its assumed rating `
         + `while the battery is ${chargingAtWorstLoad ? 'charging' : 'discharging'}. `
-        + 'Thermal capacity is binding, and reinforcing it would cost more than the battery saves.',
+        + 'Thermal capacity is binding: a smaller power rating, or a different bus, would be needed.',
       binding: 'Thermal rating'
     };
   }
@@ -411,8 +429,8 @@ export function verdict({ assessment, worth, net, setpoints }) {
         + `But the worst half-hour on the feeder gets worse, not better: ${before.vmin.toFixed(3)} pu `
         + `becomes ${after.vmin.toFixed(3)} pu at bus ${after.vminBus}`
         + (chargingAtWorstV
-          ? ', because charging at rated power puts the whole draw at the weakest point on the network. '
-            + 'A battery is a load half the time, and this siting cannot absorb it. Reduce the power rating.'
+          ? ', because charging puts the whole draw at the weakest point on the network. '
+            + 'A battery is a load whenever it charges, and this siting cannot absorb it. Reduce the power rating.'
           : '. The injection is too large for this point on the feeder.'),
       binding: chargingAtWorstV ? 'Voltage while charging' : 'Voltage'
     };
@@ -435,7 +453,7 @@ export function verdict({ assessment, worth, net, setpoints }) {
       reason: `The feeder breached the ${band.min} pu statutory limit in `
         + `${before.voltageBreaches} half-hour${before.voltageBreaches === 1 ? '' : 's'}, worst `
         + `${before.vmin.toFixed(3)} pu at bus ${before.vminBus}. With the battery every half-hour is `
-        + `inside the band and losses fall ${pct(lossShare)}.`,
+        + `inside the band and ${lossesMove(lossShare)}.`,
       binding: 'None - the constraint clears'
     };
   }
@@ -480,9 +498,10 @@ export function verdict({ assessment, worth, net, setpoints }) {
   return {
     level: 'marginal',
     headline: 'Little benefit at this location',
-    reason: `Nothing is binding and losses move only ${pct(lossShare)}. Close to the primary substation a `
-      + 'battery has almost no network to relieve - the current it displaces never travelled far enough to '
-      + 'lose anything. The same asset further down the feeder does considerably more.',
+    reason: `Nothing is binding and losses move by only ${pct(lossShare)}. A battery removes loss mainly from `
+      + 'the circuits between it and the primary substation, so close to the substation, or on a lightly '
+      + 'loaded spur, there is little for it to relieve. The same asset at the end of the main trunk usually '
+      + 'does considerably more.',
     binding: 'None'
   };
 }

@@ -3,12 +3,21 @@
 // Builds data/feeder33.json: the 33-bus radial distribution feeder of Baran and
 // Wu (1989), in the same case schema js/lib/powerflow.js already reads.
 //
-// The published data is in ohms on a 12.66 kV base. Everything here converts it
-// to per unit on a 10 MVA base and nothing else is altered - the loads, the
-// impedances and the radial topology are the case as published. Branch ratings
-// are not part of that data and are assumed here; see ratingsNote.
+// Often called the "IEEE 33-bus system" because it was published in IEEE
+// Transactions on Power Delivery. It is not one of the IEEE PES distribution
+// test feeders (those are the 4, 13, 34, 37 and 123-node cases), so it is named
+// here by its authors.
 //
-// Validate with: node --test tests/feeder.test.js
+// The line and load table below is the case as MATPOWER distributes it
+// (data/case33bw.m), which cites the paper, and tests/battery.test.js pins every
+// value to that table. The published data is in ohms on a 12.66 kV base;
+// everything here converts it to per unit on a 10 MVA base. The five normally
+// open tie switches are left out, because they carry nothing in the radial
+// configuration this page solves. Branch ratings are not part of the case and
+// are assumed; see ratingsNote. The slack voltage is changed; see
+// voltageBandNote.
+//
+// Validate with: node --test tests/battery.test.js
 
 import { writeFile } from 'node:fs/promises';
 
@@ -18,7 +27,7 @@ const Z_BASE = (KV * KV) / BASE_MVA;   // 16.0276 ohm
 
 // from, to, R ohm, X ohm, and the P kW / Q kVAr drawn at the receiving bus.
 const LINES = [
-  [1, 2, 0.0922, 0.0477, 100, 60],
+  [1, 2, 0.0922, 0.0470, 100, 60],
   [2, 3, 0.4930, 0.2511, 90, 40],
   [3, 4, 0.3660, 0.1864, 120, 80],
   [4, 5, 0.3811, 0.1941, 60, 30],
@@ -54,9 +63,10 @@ const LINES = [
 
 const load = new Map(LINES.map(([, to, , , p, q]) => [to, { p, q }]));
 
-// GB statutory limits for a nominal HV network are +/- 6 per cent. The case's
-// own published base-case solution sits below that at the far end of the trunk,
-// which is exactly why it is the standard case for siting studies.
+// GB statutory limits for a high-voltage supply below 132 kV are +/- 6 per cent
+// (ESQCR 2002, regulation 27), applied here as though this 12.66 kV case were an
+// 11 kV GB circuit. The case's own published solution sits below that at the far
+// end of the trunk.
 const VMIN = 0.94;
 const VMAX = 1.06;
 
@@ -89,12 +99,13 @@ const branch = LINES.map(([from, to, r, x]) => ({
 }));
 
 // The primary substation busbar. The published case holds it at 1.00 pu, which
-// leaves the far end of the trunk at 0.913 pu - permanently outside the GB
-// statutory band, because the case was built to study siting, not to represent
-// GB operation. A real GB primary has an on-load tap changer and targets a
-// little above nominal for exactly this reason. 1.02 pu is a realistic target:
-// it puts the feeder inside limits at ordinary demand and outside them only at
-// high demand, which is the constraint pattern a DNO actually plans against.
+// leaves the far end of the trunk at 0.913 pu at full load, and below the GB
+// band whenever load is above about 71 per cent of the published case - nearly
+// every half-hour of a typical GB day, because the case was built to study
+// reconfiguration, not to represent GB operation. A GB primary has an on-load
+// tap changer and targets a little above nominal for exactly this reason. At
+// 1.02 pu the band is breached only above about 95 per cent of the published
+// load, which is the constraint pattern a DNO actually plans against.
 const SLACK_VG = 1.02;
 
 const gen = [{ bus: 1, pg: 0, qg: 0, qmax: 99, qmin: -99, vg: SLACK_VG, status: 1 }];
@@ -128,21 +139,22 @@ net.ratingsNote =
   'feeder at full load is within limits and the demonstration is not decided by ' +
   'a rating chosen to make a point.';
 net.voltageBandNote =
-  'The band is 0.94-1.06 pu, the GB statutory limit for a nominal HV network. ' +
-  'One value is changed from the published case: the primary substation busbar ' +
-  'is held at ' + SLACK_VG.toFixed(2) + ' pu rather than 1.00 pu, because a GB ' +
-  'primary has an on-load tap changer and targets above nominal to hold the far ' +
-  'end of the feeder up. At 1.00 pu the published case sits at 0.913 pu at bus 18 ' +
-  'and is outside the GB band at every hour of every day, which would make the ' +
-  'demonstration meaningless. At ' + SLACK_VG.toFixed(2) + ' pu the feeder is ' +
-  'inside limits at ordinary demand and breaches only when demand is high - the ' +
-  'constraint pattern a distribution planner actually works against. Impedances, ' +
-  'loads and topology are unaltered.';
+  'The band is 0.94-1.06 pu, the GB statutory limit for a high-voltage supply ' +
+  'below 132 kV (ESQCR 2002, regulation 27), applied as though this 12.66 kV case ' +
+  'were an 11 kV GB circuit. One value is changed from the published case: the ' +
+  'primary substation busbar is held at ' + SLACK_VG.toFixed(2) + ' pu rather ' +
+  'than 1.00 pu, because a GB primary has an on-load tap changer and targets above ' +
+  'nominal to hold the far end of the feeder up. At 1.00 pu the published case ' +
+  'sits at 0.913 pu at bus 18 at full load and falls below the band whenever load ' +
+  'is above about 71 per cent of the published case. At ' + SLACK_VG.toFixed(2) +
+  ' pu it falls below the band only above about 95 per cent - the constraint ' +
+  'pattern a distribution planner actually works against. Impedances, loads and ' +
+  'the radial topology are unaltered.';
 net.tapNote =
   'Worth stating plainly: a tap change is the cheapest lever a DNO has. Moving ' +
-  'the primary from 1.00 to 1.02 pu lifts the whole feeder by about 0.022 pu and ' +
-  'costs nothing. A battery should be judged against that baseline, not against ' +
-  'an untapped network.';
+  'the primary from 1.00 to 1.02 pu lifts the whole feeder by 0.020 to 0.022 pu, ' +
+  'using equipment that is already installed. A battery should be judged against ' +
+  'that baseline, not against an untapped network.';
 
 await writeFile(
   new URL('../data/feeder33.json', import.meta.url),
@@ -165,4 +177,4 @@ const checkVmin = Math.min(...check.buses.map(b => b.vm));
 console.log(`--- at the published 1.00 pu slack, for validation ---`);
 console.log(`losses ${(check.lossesMw * 1000).toFixed(1)} kW   (published: 202.7 kW)`);
 console.log(`Vmin ${checkVmin.toFixed(4)} pu   (published: 0.9131 at bus 18)`);
-console.log(`iterations ${base.iterations}`);
+console.log(`iterations ${check.iterations}`);

@@ -8,6 +8,7 @@ import {
   formatShare,
   nearestIndex,
   readHistory,
+  readRecords,
   readIntensity,
   sparkline,
   statusFor
@@ -200,6 +201,31 @@ test("scrubbing snaps to the nearest half hour, and clamps past either end", () 
 test("with no line there is nothing to scrub", () => {
   assert.equal(nearestIndex([], 10), -1);
   assert.equal(nearestIndex(null, 10), -1);
+});
+
+const recordsFile = {
+  schema: 1,
+  since: "2026-09-12",
+  through: "2026-09-12",
+  updated: "2026-09-12T13:22:45.612Z",
+  lowest: { value: 29, at: "2026-09-12T12:30Z", index: "low" },
+  highest: { value: 143, at: "2026-09-12T02:30Z", index: "moderate" }
+};
+
+test("the stored record is read whole", () => {
+  const records = readRecords(recordsFile);
+  assert.equal(records.since, "2026-09-12");
+  assert.equal(records.lowest.value, 29);
+  assert.equal(records.highest.at, "2026-09-12T02:30Z");
+});
+
+test("half a record, or a record of nothing, does not draw", () => {
+  assert.equal(readRecords(null), null);
+  assert.equal(readRecords({ ...recordsFile, highest: null }), null);
+  assert.equal(readRecords({ ...recordsFile, since: undefined }), null);
+  // A value the file cannot vouch for is not printed as a record.
+  assert.equal(readRecords({ ...recordsFile, lowest: { value: null, at: "2026-09-12T12:30Z" } }), null);
+  assert.equal(readRecords({ ...recordsFile, lowest: { value: 29, at: 1757680000 } }), null);
 });
 
 test("a line needs two points", () => {

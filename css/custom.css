@@ -2419,6 +2419,27 @@ section{
   font-variant-numeric:tabular-nums;
 }
 
+/* ---------- the site's own record ---------- */
+
+.grid-now__records{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid var(--ring);
+}
+
+/* A record's unit sits inside a 700-weight number, so it steps back out. */
+.grid-now__stat .grid-now__unit{
+  font-weight:500;
+}
+
+/* The moment under each record, small enough that the number still leads. */
+.grid-now__when{
+  margin:3px 0 0;
+  font-size:12.5px;
+  color:var(--ink-muted);
+  font-variant-numeric:tabular-nums;
+}
+
 /* ---------- generation mix ---------- */
 
 .grid-now__mix{

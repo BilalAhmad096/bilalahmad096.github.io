@@ -15,12 +15,18 @@
 //                               embedded generation - the two are shown in
 //                               separate blocks and never added together.
 //
+// One file from this origin joins them: data/grid-records.json, the lowest and
+// highest settled half hour this site has recorded. A static page cannot keep
+// that record itself, so a scheduled job folds it and commits the file, which
+// is why it is the site's record rather than each browser's.
+//
 // Every pure function here is exported and covered by tests/grid-now.test.js;
 // the DOM half runs only in a browser.
 
 const API_INTENSITY = 'https://api.carbonintensity.org.uk/intensity';
 const API_MIX = 'https://api.carbonintensity.org.uk/generation';
 const API_ELEXON = 'https://data.elexon.co.uk/bmrs/api/v1/generation/outturn/summary?format=json';
+const RECORDS_FILE = '/data/grid-records.json';
 
 const REFRESH_MS = 5 * 60 * 1000;   // the feeds move on the half hour; this only catches it
 const REQUEST_TIMEOUT_MS = 8000;
@@ -55,6 +61,19 @@ const ZERO_CARBON = ['wind', 'solar', 'hydro', 'nuclear'];
 const timeFormatter = new Intl.DateTimeFormat('en-GB', {
   hour: '2-digit',
   minute: '2-digit',
+  timeZone: 'Europe/London'
+});
+
+const dayFormatter = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'Europe/London'
+});
+
+const longDayFormatter = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
   timeZone: 'Europe/London'
 });
 
@@ -100,6 +119,24 @@ export function readHistory(payload) {
   return rows
     .filter(row => Number.isFinite(row?.intensity?.actual))
     .map(row => ({ at: row.from, value: row.intensity.actual }));
+}
+
+/**
+ * The stored record, rejected unless both halves are complete. A record printed
+ * as the site's own claim is worth more scepticism than a feed reading: half a
+ * pair, or a value that is not a number, means the block does not draw.
+ */
+export function readRecords(payload) {
+  const readingOf = candidate => (
+    Number.isFinite(candidate?.value) && typeof candidate?.at === 'string'
+      ? { value: candidate.value, at: candidate.at, index: candidate.index || null }
+      : null);
+
+  const lowest = readingOf(payload?.lowest);
+  const highest = readingOf(payload?.highest);
+  if (!lowest || !highest || typeof payload?.since !== 'string') return null;
+
+  return { since: payload.since, through: payload.through || null, lowest, highest };
 }
 
 /**
@@ -238,6 +275,8 @@ function svgElement(tag, attributes = {}) {
 }
 
 const clockOf = iso => timeFormatter.format(new Date(iso));
+const dayOf = iso => dayFormatter.format(new Date(iso));
+const longDayOf = iso => longDayFormatter.format(new Date(iso));
 
 async function getJson(url) {
   const controller = new AbortController();
@@ -397,6 +436,45 @@ function renderSpark(points) {
   return figure;
 }
 
+/**
+ * The site's own record. Its own block rather than a third pair of turning
+ * points on the 24-hour line: that line's low and high are today's, while these
+ * two are cumulative, and the two spans read as the same thing side by side.
+ */
+function renderRecords(records) {
+  const block = element('div', 'grid-now__records');
+  block.append(element('p', 'grid-now__label',
+    `Recorded on this site, since ${longDayOf(`${records.since}T12:00Z`)}`));
+
+  const list = element('dl', 'grid-now__stats');
+  const stat = (term, reading) => {
+    const cell = element('div', 'grid-now__stat');
+    cell.append(element('dt', null, term));
+
+    const value = element('dd');
+    value.append(document.createTextNode(`${Math.round(reading.value)} `));
+    value.append(element('span', 'grid-now__unit', 'gCO₂/kWh'));
+    cell.append(value);
+
+    // The moment is the point of a record, so it is printed rather than left to
+    // a tooltip.
+    cell.append(element('p', 'grid-now__when',
+      `${clockOf(reading.at)}, ${dayOf(reading.at)}`));
+    list.append(cell);
+  };
+
+  stat('Lowest recorded here', records.lowest);
+  stat('Highest recorded here', records.highest);
+  block.append(list);
+
+  block.append(element('p', 'grid-now__note',
+    'The extremes of every settled half hour since that date, folded into a ' +
+    'file this site rebuilds through the day. A forecast never sets a record, ' +
+    'and while the record is young it can sit inside the 24-hour range above.'));
+
+  return block;
+}
+
 function renderMix(mix) {
   const block = element('div', 'grid-now__mix');
 
@@ -539,7 +617,7 @@ function renderMessage(root, message) {
   root.replaceChildren(element('p', 'grid-now__status', message));
 }
 
-function render(root, { intensity, history, mix, metered }) {
+function render(root, { intensity, history, records, mix, metered }) {
   const fragment = document.createDocumentFragment();
 
   const top = element('div', 'grid-now__top');
@@ -548,6 +626,9 @@ function render(root, { intensity, history, mix, metered }) {
   if (spark) top.append(spark);
   fragment.append(top);
 
+  // Beside the hero and the 24-hour line, where the reader is already looking
+  // at intensity, rather than after the fuel and metering blocks.
+  if (records) fragment.append(renderRecords(records));
   if (mix) fragment.append(renderMix(mix));
   if (metered) fragment.append(renderMetered(metered));
   fragment.append(renderFoot());
@@ -562,12 +643,14 @@ function render(root, { intensity, history, mix, metered }) {
 async function load(root) {
   const historyUrl = `${API_INTENSITY}/${new Date().toISOString().slice(0, 19)}Z/pt24h`;
 
-  const [intensityResult, historyResult, mixResult, elexonResult] = await Promise.allSettled([
-    getJson(API_INTENSITY),
-    getJson(historyUrl),
-    getJson(API_MIX),
-    getJson(API_ELEXON)
-  ]);
+  const [intensityResult, historyResult, mixResult, elexonResult, recordsResult] =
+    await Promise.allSettled([
+      getJson(API_INTENSITY),
+      getJson(historyUrl),
+      getJson(API_MIX),
+      getJson(API_ELEXON),
+      getJson(RECORDS_FILE)
+    ]);
 
   const valueOf = result => (result.status === 'fulfilled' ? result.value : null);
 
@@ -580,6 +663,7 @@ async function load(root) {
   render(root, {
     intensity,
     history: readHistory(valueOf(historyResult)),
+    records: readRecords(valueOf(recordsResult)),
     mix: foldMix(valueOf(mixResult)?.data?.generationmix),
     metered: foldElexon(valueOf(elexonResult))
   });

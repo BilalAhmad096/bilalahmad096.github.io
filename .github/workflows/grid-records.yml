@@ -1,0 +1,55 @@
+# Keeps data/grid-records.json, the lowest and highest carbon intensity the
+# "GB Grid, Right Now" panel reports as recorded on this site, and commits it
+# back to the branch GitHub Pages serves. The site is static, so this is what
+# lets one record belong to the site rather than to each visitor's browser.
+#
+# The carbon intensity feed is public, so no token and no repository secret is
+# involved. The build re-reads today and yesterday on every run, because a half
+# hour settles after it ends, and writes only when the record or the day it runs
+# through has actually moved, so a quiet week produces a commit a day rather
+# than one per run.
+
+name: Grid records
+
+on:
+  schedule:
+    # Every six hours, off the hour: the top of the hour is when scheduled
+    # workflows queue worldwide and start running late. Four runs a day catch a
+    # new record the same day it is set without leaning on a free public feed.
+    - cron: "35 1,7,13,19 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: grid-records
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fold today's readings into the record
+        run: node scripts/build-grid-records.mjs
+
+      - name: Commit the refreshed record
+        run: |
+          if [ -z "$(git status --porcelain data/grid-records.json)" ]; then
+            echo "Record unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/grid-records.json
+          git commit -m "Refresh the GB grid intensity record"
+          # Someone may have pushed while this job was running; rebasing keeps
+          # the refresh from failing on a race it can resolve itself.
+          git pull --rebase --autostash
+          git push

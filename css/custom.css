@@ -146,6 +146,18 @@ img, video{
   margin:6px 0 18px;
 }
 
+/* AOS fade-up starts an element 100px below where it rests. On a heading that
+   opened a hole above every section while it waited to animate, so headings
+   rise a short way instead.
+   Only on pages that load aos.css: the research page runs aos-setup.js, which
+   marks its headings fade-up, but not the stylesheet that animates them back,
+   so an unconditional offset would leave its heading 20px low for good.
+   :where() keeps this at the specificity of the selector after it, below
+   aos.css's animated state, which has to win once the heading arrives. */
+:where(html:has(link[href*="aos.css"])) .section-title[data-aos="fade-up"]{
+  transform:translate3d(0, 20px, 0);
+}
+
 .muted{ color:var(--ink-muted); }
 
 section{
@@ -1535,7 +1547,7 @@ section{
   justify-items: center;
   align-items: center;
   width: 100%;
-  padding: 40px 0;
+  padding: 24px 0;
 }
 
 /* Both halves stretch over the button row and draw their rule across its
@@ -1791,7 +1803,6 @@ section{
 @media (max-width: 640px) {
   .connect-divider {
     --connect-gap: 20px;
-    padding: 32px 0;
   }
 
   /* Side by side rather than stacked: two rows of buttons made the divider
@@ -2218,7 +2229,9 @@ section{
 
 .section-grid{
   background:var(--section-grid);
-  padding:40px 0;
+  /* no top padding: the connect divider above owns the seam spacing, and the
+     container's own padding already clears the heading from it */
+  padding:0 0 40px;
 }
 
 .section-grid .section-title{

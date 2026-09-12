@@ -480,11 +480,6 @@ function renderRecords(records) {
   stat('Highest recorded here', records.highest);
   block.append(list);
 
-  block.append(element('p', 'grid-now__note',
-    'The extremes of every settled half hour since that date, folded into a ' +
-    'file this site rebuilds through the day. The span covers the 24 hours ' +
-    'drawn above and grows from there. A forecast never sets a record.'));
-
   return block;
 }
 

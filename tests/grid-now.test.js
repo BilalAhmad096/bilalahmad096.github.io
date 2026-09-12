@@ -6,6 +6,8 @@ import {
   foldMix,
   formatPower,
   formatShare,
+  REFRESH_FLOOR_MS,
+  dueForRefresh,
   nearestIndex,
   readHistory,
   readRecords,
@@ -226,6 +228,19 @@ test("half a record, or a record of nothing, does not draw", () => {
   // A value the file cannot vouch for is not printed as a record.
   assert.equal(readRecords({ ...recordsFile, lowest: { value: null, at: "2026-09-12T12:30Z" } }), null);
   assert.equal(readRecords({ ...recordsFile, lowest: { value: 29, at: 1757680000 } }), null);
+});
+
+test("a tab returned to is read again, one flicked past is not", () => {
+  const now = 1_757_680_000_000;
+
+  // Never read, so there is nothing on screen to trust.
+  assert.equal(dueForRefresh(0, now), true);
+  assert.equal(dueForRefresh(null, now), true);
+
+  assert.equal(dueForRefresh(now - 1_000, now), false, "a second ago settled nothing");
+  assert.equal(dueForRefresh(now - REFRESH_FLOOR_MS + 1, now), false);
+  assert.equal(dueForRefresh(now - REFRESH_FLOOR_MS, now), true);
+  assert.equal(dueForRefresh(now - 20 * 60 * 1000, now), true, "a tab left open for 20 minutes");
 });
 
 test("a line needs two points", () => {

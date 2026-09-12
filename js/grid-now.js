@@ -31,6 +31,9 @@ const RECORDS_FILE = '/data/grid-records.json';
 const REFRESH_MS = 5 * 60 * 1000;   // the feeds move on the half hour; this only catches it
 const REQUEST_TIMEOUT_MS = 8000;
 
+/** The floor between reads, so flicking between tabs cannot become a poll. */
+export const REFRESH_FLOOR_MS = 60 * 1000;
+
 /**
  * The mix bar's fixed segment order, low-carbon first. Fixed rather than sorted
  * by size: these seven colours were validated pair by pair against this order,
@@ -247,6 +250,16 @@ export function nearestIndex(coords, x) {
     if (Math.abs(coords[index].x - x) < Math.abs(coords[best].x - x)) best = index;
   }
   return best;
+}
+
+/**
+ * Whether a read is due. A tab left open holds the half hour it last fetched,
+ * so coming back to it is worth a fresh read, but a tab flicked past twice in a
+ * minute is not: nothing has settled in between.
+ */
+export function dueForRefresh(lastAt, now = Date.now(), floorMs = REFRESH_FLOOR_MS) {
+  if (!Number.isFinite(lastAt) || lastAt <= 0) return true;
+  return now - lastAt >= floorMs;
 }
 
 export const formatShare = percent => `${percent.toFixed(1)}%`;
@@ -673,10 +686,15 @@ function init() {
   const root = document.getElementById('gridNow');
   if (!root) return;
 
-  const refresh = () => load(root).catch(error => {
-    console.warn('GB grid strip unavailable:', error.message);
-    renderMessage(root, 'The grid feeds are not answering right now.');
-  });
+  let lastAt = 0;
+
+  const refresh = () => {
+    lastAt = Date.now();
+    return load(root).catch(error => {
+      console.warn('GB grid strip unavailable:', error.message);
+      renderMessage(root, 'The grid feeds are not answering right now.');
+    });
+  };
 
   refresh();
 
@@ -685,6 +703,13 @@ function init() {
   setInterval(() => {
     if (document.visibilityState === 'visible') refresh();
   }, REFRESH_MS);
+
+  // And on the way back to a tab, rather than waiting out the interval there:
+  // the panel is about this half hour, so returning to one that has since
+  // settled and reading a stale number is the failure worth avoiding.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && dueForRefresh(lastAt)) refresh();
+  });
 }
 
 if (typeof document !== 'undefined') {

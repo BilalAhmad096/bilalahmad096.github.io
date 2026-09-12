@@ -8,7 +8,8 @@ import {
   previousDate,
   readingsFrom,
   sameRecord,
-  serialise
+  serialise,
+  widenTo
 } from "../scripts/lib/grid-records.mjs";
 
 // A day of the feed's /intensity/date/ response, which opens at 23:00Z the
@@ -111,6 +112,32 @@ test("each run re-reads yesterday, and backfills a gap it finds", () => {
 
   // A file left stale for a year asks for a capped window, not a year of calls.
   assert.equal(datesToFetch({ since: "2025-09-12", through: "2025-09-12" }, "2026-09-12").length, 14);
+});
+
+test("widening the start reopens the window and keeps the records held", () => {
+  const held = mergeRecords(null, readingsFrom(dayPayload), { since: "2026-09-12" });
+  const wider = widenTo(held, "2026-09-11");
+
+  assert.equal(wider.since, "2026-09-11");
+  assert.equal(wider.through, "2026-09-11", "the day to re-read from moves back with it");
+  assert.deepEqual(wider.lowest, held.lowest, "a record stands over a longer span");
+  assert.deepEqual(datesToFetch(wider, "2026-09-12"), ["2026-09-11", "2026-09-12"]);
+
+  // Yesterday's readings can then take a half the stored pair did not hold.
+  const merged = mergeRecords(wider, [{ at: "2026-09-11T18:30Z", value: 200, index: "high" }]);
+  assert.equal(merged.highest.value, 200);
+  assert.equal(merged.lowest.value, 29);
+  assert.equal(merged.since, "2026-09-11");
+});
+
+test("a start date that is not earlier leaves the record untouched", () => {
+  const held = mergeRecords(null, readingsFrom(dayPayload), { since: "2026-09-12" });
+
+  assert.equal(widenTo(held, "2026-09-12"), held);
+  assert.equal(widenTo(held, "2026-09-13"), held, "the start never moves forwards");
+  assert.equal(widenTo(held, null), held);
+  assert.equal(widenTo(null, "2026-09-11"), null);
+  assert.throws(() => widenTo(held, "yesterday"), /not a date/);
 });
 
 test("the written file stamps the run and keeps each record on one line", () => {

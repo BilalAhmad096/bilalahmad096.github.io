@@ -20,7 +20,8 @@ import {
   mergeRecords,
   readingsFrom,
   sameRecord,
-  serialise
+  serialise,
+  widenTo
 } from "./lib/grid-records.mjs";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -58,7 +59,13 @@ async function main() {
     .catch(() => null);
 
   const today = londonDate();
-  const days = datesToFetch(stored, today);
+
+  // A --since earlier than the file's own start widens the record backwards.
+  // Capped by datesToFetch, so reaching back a year asks for its 14 most
+  // recent days rather than a year of requests.
+  const base = widenTo(stored, since);
+
+  const days = datesToFetch(base, today);
 
   const readings = [];
   for (const day of days) {
@@ -67,7 +74,7 @@ async function main() {
     readings.push(...await fetchDay(day));
   }
 
-  const records = mergeRecords(stored, readings, { since: since || today });
+  const records = mergeRecords(base, readings, { since: since || today });
 
   // Left alone rather than restamped, so the scheduled run only produces a
   // commit on a day the record actually moved.

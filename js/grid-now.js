@@ -469,8 +469,8 @@ function renderRecords(records) {
 
   block.append(element('p', 'grid-now__note',
     'The extremes of every settled half hour since that date, folded into a ' +
-    'file this site rebuilds through the day. A forecast never sets a record, ' +
-    'and while the record is young it can sit inside the 24-hour range above.'));
+    'file this site rebuilds through the day. The span covers the 24 hours ' +
+    'drawn above and grows from there. A forecast never sets a record.'));
 
   return block;
 }

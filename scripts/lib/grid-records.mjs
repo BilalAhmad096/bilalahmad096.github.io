@@ -69,6 +69,18 @@ export function datesToFetch(records, today = londonDate(), maxDays = 14) {
   return days;
 }
 
+/**
+ * The stored record reopened at an earlier start date. Widening backwards is
+ * safe: a record already held stays a record over a longer span, so only the
+ * window to re-read has to move with it.
+ */
+export function widenTo(records, since) {
+  if (!records || !since) return records ?? null;
+  if (!DATE_PATTERN.test(String(since))) throw new GridRecordsError(`${since} is not a date`);
+
+  return since < records.since ? { ...records, since, through: since } : records;
+}
+
 /** A day of feed rows down to the settled readings, forecasts dropped. */
 export function readingsFrom(payload) {
   const rows = Array.isArray(payload?.data) ? payload.data : [];

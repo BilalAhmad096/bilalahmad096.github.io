@@ -91,3 +91,38 @@ test("the scheduled handler only runs for its own cron expression", async () => 
   assert.equal(scheduled.length, 1);
   assert.deepEqual(await scheduled[0], { sent: false, purged: 0 });
 });
+
+function memoryKv() {
+  const store = new Map();
+  return { get: async key => store.get(key) ?? null, put: async (key, value) => { store.set(key, value); } };
+}
+
+function digestRequest(token) {
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  return new Request("https://api.mintorian.com/v1/internal/digest", { method: "POST", headers });
+}
+
+test("the manual digest trigger does not exist until a token is configured", async () => {
+  const response = await worker.fetch(digestRequest("anything"), { RATE_LIMIT_KV: memoryKv() }, context());
+  assert.equal(response.status, 404);
+
+  const get = await worker.fetch(new Request("https://api.mintorian.com/v1/internal/digest"), { DIGEST_TRIGGER_TOKEN: "secret-token", RATE_LIMIT_KV: memoryKv() }, context());
+  assert.equal(get.status, 404);
+});
+
+test("the manual digest trigger needs the exact token and sends one digest per request", async () => {
+  const env = { DIGEST_TRIGGER_TOKEN: "correct-token-value", RATE_LIMIT_KV: memoryKv() };
+
+  assert.equal((await worker.fetch(digestRequest(), env, context())).status, 401);
+  assert.equal((await worker.fetch(digestRequest("correct-token-valuf"), env, context())).status, 401);
+
+  // No database is bound, so the digest reports that and sends nothing.
+  const accepted = await worker.fetch(digestRequest("correct-token-value"), env, context());
+  const payload = await accepted.json();
+  assert.equal(accepted.status, 200);
+  assert.deepEqual(payload, { ok: true, sent: false, purged: 0 });
+
+  // Three attempts an hour, counted before the token is checked, so guessing is capped too.
+  const limited = await worker.fetch(digestRequest("correct-token-value"), env, context());
+  assert.equal(limited.status, 429);
+});

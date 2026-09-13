@@ -98,6 +98,35 @@ async function meetingResponse(request, env) {
 
 const DIGEST_CRON = "0 8 * * 1";
 
+async function sha256(value) {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(value))));
+}
+
+// Compares fixed-length digests byte by byte, so the comparison takes the same time
+// however much of a guessed token happens to be right.
+async function tokensMatch(presented, expected) {
+  const [a, b] = await Promise.all([sha256(presented), sha256(expected)]);
+  let difference = 0;
+  for (let index = 0; index < a.length; index += 1) difference |= a[index] ^ b[index];
+  return difference === 0;
+}
+
+// Sends one digest on demand, for testing the email without touching the cron. The route
+// does not exist unless DIGEST_TRIGGER_TOKEN is set, needs that token as a bearer
+// credential, and is rate limited so a leaked token cannot be used to flood the inbox.
+async function digestTriggerResponse(request, env) {
+  if (!env.DIGEST_TRIGGER_TOKEN) {
+    return jsonResponse(request, env, { ok: false, code: "not_found", message: "Not found." }, 404);
+  }
+  await enforceRateLimit(request, env, "digest-trigger", 3, 3600);
+  const presented = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+  if (!presented || !(await tokensMatch(presented, env.DIGEST_TRIGGER_TOKEN))) {
+    return jsonResponse(request, env, { ok: false, code: "unauthorised", message: "Unauthorised." }, 401);
+  }
+  const result = await runWeeklyDigest(env);
+  return jsonResponse(request, env, { ok: true, ...result });
+}
+
 export default {
   async scheduled(event, env, ctx) {
     // Cloudflare kept firing a replaced trigger for well over ten minutes after a deploy
@@ -143,6 +172,14 @@ export default {
     if (request.method === "POST" && url.pathname === "/v1/contact") {
       try {
         return await contactResponse(request, env);
+      } catch (error) {
+        return errorResponse(request, env, error);
+      }
+    }
+
+    if (request.method === "POST" && url.pathname === "/v1/internal/digest") {
+      try {
+        return await digestTriggerResponse(request, env);
       } catch (error) {
         return errorResponse(request, env, error);
       }

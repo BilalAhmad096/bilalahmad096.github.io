@@ -456,8 +456,6 @@ function renderSpark(points) {
  */
 function renderRecords(records) {
   const block = element('div', 'grid-now__records');
-  block.append(element('p', 'grid-now__label',
-    `Recorded on this site, since ${longDayOf(`${records.since}T12:00Z`)}`));
 
   const list = element('dl', 'grid-now__stats');
   const stat = (term, reading) => {
@@ -479,6 +477,8 @@ function renderRecords(records) {
   stat('Lowest recorded here', records.lowest);
   stat('Highest recorded here', records.highest);
   block.append(list);
+  block.append(element('p', 'grid-now__label',
+    `Recorded on this site, since ${longDayOf(`${records.since}T12:00Z`)}`));
 
   return block;
 }

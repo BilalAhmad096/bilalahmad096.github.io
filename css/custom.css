@@ -2440,6 +2440,14 @@ section{
   border-top:1px solid var(--ring);
 }
 
+.grid-now__records .grid-now__stats{
+  margin-top:0;
+}
+
+.grid-now__records .grid-now__label{
+  margin-top:10px;
+}
+
 /* A record's unit sits inside a 700-weight number, so it steps back out. */
 .grid-now__stat .grid-now__unit{
   font-weight:500;

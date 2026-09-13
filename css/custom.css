@@ -2437,7 +2437,9 @@ section{
 .grid-now__records{
   margin-top:22px;
   padding-top:18px;
+  padding-bottom:18px;
   border-top:1px solid var(--ring);
+  border-bottom:1px solid var(--ring);
 }
 
 .grid-now__records .grid-now__stats{

@@ -399,6 +399,27 @@ async function requestFollowUps({ env, settings, messages, groundedResults }) {
 }
 
 const MATCH_TYPE_RANK = { term: 3, orientation: 2, none: 1 };
+const CONTACT_TOOLS = new Set(["get_contact_options", "check_availability"]);
+
+// What each call actually searched. An empty list means every category. The model chooses
+// the filter only for search_knowledge_base; the other tools have a fixed scope.
+function toolScope(call) {
+  const args = parseToolArguments(call);
+  switch (call.name) {
+    case "search_knowledge_base":
+      return (Array.isArray(args.categories) ? args.categories : [])
+        .map(category => String(category).toUpperCase())
+        .filter(category => KNOWLEDGE_CATEGORIES.includes(category));
+    case "search_publications":
+      return ["PUBLICATIONS"];
+    case "get_project_details":
+      return ["PROJECTS", "RESEARCH"];
+    case "get_profile_information":
+      return [KNOWLEDGE_CATEGORIES.includes(args.section) ? args.section : "PROFILE"];
+    default:
+      return [];
+  }
+}
 
 function summariseRetrieval(question, toolCalls, groundedResults) {
   let matchType = "none";
@@ -414,6 +435,12 @@ function summariseRetrieval(question, toolCalls, groundedResults) {
     }
   }
 
+  // A meeting or collaboration request is answered with contact routes, not records, so
+  // it has nothing to count. It is an answered turn, not a gap in the knowledge base.
+  if (matchType === "none" && recordIds.size === 0 && toolCalls.some(call => CONTACT_TOOLS.has(call.name))) {
+    matchType = "contact";
+  }
+
   return {
     question,
     matchType,
@@ -421,6 +448,7 @@ function summariseRetrieval(question, toolCalls, groundedResults) {
     grounded: matchType !== "none",
     tools: toolCalls.map(call => call.name),
     toolQueries: toolCalls.map(call => parseToolArguments(call).query || parseToolArguments(call).project_name || ""),
+    categories: toolCalls.map(toolScope),
     recordIds: [...recordIds]
   };
 }
@@ -431,7 +459,7 @@ export async function runAgent({ messages, env, sendEvent }) {
   if (deterministicRefusal) {
     await sendEvent("delta", { text: deterministicRefusal });
     await sendEvent("done", { grounded: true, refusedPrivilegedRequest: true });
-    return { question: latestMessage, matchType: "refused", resultCount: 0, grounded: false, tools: [], toolQueries: [], recordIds: [] };
+    return { question: latestMessage, matchType: "refused", resultCount: 0, grounded: false, tools: [], toolQueries: [], categories: [], recordIds: [] };
   }
 
   const acceptedPersonalOffer = acceptsPersonalOffer(messages);
@@ -467,7 +495,7 @@ export async function runAgent({ messages, env, sendEvent }) {
     const fallback = UNKNOWN_REPLY;
     await sendEvent("delta", { text: fallback });
     await sendEvent("done", { grounded: false });
-    return { question: latestMessage, matchType: "untooled", resultCount: 0, grounded: false, tools: [], toolQueries: [], recordIds: [] };
+    return { question: latestMessage, matchType: "untooled", resultCount: 0, grounded: false, tools: [], toolQueries: [], categories: [], recordIds: [] };
   }
 
   input.push(...(first.output || []));

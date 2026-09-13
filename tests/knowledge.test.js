@@ -327,3 +327,19 @@ test("project questions reach the numbered Research page studies", () => {
     assert.equal(searchKnowledgeBase({ query, categories: [], limit: 3 }).results[0].id, expectedId, query);
   }
 });
+
+test("a category name is a hint, not evidence, so it never pads results with filler", () => {
+  // Scoring the category field once lifted all five PROJECTS records for any question
+  // that said "project", and they filled whatever result slots were left.
+  const specific = getProjectDetails({ project_name: "investment related projects" });
+  assert.ok(specific.results.length > 0);
+  assert.equal(specific.results.some(record => record.category === "PROJECTS"), false);
+
+  // Asking for the category as a whole still lists it.
+  const listed = searchKnowledgeBase({ query: "What projects has Bilal worked on?", categories: [], limit: 4 });
+  assert.ok(listed.results.every(record => ["PROJECTS", "RESEARCH"].includes(record.category)));
+  assert.ok(listed.results.some(record => record.category === "PROJECTS"));
+
+  assert.equal(searchKnowledgeBase({ query: "What awards has he won?", categories: [], limit: 3 }).results[0]?.id, "award-icsmartgrid");
+  assert.equal(searchKnowledgeBase({ query: "Show me his publications", categories: [], limit: 4 }).results[0]?.category, "PUBLICATIONS");
+});

@@ -224,3 +224,40 @@ test("agent emits verified employer links returned by retrieval", async () => {
   assert.equal(events.some(item => item.event === "followups"), false);
   assert.ok(events.some(item => item.event === "done" && item.data.grounded));
 });
+
+test("the logged summary counts contact requests as answered and records what each call searched", async () => {
+  const originalFetch = globalThis.fetch;
+
+  async function runWithToolCall(name, args) {
+    globalThis.fetch = async (_url, options) => {
+      const body = JSON.parse(options.body);
+      if (body.tool_choice === "required") {
+        return Response.json({ output: [{ type: "function_call", call_id: "call_1", name, arguments: JSON.stringify(args) }] });
+      }
+      if (!body.stream) return Response.json({ output: [] });
+      const frame = { type: "response.output_text.delta", delta: "Here is what I found." };
+      return new Response(`event: ${frame.type}\ndata: ${JSON.stringify(frame)}\n\n`, { headers: { "Content-Type": "text/event-stream" } });
+    };
+    return runAgent({
+      messages: [{ role: "user", content: "question" }],
+      env: { OPENAI_API_KEY: "test-key" },
+      sendEvent: async () => {}
+    });
+  }
+
+  try {
+    const contact = await runWithToolCall("get_contact_options", { intent: "meeting" });
+    assert.equal(contact.matchType, "contact");
+    assert.equal(contact.grounded, true);
+    assert.deepEqual(contact.categories, [[]]);
+
+    const filtered = await runWithToolCall("search_knowledge_base", { query: "approved personal detail", categories: ["EXTRACURRICULAR"], limit: 3 });
+    assert.deepEqual(filtered.categories, [["EXTRACURRICULAR"]]);
+
+    const projects = await runWithToolCall("get_project_details", { project_name: "battery siting" });
+    assert.deepEqual(projects.categories, [["PROJECTS", "RESEARCH"]]);
+    assert.equal(projects.recordIds[0], "research-storage-siting");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

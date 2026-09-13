@@ -3,15 +3,15 @@ import knowledgeBase from "../../data/mintorian-knowledge.json" with { type: "js
 export const KNOWLEDGE_CATEGORIES = Object.freeze(Object.keys(knowledgeBase.categoryCoverage));
 
 const STOP_WORDS = new Set([
-  "a", "about", "all", "an", "and", "any", "are", "as", "at", "be", "been", "bilal",
+  "a", "about", "all", "an", "and", "any", "anything", "are", "as", "at", "be", "been", "bilal",
   "both", "can", "could", "did", "do", "does", "for", "from", "get", "give", "has",
   "have", "he", "her", "him", "his", "how", "i", "in", "into", "is", "it", "its",
   "just", "know", "like", "make", "many", "may", "me", "might", "much", "must",
   "need", "of", "on", "or", "our", "out", "over", "please", "say", "see", "should",
-  "show", "some", "such", "tell", "than", "that", "the", "their", "them", "then",
+  "show", "some", "something", "such", "tell", "than", "that", "the", "their", "them", "then",
   "there", "these", "they", "this", "those", "to", "under", "us", "use", "used",
   "uses", "was", "we", "were", "what", "when", "where", "whether", "which", "while",
-  "who", "whom", "whose", "why", "will", "with", "would", "you", "your"
+  "who", "whom", "whose", "why", "will", "win", "with", "won", "would", "you", "your"
 ]);
 
 // Generic words that reveal what a visitor is asking about without themselves being
@@ -19,6 +19,22 @@ const STOP_WORDS = new Set([
 // must not retrieve employment records on the strength of "worked" alone - but they do
 // tell us which category to show when a question carries no content-bearing term at all.
 const INTENT_HINTS = new Map([
+  // Category nouns. Now that a category's name is not searchable text, these carry "list
+  // his projects" style questions to the right category instead.
+  ["award", ["AWARDS"]],
+  ["awards", ["AWARDS"]],
+  ["fellowship", ["FELLOWSHIPS"]],
+  ["fellowships", ["FELLOWSHIPS"]],
+  ["presentation", ["PRESENTATIONS"]],
+  ["presentations", ["PRESENTATIONS"]],
+  ["project", ["PROJECTS", "RESEARCH"]],
+  ["projects", ["PROJECTS", "RESEARCH"]],
+  ["publication", ["PUBLICATIONS"]],
+  ["publications", ["PUBLICATIONS"]],
+  ["recommendation", ["RECOMMENDATIONS"]],
+  ["recommendations", ["RECOMMENDATIONS"]],
+  ["skill", ["TECHNICAL_SKILLS"]],
+  ["skills", ["TECHNICAL_SKILLS"]],
   ["available", ["COLLABORATION", "CONTACT"]],
   ["availability", ["COLLABORATION", "CONTACT"]],
   ["background", ["PROFILE"]],
@@ -111,18 +127,22 @@ function normalise(value) {
 // Records are static, so normalise every field once at module load rather than on every
 // query. `haystack` backs the document-frequency count below and keeps it consistent with
 // the substring semantics the field scores use.
+//
+// The category is deliberately not searchable text. Every record in a category shares its
+// name, so scoring it meant any question containing "project" lifted all five PROJECTS
+// records, and they filled the leftover result slots whether or not they were relevant.
+// Category filters still narrow a search; the name just no longer counts as evidence.
 const RECORD_INDEX = knowledgeBase.records.map(record => {
   const text = {
     title: normalise(record.title),
     summary: normalise(record.summary),
     details: normalise(record.details.join(" ")),
-    keywords: normalise(record.keywords.join(" ")),
-    category: normalise(record.category)
+    keywords: normalise(record.keywords.join(" "))
   };
   return {
     record,
     text,
-    haystack: `${text.title} ${text.summary} ${text.details} ${text.keywords} ${text.category}`
+    haystack: `${text.title} ${text.summary} ${text.details} ${text.keywords}`
   };
 });
 
@@ -130,8 +150,7 @@ const FIELD_WEIGHTS = Object.freeze({
   title: 9,
   keywords: 7,
   summary: 4,
-  details: 2,
-  category: 2
+  details: 2
 });
 
 function queryTerms(query) {
@@ -336,6 +355,10 @@ export function executeKnowledgeTool(name, args) {
 
 export function getNavigation() {
   return knowledgeBase.navigation.map(item => ({ ...item }));
+}
+
+export function getRecordTitles() {
+  return new Map(knowledgeBase.records.map(record => [record.id, record.title]));
 }
 
 export function getAllRecordIds() {

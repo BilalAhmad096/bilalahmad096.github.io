@@ -79,14 +79,21 @@ export function cardRow(innerHtml, paddingTop = 28) {
 
 // The full document: hidden preheader, dark header with the Ask Mintorian mark, the card
 // body, and a muted footer line beneath the card. titleHtml and bodyHtml are trusted
-// markup; preheader, eyebrow and subline are plain text and escaped here.
-export function emailDocument({ preheader, eyebrow = "Ask Mintorian", titleHtml, subline, bodyHtml, footerHtml }) {
+// markup; preheader and subline are plain text and escaped here.
+// The chatbot's own mark: its network icon on the blue gradient tile, rendered from the
+// same SVG path data. Email clients strip inline SVG and ignore CSS gradients, so it has
+// to be an image. Every email already sent points at this URL, so the file must stay put.
+export const MARK_URL = "https://mintorian.com/img/email/ask-mintorian-mark.png";
+const BRAND_NAME = "Ask Mintorian";
+const BRAND_TAGLINE = "Research & collaboration assistant";
+
+export function emailDocument({ preheader, titleHtml, subline, bodyHtml, footerHtml }) {
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(eyebrow)}</title>
+<title>${escapeHtml(BRAND_NAME)}</title>
 </head>
 <body style="margin:0;padding:0;background:${COLOUR.page};">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(preheader)}</div>
@@ -95,8 +102,13 @@ export function emailDocument({ preheader, eyebrow = "Ask Mintorian", titleHtml,
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${COLOUR.card};border:1px solid ${COLOUR.line};border-radius:16px;">
       <tr><td style="background:${COLOUR.ink};padding:28px 32px 26px;border-radius:16px 16px 0 0;font-family:${FONT};">
         <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-          <td width="32" height="32" align="center" valign="middle" style="width:32px;height:32px;background:${COLOUR.accent};border-radius:9px;font-size:15px;font-weight:700;color:#ffffff;">M</td>
-          <td style="padding-left:10px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9ec0ff;">${escapeHtml(eyebrow)}</td>
+          <td width="40" height="40" valign="middle" style="width:40px;height:40px;background:${COLOUR.accent};border-radius:12px;">
+            <img src="${MARK_URL}" width="40" height="40" alt="" style="display:block;width:40px;height:40px;border:0;border-radius:12px;">
+          </td>
+          <td valign="middle" style="padding-left:12px;">
+            <div style="font-size:16px;line-height:1.2;font-weight:700;color:#ffffff;">${escapeHtml(BRAND_NAME)}</div>
+            <div style="margin-top:2px;font-size:12px;line-height:1.3;color:#b9c7de;">${escapeHtml(BRAND_TAGLINE)}</div>
+          </td>
         </tr></table>
         <div style="margin-top:18px;font-size:26px;line-height:1.2;font-weight:700;color:#ffffff;">${titleHtml}</div>
         ${subline ? `<div style="margin-top:6px;font-size:14px;line-height:1.4;color:#b9c7de;">${escapeHtml(subline)}</div>` : ""}

@@ -1,4 +1,4 @@
-import { sendContactMessage, sendMeetingRequest, validateContact, validateMeetingRequest } from "./email.js";
+import { sendConfirmation, sendContactMessage, sendMeetingRequest, validateContact, validateMeetingRequest } from "./email.js";
 import { recordTurn, runWeeklyDigest } from "./insights.js";
 import { getAgentConfiguration, runAgent } from "./openai.js";
 import { getKnowledgeMetadata } from "./knowledge.js";
@@ -69,7 +69,7 @@ async function chatResponse(request, env, ctx) {
   return new Response(stream.readable, { status: 200, headers });
 }
 
-async function contactResponse(request, env) {
+async function contactResponse(request, env, ctx) {
   assertAllowedOrigin(request, env);
   await enforceRateLimit(request, env, "contact", Number(env.CONTACT_RATE_LIMIT || 5), 600);
   const payload = await readJson(request, 12000);
@@ -77,10 +77,12 @@ async function contactResponse(request, env) {
   if (data.spam) return jsonResponse(request, env, { ok: true, accepted: true }, 202);
   const idempotencyKey = request.headers.get("Idempotency-Key") || `contact-${crypto.randomUUID()}`;
   const result = await sendContactMessage(env, data, idempotencyKey.slice(0, 256));
+  // Only once the owner has the enquiry, and never allowed to affect this response.
+  ctx?.waitUntil?.(sendConfirmation(env, { kind: "contact", recipient: data.email, idempotencyKey }));
   return jsonResponse(request, env, { ok: true, message: "Your message has been sent.", reference: result.deliveryId });
 }
 
-async function meetingResponse(request, env) {
+async function meetingResponse(request, env, ctx) {
   assertAllowedOrigin(request, env);
   await enforceRateLimit(request, env, "meeting", Number(env.CONTACT_RATE_LIMIT || 5), 600);
   const payload = await readJson(request, 12000);
@@ -88,6 +90,7 @@ async function meetingResponse(request, env) {
   if (data.spam) return jsonResponse(request, env, { ok: true, accepted: true, booked: false }, 202);
   const idempotencyKey = request.headers.get("Idempotency-Key") || `meeting-${crypto.randomUUID()}`;
   const result = await sendMeetingRequest(env, data, idempotencyKey.slice(0, 256));
+  ctx?.waitUntil?.(sendConfirmation(env, { kind: "meeting", recipient: data.email, idempotencyKey }));
   return jsonResponse(request, env, {
     ok: true,
     booked: false,
@@ -171,7 +174,7 @@ export default {
 
     if (request.method === "POST" && url.pathname === "/v1/contact") {
       try {
-        return await contactResponse(request, env);
+        return await contactResponse(request, env, ctx);
       } catch (error) {
         return errorResponse(request, env, error);
       }
@@ -187,7 +190,7 @@ export default {
 
     if (request.method === "POST" && url.pathname === "/v1/meeting-request") {
       try {
-        return await meetingResponse(request, env);
+        return await meetingResponse(request, env, ctx);
       } catch (error) {
         return errorResponse(request, env, error);
       }

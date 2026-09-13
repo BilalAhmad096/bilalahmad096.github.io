@@ -126,3 +126,45 @@ test("the manual digest trigger needs the exact token and sends one digest per r
   const limited = await worker.fetch(digestRequest("correct-token-value"), env, context());
   assert.equal(limited.status, 429);
 });
+
+test("a meeting request emails the owner first, then confirms to the visitor, and never confirms a failed request", async () => {
+  const original = globalThis.fetch;
+  const sent = [];
+  let ownerFails = false;
+  globalThis.fetch = async (_url, options) => {
+    const body = JSON.parse(options.body);
+    sent.push(body.to[0]);
+    if (ownerFails && body.to[0] === "owner.private@gmail.example") return new Response("down", { status: 500 });
+    return Response.json({ id: `email_${sent.length}` });
+  };
+
+  const env = {
+    RESEND_API_KEY: "re_test",
+    CONTACT_FROM_EMAIL: "assistant@updates.mintorian.com",
+    CONTACT_TO_EMAIL: "owner.private@gmail.example",
+    RATE_LIMIT_KV: memoryKv()
+  };
+  const request = email => new Request("https://api.mintorian.com/v1/meeting-request", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "https://mintorian.com" },
+    body: JSON.stringify({ name: "Ana Ferreira", email, topic: "BESS reliability", preferredWindow: "Next Tuesday", timezone: "Europe/Lisbon", company: "" })
+  });
+
+  try {
+    const ctx = context();
+    const ok = await worker.fetch(request("ana@example.org"), env, ctx);
+    assert.equal(ok.status, 200);
+    await Promise.all(ctx.promises);
+    assert.deepEqual(sent, ["owner.private@gmail.example", "ana@example.org"]);
+
+    sent.length = 0;
+    ownerFails = true;
+    const failedCtx = context();
+    const failed = await worker.fetch(request("ben@example.org"), env, failedCtx);
+    assert.equal(failed.status, 502);
+    await Promise.all(failedCtx.promises);
+    assert.deepEqual(sent, ["owner.private@gmail.example"]);
+  } finally {
+    globalThis.fetch = original;
+  }
+});

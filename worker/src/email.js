@@ -1,5 +1,5 @@
 import { RequestError, isValidEmail, sanitiseText } from "./security.js";
-import { COLOUR, button, cardRow, detailRows, emailDocument, escapeHtml, multilineHtml, notice, textPanel } from "./email-layout.js";
+import { COLOUR, FONT, button, cardRow, detailRows, emailDocument, escapeHtml, multilineHtml, notice, textPanel } from "./email-layout.js";
 
 const CONTACT_REASONS = new Set([
   "Research collaboration",
@@ -181,6 +181,116 @@ export async function sendContactMessage(env, data, idempotencyKey) {
 export async function sendMeetingRequest(env, data, idempotencyKey) {
   const { subject, text, html } = renderMeetingEmail(data);
   return sendViaResend(env, { subject, text, html, replyTo: data.email }, idempotencyKey);
+}
+
+// Confirmations go to an address the visitor typed, which nothing verifies, so they are
+// built to be useless for abuse: fixed wording that never repeats the visitor's name or
+// message, a reply-to on the public mailbox rather than the owner's inbox, one per address
+// per day, and a daily ceiling well under the Resend quota the owner's own mail relies on.
+const CONFIRMATION_REPLY_TO = "connect@mintorian.com";
+const CONFIRMATION_DAILY_CAP = 40;
+const CONFIRMATION_TTL_SECONDS = 2 * 86400;
+const CONFIRMATION_FOOTER = `Sent by Ask Mintorian for <a href="https://mintorian.com" style="color:${COLOUR.accent};text-decoration:none;">mintorian.com</a>.`;
+const NOTHING_ELSE = `There is nothing else you need to do. To add anything, reply to this email or write to ${CONFIRMATION_REPLY_TO}.`;
+const NOT_YOU = "You are receiving this because this address was entered in a form on mintorian.com. If that was not you, you can safely ignore this email.";
+
+function paragraph(html) {
+  return `<p style="margin:0 0 14px;font-family:${FONT};font-size:15px;line-height:1.6;color:${COLOUR.ink};">${html}</p>`;
+}
+
+function confirmationBody(lead, noticeHtml = "") {
+  const mailbox = `<a href="mailto:${CONFIRMATION_REPLY_TO}" style="color:${COLOUR.accent};text-decoration:none;">${CONFIRMATION_REPLY_TO}</a>`;
+  return [
+    cardRow(paragraph("Hello,") + paragraph(escapeHtml(lead)), 26),
+    noticeHtml ? cardRow(noticeHtml, 4) + cardRow("", 18) : "",
+    cardRow(paragraph(`There is nothing else you need to do. To add anything, reply to this email or write to ${mailbox}.`), 4),
+    cardRow(notice(NOT_YOU, "neutral"), 6)
+  ].join("");
+}
+
+// Takes no visitor data at all, so nothing a visitor typed can reach the recipient.
+export function renderContactConfirmation(now = Date.now()) {
+  const lead = "Thank you for getting in touch through mintorian.com. Your message has reached Bilal, and he will reply by email.";
+  return {
+    subject: "Your message to Bilal Ahmad has been received",
+    text: ["Hello,", "", lead, "", NOTHING_ELSE, "", NOT_YOU].join("\n"),
+    html: emailDocument({
+      preheader: "Thank you for getting in touch through mintorian.com.",
+      titleHtml: "Message received",
+      subline: `Received ${receivedAt(now)}`,
+      bodyHtml: confirmationBody(lead),
+      footerHtml: CONFIRMATION_FOOTER
+    })
+  };
+}
+
+export function renderMeetingConfirmation(now = Date.now()) {
+  const lead = "Thank you for your meeting request through mintorian.com. Bilal will reply by email to agree a time.";
+  const booking = "This is a request, not a booking. Nothing has been scheduled yet.";
+  return {
+    subject: "Your meeting request to Bilal Ahmad has been received",
+    text: ["Hello,", "", lead, "", booking, "", NOTHING_ELSE, "", NOT_YOU].join("\n"),
+    html: emailDocument({
+      preheader: "Thank you for your meeting request. It is not a booking yet.",
+      titleHtml: "Meeting request received",
+      subline: `Received ${receivedAt(now)}`,
+      bodyHtml: confirmationBody(lead, notice("<strong>This is a request, not a booking.</strong> Nothing has been scheduled yet.", "warn")),
+      footerHtml: CONFIRMATION_FOOTER
+    })
+  };
+}
+
+async function addressKey(env, address) {
+  const salt = String(env.RATE_LIMIT_SALT || "mintorian-development");
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${salt}:confirmation:${address}`));
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+// Best-effort and never throws. Called only after the owner's notification has been sent,
+// so a failure here never costs a visitor their enquiry. Both limits are claimed before
+// sending; KV is eventually consistent, so simultaneous requests can slip slightly past
+// either limit, which is acceptable for a courtesy email.
+export async function sendConfirmation(env, { kind, recipient, idempotencyKey }, now = Date.now()) {
+  const kv = env?.RATE_LIMIT_KV;
+  if (!env?.RESEND_API_KEY || !env?.CONTACT_FROM_EMAIL || !kv) return { sent: false, reason: "not_configured" };
+
+  const address = String(recipient || "").trim().toLowerCase();
+  if (!isValidEmail(address)) return { sent: false, reason: "invalid_recipient" };
+
+  try {
+    const day = Math.floor(now / 86400000);
+    const perAddress = `confirm:address:${day}:${await addressKey(env, address)}`;
+    if (await kv.get(perAddress)) return { sent: false, reason: "already_confirmed_today" };
+
+    const total = `confirm:total:${day}`;
+    const sentToday = Number(await kv.get(total)) || 0;
+    if (sentToday >= CONFIRMATION_DAILY_CAP) {
+      console.error("Confirmation daily cap reached");
+      return { sent: false, reason: "daily_cap" };
+    }
+
+    await kv.put(perAddress, "1", { expirationTtl: CONFIRMATION_TTL_SECONDS });
+    await kv.put(total, String(sentToday + 1), { expirationTtl: CONFIRMATION_TTL_SECONDS });
+
+    const { subject, text, html } = kind === "meeting" ? renderMeetingConfirmation(now) : renderContactConfirmation(now);
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": `${String(idempotencyKey || crypto.randomUUID()).slice(0, 200)}:confirmation`
+      },
+      body: JSON.stringify({ from: env.CONTACT_FROM_EMAIL, to: [address], reply_to: CONFIRMATION_REPLY_TO, subject, text, html })
+    });
+    if (!response.ok) {
+      console.error("Confirmation email failed", response.status);
+      return { sent: false, reason: "delivery_failed" };
+    }
+    return { sent: true };
+  } catch (error) {
+    console.error("Confirmation email error", error?.name || "unknown_error");
+    return { sent: false, reason: "error" };
+  }
 }
 
 // Operational mail sent by the scheduled digest rather than by a visitor. It reports

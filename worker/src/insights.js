@@ -1,4 +1,5 @@
-import { escapeHtml, sendOperationalEmail } from "./email.js";
+import { sendOperationalEmail } from "./email.js";
+import { COLOUR, FONT, MONO, emailDocument, escapeHtml, notice } from "./email-layout.js";
 import { getAllRecordIds, getRecordTitles } from "./knowledge.js";
 
 // Rows carry what was asked and what retrieval did with it. They never carry visitor
@@ -252,27 +253,6 @@ function renderText(summary, rate, titles) {
   ].filter(Boolean).join("\n");
 }
 
-// Email clients ignore stylesheets and most modern CSS, so the digest is built from nested
-// tables with inline styles. The palette matches the Ask Mintorian panel on the site.
-const COLOUR = Object.freeze({
-  ink: "#0a1a3b",
-  accent: "#0f66ff",
-  accentSoft: "#eaf2ff",
-  page: "#f3f6fb",
-  card: "#ffffff",
-  soft: "#f7f9fc",
-  line: "#e3e9f2",
-  track: "#edf1f7",
-  muted: "#5b6b82",
-  amber: "#b54708",
-  amberSoft: "#fff3e8",
-  green: "#1e8a58",
-  greenSoft: "#ebf7f0"
-});
-
-const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-const MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
-
 function statTile(value, label, tone) {
   const colour = tone === "warn" ? COLOUR.amber : tone === "good" ? COLOUR.green : COLOUR.ink;
   return `<td width="33%" valign="top" style="padding:0 6px;">
@@ -291,13 +271,6 @@ function sectionBlock(title, intro, body) {
     ${intro ? `<div style="margin-top:4px;font-size:13px;line-height:1.5;color:${COLOUR.muted};">${intro}</div>` : ""}
     <div style="margin-top:14px;">${body}</div>
   </td></tr>`;
-}
-
-function notice(message, tone) {
-  const good = tone === "good";
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${good ? COLOUR.greenSoft : COLOUR.soft};border-radius:12px;">
-    <tr><td style="padding:14px 16px;font-family:${FONT};font-size:14px;line-height:1.5;color:${good ? COLOUR.green : COLOUR.muted};">${message}</td></tr>
-  </table>`;
 }
 
 function questionRows(rows, tone) {
@@ -343,15 +316,6 @@ function renderHtml(summary, rate, titles) {
   const preheader = summary.turns
     ? `${summary.turns} ${plural(summary.turns, "question")}, ${gaps} ${plural(gaps, "gap")}, ${rate}% answered from a verified record.`
     : "No questions this week. The digest is still running.";
-
-  const header = `<tr><td style="background:${COLOUR.ink};padding:28px 32px 26px;border-radius:16px 16px 0 0;font-family:${FONT};">
-      <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-        <td width="32" height="32" align="center" valign="middle" style="width:32px;height:32px;background:${COLOUR.accent};border-radius:9px;font-size:15px;font-weight:700;color:#ffffff;">M</td>
-        <td style="padding-left:10px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9ec0ff;">Ask Mintorian</td>
-      </tr></table>
-      <div style="margin-top:18px;font-size:26px;line-height:1.2;font-weight:700;color:#ffffff;">Weekly knowledge digest</div>
-      <div style="margin-top:6px;font-size:14px;line-height:1.4;color:#b9c7de;">${escapeHtml(range)}</div>
-    </td></tr>`;
 
   let body;
   if (!summary.turns) {
@@ -399,32 +363,14 @@ function renderHtml(summary, rate, titles) {
     body = stats + unanswered + orientation + top + never;
   }
 
-  return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ask Mintorian weekly digest</title>
-</head>
-<body style="margin:0;padding:0;background:${COLOUR.page};">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(preheader)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLOUR.page};">
-  <tr><td align="center" style="padding:28px 12px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${COLOUR.card};border:1px solid ${COLOUR.line};border-radius:16px;">
-      ${header}
-      ${body}
-      <tr><td style="padding:30px 32px 0;"></td></tr>
-    </table>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;">
-      <tr><td style="padding:18px 20px 0;font-family:${FONT};font-size:12px;line-height:1.6;color:${COLOUR.muted};text-align:center;">
-        Questions are kept for ${RETENTION_DAYS} days, with nothing that identifies the visitor.<br>
-        Sent every Monday by the Ask Mintorian worker for <a href="https://mintorian.com" style="color:${COLOUR.accent};text-decoration:none;">mintorian.com</a>.
-      </td></tr>
-    </table>
-  </td></tr>
-</table>
-</body>
-</html>`;
+  return emailDocument({
+    preheader,
+    titleHtml: "Weekly knowledge digest",
+    subline: range,
+    bodyHtml: body,
+    footerHtml: `Questions are kept for ${RETENTION_DAYS} days, with nothing that identifies the visitor.<br>
+        Sent every Monday by the Ask Mintorian worker for <a href="https://mintorian.com" style="color:${COLOUR.accent};text-decoration:none;">mintorian.com</a>.`
+  });
 }
 
 export function renderDigest(summary) {

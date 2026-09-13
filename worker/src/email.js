@@ -1,4 +1,5 @@
 import { RequestError, isValidEmail, sanitiseText } from "./security.js";
+import { COLOUR, button, cardRow, detailRows, emailDocument, escapeHtml, multilineHtml, notice, textPanel } from "./email-layout.js";
 
 const CONTACT_REASONS = new Set([
   "Research collaboration",
@@ -7,15 +8,6 @@ const CONTACT_REASONS = new Set([
   "Publication discussion",
   "Other"
 ]);
-
-export function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
 
 function validateIdentity(payload) {
   const name = sanitiseText(payload?.name, 100);
@@ -89,10 +81,34 @@ async function sendViaResend(env, message, idempotencyKey) {
   return { deliveryId: result.id };
 }
 
-export async function sendContactMessage(env, data, idempotencyKey) {
+// Visitor mail is read in the owner's inbox, so times are shown in UK time.
+function receivedAt(now) {
+  return new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "Europe/London" }).format(new Date(now));
+}
+
+function firstName(name) {
+  return String(name).trim().split(/\s+/)[0] || "them";
+}
+
+function emailLink(address) {
+  return `<a href="mailto:${escapeHtml(address)}" style="color:${COLOUR.accent};text-decoration:none;">${escapeHtml(address)}</a>`;
+}
+
+function snippet(value, limit = 90) {
+  const text = String(value).replace(/\s+/g, " ").trim();
+  return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
+}
+
+function visitorFooter(formName, name) {
+  return `Sent from the ${formName} on <a href="https://mintorian.com" style="color:${COLOUR.accent};text-decoration:none;">mintorian.com</a>.<br>
+        Replying to this email goes straight to ${escapeHtml(firstName(name))}.`;
+}
+
+export function renderContactEmail(data, now = Date.now()) {
   const subject = `[Mintorian enquiry] ${data.reason}, ${data.name}`;
   const text = [
     "New Mintorian website enquiry",
+    `Received ${receivedAt(now)}`,
     "",
     `Name: ${data.name}`,
     `Email: ${data.email}`,
@@ -100,19 +116,32 @@ export async function sendContactMessage(env, data, idempotencyKey) {
     "",
     data.message
   ].join("\n");
-  const html = `<h2>New Mintorian website enquiry</h2>
-    <p><strong>Name:</strong> ${escapeHtml(data.name)}<br>
-    <strong>Email:</strong> ${escapeHtml(data.email)}<br>
-    <strong>Reason:</strong> ${escapeHtml(data.reason)}</p>
-    <p>${escapeHtml(data.message).replaceAll("\n", "<br>")}</p>`;
-  return sendViaResend(env, { subject, text, html, replyTo: data.email }, idempotencyKey);
+
+  const html = emailDocument({
+    preheader: `${data.name}, ${data.reason}: ${snippet(data.message)}`,
+    titleHtml: "New enquiry",
+    subline: `From ${data.name}, ${receivedAt(now)}`,
+    bodyHtml: [
+      cardRow(detailRows([
+        ["Name", escapeHtml(data.name)],
+        ["Email", emailLink(data.email)],
+        ["Reason", escapeHtml(data.reason)]
+      ]), 24),
+      cardRow(textPanel("Message", multilineHtml(data.message)), 24),
+      cardRow(button(`Reply to ${firstName(data.name)}`, `mailto:${data.email}?subject=${encodeURIComponent("Re: your enquiry")}`), 26)
+    ].join(""),
+    footerHtml: visitorFooter("contact form", data.name)
+  });
+
+  return { subject, text, html };
 }
 
-export async function sendMeetingRequest(env, data, idempotencyKey) {
+export function renderMeetingEmail(data, now = Date.now()) {
   const subject = `[Mintorian meeting request] ${data.name}`;
   const text = [
     "New meeting request from the Mintorian website",
     "This is a request only; no meeting has been booked.",
+    `Received ${receivedAt(now)}`,
     "",
     `Name: ${data.name}`,
     `Email: ${data.email}`,
@@ -121,13 +150,36 @@ export async function sendMeetingRequest(env, data, idempotencyKey) {
     "",
     `Topic: ${data.topic}`
   ].join("\n");
-  const html = `<h2>New Mintorian meeting request</h2>
-    <p><strong>This is a request only; no meeting has been booked.</strong></p>
-    <p><strong>Name:</strong> ${escapeHtml(data.name)}<br>
-    <strong>Email:</strong> ${escapeHtml(data.email)}<br>
-    <strong>Timezone:</strong> ${escapeHtml(data.timezone)}<br>
-    <strong>Preferred date/time:</strong> ${escapeHtml(data.preferredWindow)}</p>
-    <p><strong>Topic:</strong><br>${escapeHtml(data.topic).replaceAll("\n", "<br>")}</p>`;
+
+  const html = emailDocument({
+    preheader: `${data.name} would like to meet: ${snippet(data.topic)}`,
+    titleHtml: "New meeting request",
+    subline: `From ${data.name}, ${receivedAt(now)}`,
+    bodyHtml: [
+      // The form never books anything, and the email must not read as though it had.
+      cardRow(notice("<strong>This is a request, not a booking.</strong> Nothing has been added to a calendar. Reply to agree a time.", "warn"), 24),
+      cardRow(detailRows([
+        ["Name", escapeHtml(data.name)],
+        ["Email", emailLink(data.email)],
+        ["Preferred time", multilineHtml(data.preferredWindow)],
+        ["Timezone", escapeHtml(data.timezone)]
+      ]), 20),
+      cardRow(textPanel("What they want to discuss", multilineHtml(data.topic)), 24),
+      cardRow(button(`Reply to ${firstName(data.name)}`, `mailto:${data.email}?subject=${encodeURIComponent("Re: your meeting request")}`), 26)
+    ].join(""),
+    footerHtml: visitorFooter("meeting request form", data.name)
+  });
+
+  return { subject, text, html };
+}
+
+export async function sendContactMessage(env, data, idempotencyKey) {
+  const { subject, text, html } = renderContactEmail(data);
+  return sendViaResend(env, { subject, text, html, replyTo: data.email }, idempotencyKey);
+}
+
+export async function sendMeetingRequest(env, data, idempotencyKey) {
+  const { subject, text, html } = renderMeetingEmail(data);
   return sendViaResend(env, { subject, text, html, replyTo: data.email }, idempotencyKey);
 }
 

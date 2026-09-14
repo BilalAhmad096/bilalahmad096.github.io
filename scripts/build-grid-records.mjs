@@ -6,6 +6,7 @@
 // every visitor then reads the same copy of.
 //
 //   node scripts/build-grid-records.mjs [--out <path>] [--since <YYYY-MM-DD>]
+//                                       [--last-run <ISO timestamp>]
 //
 // The feed is public and needs no credential. Each run re-reads today and
 // yesterday, because a half hour settles after it ends, and backfills any day a
@@ -32,10 +33,15 @@ const DEFAULT_OUT = "data/grid-records.json";
 const USER_AGENT = "mintorian.com-grid-records-build";
 
 function readArgs(argv) {
-  const args = { out: DEFAULT_OUT, since: process.env.GRID_RECORDS_SINCE || null };
+  const args = {
+    out: DEFAULT_OUT,
+    since: process.env.GRID_RECORDS_SINCE || null,
+    lastRun: process.env.GRID_RECORDS_LAST_RUN || null
+  };
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === "--out") args.out = argv[++i];
     else if (argv[i] === "--since") args.since = argv[++i];
+    else if (argv[i] === "--last-run") args.lastRun = argv[++i];
   }
   return args;
 }
@@ -53,7 +59,7 @@ async function fetchDay(date) {
 }
 
 async function main() {
-  const { out, since } = readArgs(process.argv.slice(2));
+  const { out, since, lastRun } = readArgs(process.argv.slice(2));
   const target = resolve(REPO_ROOT, out);
 
   const stored = await readFile(target, "utf8")
@@ -67,7 +73,9 @@ async function main() {
   // recent days rather than a year of requests.
   const base = widenTo(stored, since);
 
-  const days = datesToFetch(base, today);
+  // Widening deliberately moves the window back past the last run, so the last
+  // run only shortens the window when the stored record is kept as it was.
+  const days = datesToFetch(base, today, { lastRun: base === stored ? lastRun : null });
 
   const readings = [];
   for (const day of days) {

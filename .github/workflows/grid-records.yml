@@ -20,6 +20,8 @@ on:
 
 permissions:
   contents: write
+  # To read when this workflow last succeeded; see the step below.
+  actions: read
 
 concurrency:
   group: grid-records
@@ -34,6 +36,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      # A run that beats nothing commits nothing, so the file cannot say how far
+      # the last run read. The last successful run's start time can, without a
+      # commit. If it cannot be read, the build falls back to the file's own
+      # through, which is correct and only asks the feed for more days.
+      - name: Find when this workflow last succeeded
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          last_run="$(gh run list --workflow grid-records.yml --branch "${{ github.ref_name }}" \
+            --status success --limit 1 --json createdAt --jq '.[0].createdAt // empty' || true)"
+          echo "Last successful run: ${last_run:-none found}"
+          echo "GRID_RECORDS_LAST_RUN=${last_run}" >> "$GITHUB_ENV"
 
       - name: Fold today's readings into the record
         run: node scripts/build-grid-records.mjs

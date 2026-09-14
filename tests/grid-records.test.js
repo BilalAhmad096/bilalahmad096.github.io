@@ -156,6 +156,28 @@ test("each run re-reads yesterday, and backfills a gap it finds", () => {
   assert.equal(datesToFetch({ since: "2025-09-12", through: "2025-09-12" }, "2026-09-12").length, 14);
 });
 
+test("a quiet spell asks for two days when the last run is known", () => {
+  // A week of runs that beat nothing left through where the last record was set.
+  const quiet = { since: "2026-09-01", through: "2026-09-05T13:00Z" };
+
+  assert.deepEqual(
+    datesToFetch(quiet, "2026-09-12", { lastRun: "2026-09-12T07:35:10Z" }),
+    ["2026-09-11", "2026-09-12"]);
+
+  // Runs that did not happen since the last success are still backfilled.
+  assert.deepEqual(
+    datesToFetch(quiet, "2026-09-12", { lastRun: "2026-09-09T19:35:00Z" }),
+    ["2026-09-09", "2026-09-10", "2026-09-11", "2026-09-12"]);
+
+  // A last run older than through, or none at all, leaves through in charge.
+  assert.deepEqual(
+    datesToFetch(quiet, "2026-09-07", { lastRun: "2026-09-02T01:35:00Z" }),
+    ["2026-09-05", "2026-09-06", "2026-09-07"]);
+  assert.equal(datesToFetch(quiet, "2026-09-12", { lastRun: null }).length, 8);
+
+  assert.throws(() => datesToFetch(quiet, "2026-09-12", { lastRun: "soon" }), /not a moment/);
+});
+
 test("widening the start reopens the window and keeps the records held", () => {
   const held = mergeRecords(null, readingsFrom(dayPayload), { since: "2026-09-12" });
   const wider = widenTo(held, "2026-09-11");

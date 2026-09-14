@@ -51,12 +51,19 @@ export function previousDate(date) {
  * The days worth requesting this run: today, yesterday, and any further back
  * left uncovered by a run that did not happen. Capped, so a file left stale for
  * a month does not turn one run into a month of requests.
+ *
+ * A run that beats nothing leaves the file alone, so its through stops moving
+ * during a quiet spell. lastRun, when the last successful run is known, stands
+ * in for it: that run already compared every half hour landed before it, so a
+ * quiet week goes on asking for two days rather than a growing backlog.
  */
-export function datesToFetch(records, today = londonDate(), maxDays = 14) {
+export function datesToFetch(records, today = londonDate(), { maxDays = 14, lastRun = null } = {}) {
   if (!DATE_PATTERN.test(String(today))) throw new GridRecordsError(`${today} is not a date`);
 
   const held = records?.through ?? records?.since ?? today;
-  const covered = DATE_PATTERN.test(String(held)) ? held : londonDate(held);
+  const heldDate = DATE_PATTERN.test(String(held)) ? held : londonDate(held);
+  const lastRunDate = lastRun ? londonDate(lastRun) : null;
+  const covered = lastRunDate && lastRunDate > heldDate ? lastRunDate : heldDate;
   const yesterday = previousDate(today);
   const from = covered < yesterday ? covered : yesterday;
 

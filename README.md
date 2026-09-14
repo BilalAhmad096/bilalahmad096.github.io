@@ -57,6 +57,8 @@ Requests use the OpenAI Responses API with `store: false`, so OpenAI retains not
 
 Mintorian records one row per question in the `ask-mintorian-insights` D1 database: the question text, the search terms the model used, which verified records were returned, and whether the turn was grounded. It records no IP address, no session identifier and no assistant answer, and rows are deleted after 90 days by the Monday digest job. That row exists to show which questions the knowledge base cannot yet answer; do not extend it with anything that identifies a visitor.
 
+So a conversation follows the visitor between pages, the widget saves it in the tab's `sessionStorage` under `ask-mintorian:session`: the last 40 messages, the follow-up suggestions and whether the panel was open. It stays in that browser tab, is never sent to the Worker, and clears when the tab closes. Contact and meeting form fields are deliberately not saved.
+
 ## Optional email delivery
 
 The assistant remains useful with only `OPENAI_API_KEY`. Contact and meeting forms show a safe email fallback until these values are configured:

@@ -7,7 +7,34 @@ const SUGGESTIONS = [
 ];
 
 const EMAIL_FALLBACK = "connect@mintorian.com";
+// Shared with assistant-loader.js, which reads it to reopen the panel on the next page.
+const SESSION_KEY = "ask-mintorian:session";
+const SAVED_MESSAGE_LIMIT = 40;
 let activeAssistant;
+
+// The conversation lives in this tab's sessionStorage so it follows the visitor between
+// pages and clears when the tab closes. It never leaves the browser. Form details are not
+// saved because they hold the visitor's name and email.
+function readSession() {
+  try {
+    const data = JSON.parse(sessionStorage.getItem(SESSION_KEY) || "null");
+    return data?.version === 1 ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSession(data) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ version: 1, ...data }));
+  } catch {
+    // Storage can be full or blocked. The chat still works for this page.
+  }
+}
+
+function isRole(value) {
+  return value === "user" || value === "assistant";
+}
 
 function track(eventName, parameters = {}) {
   if (typeof window.gtag !== "function") return;
@@ -111,6 +138,8 @@ class AskMintorian {
     this.dock = dock;
     this.apiBase = apiBase;
     this.history = [];
+    // What the message log shows, kept alongside history so a restored chat can be redrawn.
+    this.transcript = [];
     this.isOpen = false;
     this.isBusy = false;
     this.hasTrackedOpen = false;
@@ -119,6 +148,68 @@ class AskMintorian {
     this.mobileQuery = window.matchMedia("(max-width: 640px)");
     this.build();
     this.bind();
+    this.restore();
+  }
+
+  restore() {
+    const saved = readSession();
+    if (!saved || this.isBusy) return;
+    this.messages.querySelectorAll(".ask-mintorian-message:not(.ask-mintorian-message--welcome)")
+      .forEach(message => message.remove());
+
+    this.history = (Array.isArray(saved.history) ? saved.history : [])
+      .filter(item => isRole(item?.role) && typeof item.content === "string")
+      .map(({ role, content }) => ({ role, content }));
+    this.transcript = (Array.isArray(saved.transcript) ? saved.transcript : [])
+      .filter(item => isRole(item?.role) && typeof item.text === "string")
+      .map(({ role, text, actions, error }) => ({
+        role,
+        text,
+        actions: Array.isArray(actions) ? actions : [],
+        error: error === true
+      }));
+    for (const entry of this.transcript) {
+      if (entry.role === "user") {
+        this.addMessage("user", entry.text);
+        continue;
+      }
+      const { article, content } = this.addMessage("assistant");
+      renderResponse(content, entry.text);
+      article.classList.toggle("is-error", entry.error);
+      this.appendActions(article, entry.actions);
+    }
+
+    const suggestions = saved.suggestions;
+    if (Array.isArray(suggestions?.prompts)) {
+      this.renderSuggestions(
+        suggestions.prompts.filter(prompt => typeof prompt === "string").slice(0, SUGGESTIONS.length),
+        typeof suggestions.label === "string" ? suggestions.label : "Suggested questions"
+      );
+    }
+    this.hasStarted = saved.hasStarted === true;
+    this.hasTrackedOpen = saved.hasTrackedOpen === true;
+
+    // On a phone the panel fills the screen, so reopening it would hide the page the
+    // visitor just went to. There it comes back minimised with the conversation intact.
+    if (saved.open === true && !this.mobileQuery.matches) this.open(undefined, { focus: false });
+    else if (this.isOpen) this.close({ restoreFocus: false });
+  }
+
+  save() {
+    // A reply still streaming is left out, so a page change mid-answer never saves a
+    // question without its answer.
+    const settled = this.isBusy ? -1 : undefined;
+    writeSession({
+      open: this.isOpen,
+      hasStarted: this.hasStarted,
+      hasTrackedOpen: this.hasTrackedOpen,
+      history: this.history.slice(0, settled).slice(-12),
+      transcript: this.transcript.slice(0, settled).slice(-SAVED_MESSAGE_LIMIT),
+      suggestions: {
+        prompts: this.suggestions.hidden ? [] : [...this.suggestions.children].map(button => button.textContent),
+        label: this.suggestions.getAttribute("aria-label")
+      }
+    });
   }
 
   build() {
@@ -230,9 +321,14 @@ class AskMintorian {
     }, true);
     document.addEventListener("keydown", event => this.onKeyDown(event));
     this.mobileQuery.addEventListener("change", () => this.syncModalState());
+    // Going back to a page kept in the back-forward cache shows its old in-memory chat,
+    // which misses anything said on the pages visited since.
+    window.addEventListener("pageshow", event => {
+      if (event.persisted) this.restore();
+    });
   }
 
-  open(view) {
+  open(view, { focus = true } = {}) {
     this.isOpen = true;
     this.panel.hidden = false;
     this.backdrop.hidden = false;
@@ -253,6 +349,9 @@ class AskMintorian {
     // minimised, so a half-written contact or meeting form is still there.
     if (view === "contact" || view === "meeting") this.openForm(view);
     else if (this.formView.hidden) this.showConversation();
+    this.save();
+    // A panel restored on page load leaves focus with the page the visitor just opened.
+    if (!focus) return;
     const onForm = !this.formView.hidden;
     setTimeout(() => (onForm ? this.formView.querySelector("input, textarea, select") : this.input)?.focus(), 120);
   }
@@ -279,6 +378,7 @@ class AskMintorian {
         this.backdrop.hidden = true;
       }
     }, 220);
+    this.save();
     // An outside click has already put focus where the visitor wanted it.
     if (restoreFocus) this.trigger.focus({ preventScroll: true });
   }
@@ -379,6 +479,7 @@ class AskMintorian {
     this.suggestions.hidden = true;
     this.addMessage("user", text);
     this.history.push({ role: "user", content: text });
+    this.transcript.push({ role: "user", text });
     this.input.value = "";
     this.resizeInput();
     const assistant = this.addMessage("assistant");
@@ -445,6 +546,7 @@ class AskMintorian {
       renderResponse(assistant.content, responseText);
       this.appendActions(assistant.article, actions);
       this.history.push({ role: "assistant", content: responseText });
+      this.transcript.push({ role: "assistant", text: responseText, actions });
       // Starter prompts never come back. Anything shown from here is a grounded follow-up.
       this.renderSuggestions(
         followups.slice(0, 3).map(item => String(item || "").trim().slice(0, 120)).filter(Boolean),
@@ -456,12 +558,15 @@ class AskMintorian {
         ? "I’m having trouble connecting to the research assistant right now."
         : rawMessage || "I’m having trouble connecting to the research assistant right now.";
       assistant.article.classList.add("is-error");
-      renderResponse(assistant.content, `${responseText}\n\nYou can still visit [Publications](/publications/) or email [connect@mintorian.com](mailto:connect@mintorian.com).`);
+      const errorText = `${responseText}\n\nYou can still visit [Publications](/publications/) or email [connect@mintorian.com](mailto:connect@mintorian.com).`;
+      renderResponse(assistant.content, errorText);
+      this.transcript.push({ role: "assistant", text: errorText, error: true });
       track("chat_error");
     } finally {
       assistant.article.classList.remove("is-streaming");
       this.showToolStatus("");
       this.setBusy(false);
+      this.save();
       this.input.focus({ preventScroll: true });
       this.scrollMessages();
     }
@@ -611,6 +716,7 @@ class AskMintorian {
 
 export function mountAskMintorian(options) {
   if (!activeAssistant) activeAssistant = new AskMintorian(options);
-  activeAssistant.open(options.view);
+  // A restore mount only rebuilds the saved session; the constructor decides whether to open.
+  if (!options.restore) activeAssistant.open(options.view);
   return activeAssistant;
 }

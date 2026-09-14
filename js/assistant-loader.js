@@ -2,7 +2,7 @@
   "use strict";
 
   const script = document.currentScript;
-  const assetVersion = "20260914-2";
+  const assetVersion = "20260915-1";
   const isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   const apiBase = script?.dataset.apiBase || (isLocal
     ? "http://127.0.0.1:8787"
@@ -24,6 +24,16 @@
       modulePromise = import(`/js/ask-mintorian.js?v=${assetVersion}`);
     }
     return modulePromise;
+  }
+
+  // ask-mintorian.js saves the conversation under this key. When the panel was open on the
+  // last page, load it straight away instead of waiting for a click.
+  function wasOpenOnLastPage() {
+    try {
+      return JSON.parse(sessionStorage.getItem("ask-mintorian:session") || "null")?.open === true;
+    } catch {
+      return false;
+    }
   }
 
   function ensureActionDock() {
@@ -96,6 +106,13 @@
       if (backToTop?.matches?.(".scroll-ribbon")) attachBackToTop(dock, backToTop);
     });
     const trigger = createTrigger(dock);
+    if (wasOpenOnLastPage()) {
+      loadAssistant()
+        .then(module => {
+          if (!assistantInstance) assistantInstance = module.mountAskMintorian({ trigger, dock, apiBase, restore: true });
+        })
+        .catch(() => undefined);
+    }
     // backtotop.js also waits for DOMContentLoaded. Depending on listener
     // ordering its button may be appended just after this loader runs.
     setTimeout(() => attachBackToTop(dock), 0);

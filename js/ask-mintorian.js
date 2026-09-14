@@ -218,6 +218,16 @@ class AskMintorian {
       const action = event.target.closest("button[data-assistant-action]");
       if (action) this.openForm(action.dataset.assistantAction);
     });
+    // Minimise on a click outside the panel. Scrolling never produces a click, and a press
+    // must start outside too, so selecting text in the panel and releasing past its edge is
+    // not a dismissal. composedPath is used because some panel clicks re-render their target.
+    document.addEventListener("pointerdown", event => {
+      this.pressedOutside = this.isOutside(event);
+    }, true);
+    document.addEventListener("click", event => {
+      if (this.isOpen && this.pressedOutside && this.isOutside(event)) this.close({ restoreFocus: false });
+      this.pressedOutside = false;
+    }, true);
     document.addEventListener("keydown", event => this.onKeyDown(event));
     this.mobileQuery.addEventListener("change", () => this.syncModalState());
   }
@@ -239,12 +249,21 @@ class AskMintorian {
       track("chat_opened");
       this.hasTrackedOpen = true;
     }
+    // Reopening without a requested view returns to whatever was showing when the panel was
+    // minimised, so a half-written contact or meeting form is still there.
     if (view === "contact" || view === "meeting") this.openForm(view);
-    else this.showConversation();
-    setTimeout(() => (view ? this.formView.querySelector("input, textarea, select") : this.input)?.focus(), 120);
+    else if (this.formView.hidden) this.showConversation();
+    const onForm = !this.formView.hidden;
+    setTimeout(() => (onForm ? this.formView.querySelector("input, textarea, select") : this.input)?.focus(), 120);
   }
 
-  close() {
+  isOutside(event) {
+    // The mobile backdrop keeps its own close handler, which returns focus to the trigger.
+    const path = event.composedPath();
+    return !path.includes(this.panel) && !path.includes(this.trigger) && !path.includes(this.backdrop);
+  }
+
+  close({ restoreFocus = true } = {}) {
     if (!this.isOpen) return;
     this.isOpen = false;
     this.syncCollapsedOrigin();
@@ -260,7 +279,8 @@ class AskMintorian {
         this.backdrop.hidden = true;
       }
     }, 220);
-    this.trigger.focus({ preventScroll: true });
+    // An outside click has already put focus where the visitor wanted it.
+    if (restoreFocus) this.trigger.focus({ preventScroll: true });
   }
 
   syncModalState() {

@@ -781,6 +781,20 @@ section{
   color:var(--ink-muted);
 }
 
+/* Citation count, hand-copied from Google Scholar. Shown only when above zero. */
+.pub-cites{
+  display:inline-block;
+  margin-left:8px;
+  padding:2px 9px;
+  border-radius:999px;
+  background:var(--ring);
+  color:var(--ink);
+  font-size:13px;
+  font-weight:600;
+  vertical-align:1px;
+  white-space:nowrap;
+}
+
 /* Framed image block on publications page */
 .page-publications .section-publications{
   padding:40px 0 80px;

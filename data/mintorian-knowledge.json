@@ -511,6 +511,18 @@
       "status": "verified"
     },
     {
+      "id": "partnership-psr-inc-2026",
+      "category": "RESEARCH",
+      "title": "Partnership with PSR Inc.",
+      "summary": "Bilal's public Updates page announces a partnership with PSR Inc. in September 2026: PSR will provide weather forecasts from PSRCast, which will be used to determine resilient power systems.",
+      "details": [
+        "PSR Inc. is also listed among the collaborators in the site footer."
+      ],
+      "keywords": ["partnership", "partner", "partnered", "partners", "collaboration", "psr", "psr inc", "psrcast", "weather forecast", "forecasting", "resilience", "resilient power systems", "september 2026"],
+      "source": { "label": "Updates, Professional", "url": "/updates/" },
+      "status": "verified"
+    },
+    {
       "id": "event-dtu-pes-summer-school-2026",
       "category": "EVENTS",
       "title": "DTU PES Summer School 2026",

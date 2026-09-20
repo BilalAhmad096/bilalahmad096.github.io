@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-09-11",
+  "lastVerified": "2026-09-20",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -513,12 +513,16 @@
     {
       "id": "partnership-psr-inc-2026",
       "category": "RESEARCH",
+      "crossListedIn": ["COLLABORATION"],
       "title": "Partnership with PSR Inc.",
       "summary": "Bilal's public Updates page announces a partnership with PSR Inc. in August 2026: PSR will provide weather forecasts through PSRCast, which will be used to assess power-system resilience.",
       "details": [
-        "PSR Inc. is also listed among the collaborators in the site footer."
+        "PSR Inc. is a Brazil-based company and the developer of PSRCast, its weather-forecasting product.",
+        "PSR has given Bilal access to PSRCast for his research, where the forecasts feed power-system resilience assessment.",
+        "PSR Inc. is also listed among the collaborators in the site footer.",
+        "This is the only named industry research partnership on the public site. PSR is a partner providing data access, not an employer."
       ],
-      "keywords": ["partnership", "partner", "partnered", "partners", "collaboration", "psr", "psr inc", "psrcast", "weather forecast", "forecasting", "resilience", "resilient power systems", "august 2026"],
+      "keywords": ["partnership", "partner", "partnered", "partners", "collaboration", "collaborator", "collaborators", "industry partner", "psr", "psr inc", "psrcast", "brazil", "brazilian", "weather forecast", "forecasting", "data access", "resilience", "resilient power systems", "august 2026"],
       "source": { "label": "Updates, Professional", "url": "/updates/" },
       "status": "verified"
     },

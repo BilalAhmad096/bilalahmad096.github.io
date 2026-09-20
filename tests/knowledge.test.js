@@ -343,3 +343,41 @@ test("a category name is a hint, not evidence, so it never pads results with fil
   assert.equal(searchKnowledgeBase({ query: "What awards has he won?", categories: [], limit: 3 }).results[0]?.id, "award-icsmartgrid");
   assert.equal(searchKnowledgeBase({ query: "Show me his publications", categories: [], limit: 4 }).results[0]?.category, "PUBLICATIONS");
 });
+
+test("a term matches whole words, so PSR never retrieves EPSRC", () => {
+  // Substring matching put the "psr" inside "EPSRC" on every PSR question, so the
+  // EPSRC-funded Supergen event arrived beside the partnership and invited the assistant
+  // to describe PSR as an EPSRC-funded hub.
+  for (const query of ["PSR", "PSR Inc", "What is his collaboration with PSR about?"]) {
+    const result = searchKnowledgeBase({ query, categories: [], limit: 5 });
+    assert.equal(result.results[0].id, "partnership-psr-inc-2026", query);
+    assert.equal(result.results.some(record => record.id === "event-supergen-newcastle-2025"), false, query);
+  }
+
+  // The same flaw in the other direction: "Supergen" expands to include "hub", which used
+  // to match GitHub, and "siting" used to match a visiting-researcher role.
+  const supergen = searchKnowledgeBase({ query: "Supergen", categories: [], limit: 5 });
+  assert.equal(supergen.results.some(record => record.id === "skills-public-code-activity"), false);
+  const siting = searchKnowledgeBase({ query: "battery siting", categories: [], limit: 5 });
+  assert.equal(siting.results.some(record => /visiting/i.test(record.summary)), false);
+
+  // A word start still reaches a longer word that genuinely begins with the term.
+  assert.equal(searchKnowledgeBase({ query: "PSRCast", categories: [], limit: 3 }).results[0].id, "partnership-psr-inc-2026");
+});
+
+test("the PSR partnership answers collaboration questions and carries its verified detail", () => {
+  // The record is research, but "who does he collaborate with" routes to COLLABORATION,
+  // where the only other record says of itself that it asserts no accepted collaboration.
+  const collaborators = searchKnowledgeBase({ query: "who does he collaborate with", categories: [], limit: 5 });
+  assert.equal(collaborators.results.some(record => record.id === "partnership-psr-inc-2026"), true);
+  assert.equal(searchKnowledgeBase({ query: "", categories: ["COLLABORATION"], limit: 5 })
+    .results.some(record => record.id === "partnership-psr-inc-2026"), true);
+
+  const psr = searchKnowledgeBase({ query: "PSR Inc weather forecasting", categories: [], limit: 1 }).results[0];
+  const text = `${psr.summary} ${psr.details.join(" ")}`;
+  assert.match(text, /Brazil/i);
+  assert.match(text, /PSRCast/);
+  assert.match(text, /access to PSRCast for his research/i);
+  assert.match(text, /not an employer/i);
+  assert.equal(psr.verification, "verified");
+});

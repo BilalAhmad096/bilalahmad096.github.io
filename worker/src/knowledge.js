@@ -11,7 +11,10 @@ const STOP_WORDS = new Set([
   "show", "some", "something", "such", "tell", "than", "that", "the", "their", "them", "then",
   "there", "these", "they", "this", "those", "to", "under", "us", "use", "used",
   "uses", "was", "we", "were", "what", "when", "where", "whether", "which", "while",
-  "who", "whom", "whose", "why", "will", "win", "with", "won", "would", "you", "your"
+  "who", "whom", "whose", "why", "will", "win", "with", "won", "would", "you", "your",
+  // Company suffixes. A visitor who types the full "PSR Inc." should be searching for PSR;
+  // scoring "inc" on its own only lifts records that happen to say "including".
+  "corp", "gmbh", "inc", "llc", "ltd", "plc"
 ]);
 
 // Generic words that reveal what a visitor is asking about without themselves being
@@ -126,7 +129,7 @@ function normalise(value) {
 
 // Records are static, so normalise every field once at module load rather than on every
 // query. `haystack` backs the document-frequency count below and keeps it consistent with
-// the substring semantics the field scores use.
+// the word-start semantics the field scores use.
 //
 // The category is deliberately not searchable text. Every record in a category shares its
 // name, so scoring it meant any question containing "project" lifted all five PROJECTS
@@ -142,9 +145,23 @@ const RECORD_INDEX = knowledgeBase.records.map(record => {
   return {
     record,
     text,
+    // A record answers questions in its own category and in any it is cross-listed into.
+    // The PSR partnership is research, but "who does he collaborate with" routes to
+    // COLLABORATION, and a named industry partner has to be reachable from there.
+    categories: [record.category, ...(Array.isArray(record.crossListedIn) ? record.crossListedIn : [])]
+      .filter(category => KNOWLEDGE_CATEGORIES.includes(category)),
     haystack: `${text.title} ${text.summary} ${text.details} ${text.keywords}`
   };
 });
+
+// Terms match at the start of a word, never inside one. Plain substring matching let "psr"
+// match the letters buried in "EPSRC", so every PSR question also retrieved the EPSRC-funded
+// Supergen event and handed the model two unrelated organisations to merge. A word start
+// still reaches "PSRCast", which is the match such a question actually wants, and it stops
+// short acronyms like "inc" from scoring on "since" and "distinction".
+function containsWord(text, term) {
+  return text.startsWith(term) || text.includes(` ${term}`);
+}
 
 const FIELD_WEIGHTS = Object.freeze({
   title: 9,
@@ -184,7 +201,7 @@ function inverseDocumentFrequency(term, cache) {
 
   let frequency = 0;
   for (const entry of RECORD_INDEX) {
-    if (entry.haystack.includes(term)) frequency += 1;
+    if (containsWord(entry.haystack, term)) frequency += 1;
   }
   const weight = Math.log(1 + RECORD_INDEX.length / (1 + frequency));
   cache.set(term, weight);
@@ -196,13 +213,13 @@ function scoreRecord(entry, terms, rawQuery, idfCache) {
   let score = 0;
   const phrase = normalise(rawQuery);
 
-  if (phrase.length > 3 && text.title.includes(phrase)) score += 30;
-  if (phrase.length > 3 && text.summary.includes(phrase)) score += 16;
+  if (phrase.length > 3 && containsWord(text.title, phrase)) score += 30;
+  if (phrase.length > 3 && containsWord(text.summary, phrase)) score += 16;
 
   for (const term of terms) {
     const idf = inverseDocumentFrequency(term, idfCache);
     for (const [field, weight] of Object.entries(FIELD_WEIGHTS)) {
-      if (text[field].includes(term)) score += weight * idf;
+      if (containsWord(text[field], term)) score += weight * idf;
     }
   }
 
@@ -244,7 +261,7 @@ export function searchKnowledgeBase({ query, categories = [], limit = 5 } = {}) 
     : requestedCategories;
 
   const candidates = RECORD_INDEX.filter(entry =>
-    effectiveCategories.size === 0 || effectiveCategories.has(entry.record.category)
+    effectiveCategories.size === 0 || entry.categories.some(category => effectiveCategories.has(category))
   );
 
   // Orientation results all score zero, so lead with the category the question named

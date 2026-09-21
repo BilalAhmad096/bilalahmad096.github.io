@@ -379,6 +379,16 @@
       "status": "verified"
     },
     {
+      "id": "experience-bath-gta",
+      "category": "PROFESSIONAL_EXPERIENCE",
+      "title": "Graduate Teaching Assistant in the Electrical Engineering Department, University of Bath",
+      "summary": "Bilal has served as a part-time Graduate Teaching Assistant in the Electrical Engineering Department at the University of Bath since September 2026.",
+      "details": ["The public profile lists support for labs and tutorials in the Electrical Engineering Department."],
+      "keywords": ["experience", "teaching", "graduate teaching assistant", "gta", "teaching assistant", "electrical engineering", "university of bath", "2026"],
+      "source": { "label": "Professional experience", "url": "/experience/" },
+      "status": "verified"
+    },
+    {
       "id": "experience-bath-ta",
       "category": "PROFESSIONAL_EXPERIENCE",
       "title": "Teaching Assistant at the University of Bath",

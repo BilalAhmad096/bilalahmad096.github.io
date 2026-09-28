@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "since": "2026-09-11",
-  "through": "2026-09-22T21:30Z",
-  "updated": "2026-09-22T22:22:55.456Z",
+  "through": "2026-09-28T22:30Z",
+  "updated": "2026-09-28T23:53:33.583Z",
   "lowest": {"value": 27, "at": "2026-09-12T13:00Z", "index": "low"},
-  "highest": {"value": 229, "at": "2026-09-22T17:30Z", "index": "high"}
+  "highest": {"value": 236, "at": "2026-09-28T17:00Z", "index": "very high"}
 }

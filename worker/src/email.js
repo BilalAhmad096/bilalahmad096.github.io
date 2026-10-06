@@ -293,10 +293,10 @@ export async function sendConfirmation(env, { kind, recipient, idempotencyKey },
   }
 }
 
-// Operational mail sent by the scheduled digest rather than by a visitor. It reports
-// failures to the logs instead of raising visitor-facing errors, and it never throws:
-// a broken digest must not take the cron run down with it.
-export async function sendOperationalEmail(env, { subject, text, html }) {
+// Operational mail sent by the scheduled jobs (digest, reminders) rather than by a visitor.
+// It reports failures to the logs instead of raising visitor-facing errors, and it never
+// throws: a broken email must not take the cron run down with it.
+export async function sendOperationalEmail(env, { subject, text, html, idempotencyKey }) {
   const recipient = env.DIGEST_TO_EMAIL || env.CONTACT_TO_EMAIL;
   if (!env.RESEND_API_KEY || !recipient || !env.CONTACT_FROM_EMAIL) {
     console.error("Digest email is not configured");
@@ -308,7 +308,8 @@ export async function sendOperationalEmail(env, { subject, text, html }) {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${env.RESEND_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {})
       },
       body: JSON.stringify({
         from: env.CONTACT_FROM_EMAIL,

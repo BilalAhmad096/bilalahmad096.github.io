@@ -59,6 +59,16 @@ Mintorian records one row per question in the `ask-mintorian-insights` D1 databa
 
 So a conversation follows the visitor between pages, the widget saves it in the tab's `sessionStorage` under `ask-mintorian:session`: the last 40 messages, the follow-up suggestions and whether the panel was open. It stays in that browser tab, is never sent to the Worker, and clears when the tab closes. Contact and meeting form fields are deliberately not saved.
 
+## Personal reminders
+
+The same database holds a `reminders` table for reminders you set yourself. A cron every five minutes emails any that are due, through Resend, to `DIGEST_TO_EMAIL` (or `CONTACT_TO_EMAIL`). Times without an offset are UK time. The script needs `npx wrangler login`.
+
+```bash
+npm run reminder -- add --at "2026-10-10 09:00" --title "Submit the review" --notes "Optional detail"
+npm run reminder -- list
+npm run reminder -- cancel <id>
+```
+
 ## Optional email delivery
 
 The assistant remains useful with only `OPENAI_API_KEY`. Contact and meeting forms show a safe email fallback until these values are configured:

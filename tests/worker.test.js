@@ -90,6 +90,10 @@ test("the scheduled handler only runs for its own cron expression", async () => 
   await worker.scheduled({ cron: "0 8 * * 1" }, {}, ctx);
   assert.equal(scheduled.length, 1);
   assert.deepEqual(await scheduled[0], { sent: false, purged: 0 });
+
+  await worker.scheduled({ cron: "*/5 * * * *" }, {}, ctx);
+  assert.equal(scheduled.length, 2);
+  assert.deepEqual(await scheduled[1], { due: 0, sent: 0, failed: 0 });
 });
 
 function memoryKv() {

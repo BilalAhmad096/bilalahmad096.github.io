@@ -1,5 +1,6 @@
 import { sendConfirmation, sendContactMessage, sendMeetingRequest, validateContact, validateMeetingRequest } from "./email.js";
 import { recordTurn, runWeeklyDigest } from "./insights.js";
+import { REMINDER_CRON, runDueReminders } from "./reminders.js";
 import { getAgentConfiguration, runAgent } from "./openai.js";
 import { getKnowledgeMetadata } from "./knowledge.js";
 import {
@@ -100,6 +101,7 @@ async function meetingResponse(request, env, ctx) {
 }
 
 const DIGEST_CRON = "0 8 * * 1";
+const CRON_JOBS = { [DIGEST_CRON]: runWeeklyDigest, [REMINDER_CRON]: runDueReminders };
 
 async function sha256(value) {
   return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(value))));
@@ -134,11 +136,12 @@ export default {
   async scheduled(event, env, ctx) {
     // Cloudflare kept firing a replaced trigger for well over ten minutes after a deploy
     // reported the new schedule, so confirm which cron actually fired before doing work.
-    if (event?.cron && event.cron !== DIGEST_CRON) {
+    const job = CRON_JOBS[event?.cron || DIGEST_CRON];
+    if (!job) {
       console.error("Ignoring unexpected cron trigger", event.cron);
       return;
     }
-    ctx.waitUntil(runWeeklyDigest(env));
+    ctx.waitUntil(job(env));
   },
 
   async fetch(request, env, ctx) {

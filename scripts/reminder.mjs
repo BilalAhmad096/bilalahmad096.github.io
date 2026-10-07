@@ -41,12 +41,13 @@ function add(options) {
 
 function list() {
   const { results } = execute(
-    "SELECT id, due_at, title, recipient, attempts FROM reminders WHERE sent_at IS NULL AND cancelled_at IS NULL ORDER BY due_at"
+    "SELECT id, due_at, title, notes, recipient, attempts FROM reminders WHERE sent_at IS NULL AND cancelled_at IS NULL ORDER BY due_at"
   );
   if (!results.length) return console.log("No upcoming reminders.");
   for (const row of results) {
     const retry = row.attempts ? ` (failed ${row.attempts}x)` : "";
     console.log(`${row.id}  ${formatLondon(row.due_at, true)}  ${row.recipient.padEnd(4)}  ${row.title}${retry}`);
+    if (row.notes) console.log(`          ${row.notes.replace(/\s*\n\s*/g, " / ")}`);
   }
 }
 

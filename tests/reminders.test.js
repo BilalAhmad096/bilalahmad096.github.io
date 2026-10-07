@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { renderReminderEmail, runDueReminders } from "../worker/src/reminders.js";
-import { insertReminderSql, parseDueAt, sqlString } from "../scripts/lib/reminders.mjs";
+import { eventReminders, insertReminderSql, parseDueAt, parseIcs, parseLeadTimes, sqlString } from "../scripts/lib/reminders.mjs";
 
 test("local times are read as UK time across both sides of the clock change", () => {
   assert.equal(parseDueAt("2026-07-01 09:00"), Date.parse("2026-07-01T08:00:00Z"));
@@ -115,4 +115,29 @@ test("a reminder for the wife goes to her secret address, replies reach the owne
   const now = Date.parse("2026-10-06T12:00:00Z");
   assert.match(insertReminderSql({ id: "a", title: "t", dueAt: now + 1, recipient: "wife", now }), /'wife'\)$/);
   assert.throws(() => insertReminderSql({ id: "a", title: "t", dueAt: now + 1, recipient: "x@example.com", now }), /--for must be one of: me, wife/);
+});
+
+test("calendar sessions become one reminder per lead time, in UK time, with stable ids", () => {
+  const ics = [
+    "BEGIN:VCALENDAR", "BEGIN:VEVENT", "UID:s-1", "DTSTART:20261201T121500", "DTEND:20261201T140500",
+    "SUMMARY:Lab\\, MATLAB", "END:VEVENT",
+    "BEGIN:VEVENT", "UID:s-2", "DTSTART;TZID=Europe/London:20270705T091500", "SUMMARY:Summer lab", "END:VEVENT",
+    "BEGIN:VEVENT", "UID:s-0", "DTSTART:20260101T090000Z", "SUMMARY:Past", "END:VEVENT", "END:VCALENDAR"
+  ].join("\r\n");
+  const events = parseIcs(ics);
+  assert.deepEqual(events.map(event => event.summary), ["Past", "Lab, MATLAB", "Summer lab"]);
+  assert.equal(events[2].start, Date.parse("2027-07-05T08:15:00Z"));
+
+  const now = Date.parse("2026-10-07T12:00:00Z");
+  const reminders = eventReminders(events, parseLeadTimes("1d,2h"), { now });
+  assert.equal(reminders.length, 4);
+  assert.equal(reminders[0].dueAt, Date.parse("2026-11-30T12:15:00Z"));
+  assert.equal(reminders[0].title, "Tomorrow at 12:15: Lab, MATLAB");
+  assert.match(reminders[0].notes, /Tuesday, 1 December 2026, 12:15–14:05 \(UK time\)/);
+  assert.equal(reminders[1].title, "In 2 hours at 12:15: Lab, MATLAB");
+  assert.deepEqual(eventReminders(events, parseLeadTimes("1d,2h"), { now }).map(r => r.id), reminders.map(r => r.id));
+  assert.match(insertReminderSql({ ...reminders[0], now, ignoreDuplicates: true }), /^INSERT OR IGNORE INTO reminders/);
+
+  assert.throws(() => parseLeadTimes("2 weeks"), /Could not read lead time/);
+  assert.throws(() => parseIcs("BEGIN:VEVENT\nUID:x\nDTSTART;TZID=America/New_York:20261201T090000\nEND:VEVENT"), /only Europe\/London/);
 });

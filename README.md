@@ -68,7 +68,10 @@ npm run reminder -- add --at "2026-10-10 09:00" --title "Submit the review" --no
 npm run reminder -- add --at "2026-10-10 17:00" --title "Pick up the parcel" --for wife
 npm run reminder -- list
 npm run reminder -- cancel <id>
+npm run reminder -- import sessions.ics --before 1d,2h --dry-run
 ```
+
+`import` turns each event in an `.ics` file into one reminder per lead time (`1d`, `2h`, `30m`). Floating and `Europe/London` times are read as UK time. Re-importing the same calendar adds only what is missing.
 
 ## Optional email delivery
 

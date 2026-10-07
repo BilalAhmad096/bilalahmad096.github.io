@@ -4,23 +4,27 @@
 //   npm run reminder -- add --at "2026-10-10 09:00" --title "Submit the review" [--notes "..."] [--for wife]
 //   npm run reminder -- list
 //   npm run reminder -- cancel <id>
+//   npm run reminder -- import sessions.ics --before 1d,2h [--for wife] [--dry-run]
 //
 // Times without an offset are UK time. Reminders go to the owner unless --for names another
 // recipient key. Needs `npx wrangler login`.
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { formatLondon, insertReminderSql, parseDueAt, sqlString } from "./lib/reminders.mjs";
+import { eventReminders, formatLondon, insertReminderSql, parseDueAt, parseIcs, parseLeadTimes, sqlString } from "./lib/reminders.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const WRANGLER = fileURLToPath(new URL("../node_modules/wrangler/bin/wrangler.js", import.meta.url));
 const DATABASE = "ask-mintorian-insights";
+const IMPORT_BATCH = 15;
 
 // Cloudflare intermittently rejects a D1 request with 7403 before running it, and the same
 // request succeeds moments later, so that one error is retried.
 const TRANSIENT_ATTEMPTS = 4;
 
 // Spawned without a shell, so the SQL reaches wrangler as one argument with no quoting games.
+// Returns one result per statement.
 function execute(sql) {
   let run;
   for (let attempt = 1; attempt <= TRANSIENT_ATTEMPTS; attempt += 1) {
@@ -36,8 +40,7 @@ function execute(sql) {
     process.stderr.write(run.stderr || run.stdout || "wrangler failed\n");
     process.exit(run.status || 1);
   }
-  const [result] = JSON.parse(run.stdout);
-  return result;
+  return JSON.parse(run.stdout);
 }
 
 function add(options) {
@@ -49,7 +52,7 @@ function add(options) {
 }
 
 function list() {
-  const { results } = execute(
+  const [{ results }] = execute(
     "SELECT id, due_at, title, notes, recipient, attempts FROM reminders WHERE sent_at IS NULL AND cancelled_at IS NULL ORDER BY due_at"
   );
   if (!results.length) return console.log("No upcoming reminders.");
@@ -62,22 +65,47 @@ function list() {
 
 function cancel(id) {
   if (!id) throw new Error("Give the id from `npm run reminder -- list`.");
-  const { meta } = execute(
+  const [{ meta }] = execute(
     `UPDATE reminders SET cancelled_at = ${Date.now()} WHERE id = ${sqlString(id)} AND sent_at IS NULL AND cancelled_at IS NULL`
   );
   console.log(meta?.changes ? `Cancelled ${id}.` : `No upcoming reminder with id ${id}.`);
 }
 
+// Statements use INSERT OR IGNORE with ids derived from each event, so a calendar can be
+// imported again after it changes without duplicating the reminders already there.
+function importCalendar(file, options) {
+  if (!file) throw new Error("Give the path of an .ics file.");
+  const recipient = options.for || "me";
+  const now = Date.now();
+  const reminders = eventReminders(parseIcs(readFileSync(file, "utf8")), parseLeadTimes(options.before), { recipient, now });
+  if (!reminders.length) return console.log("No future reminders to add from that calendar.");
+
+  for (const reminder of reminders) console.log(`${reminder.id}  ${formatLondon(reminder.dueAt, true)}  ${recipient.padEnd(4)}  ${reminder.title}`);
+  if (options["dry-run"]) return console.log(`Dry run: ${reminders.length} reminders, nothing saved.`);
+
+  let added = 0;
+  for (let start = 0; start < reminders.length; start += IMPORT_BATCH) {
+    const batch = reminders.slice(start, start + IMPORT_BATCH);
+    const results = execute(batch.map(reminder => insertReminderSql({ ...reminder, now, ignoreDuplicates: true })).join(";\n"));
+    added += results.reduce((total, result) => total + (result?.meta?.changes || 0), 0);
+  }
+  console.log(`Added ${added} of ${reminders.length} reminders${added < reminders.length ? " (the rest were already there)" : ""}.`);
+}
+
 try {
   const { positionals, values } = parseArgs({
     allowPositionals: true,
-    options: { at: { type: "string" }, title: { type: "string" }, notes: { type: "string" }, for: { type: "string" } }
+    options: {
+      at: { type: "string" }, title: { type: "string" }, notes: { type: "string" }, for: { type: "string" },
+      before: { type: "string" }, "dry-run": { type: "boolean" }
+    }
   });
   const [command, argument] = positionals;
   if (command === "add") add(values);
   else if (command === "list") list();
   else if (command === "cancel") cancel(argument);
-  else throw new Error("Usage: npm run reminder -- add --at \"YYYY-MM-DD HH:MM\" --title \"...\" [--for wife] | list | cancel <id>");
+  else if (command === "import") importCalendar(argument, values);
+  else throw new Error("Usage: npm run reminder -- add --at \"YYYY-MM-DD HH:MM\" --title \"...\" [--for wife] | list | cancel <id> | import <file.ics> --before 1d,2h");
 } catch (error) {
   console.error(error.message);
   process.exit(1);

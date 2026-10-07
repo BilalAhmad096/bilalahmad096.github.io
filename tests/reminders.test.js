@@ -84,3 +84,35 @@ test("due reminders are claimed, sent once with an idempotency key, and released
   assert.deepEqual(await runDueReminders(env(raced), 1000), { due: 1, sent: 0, failed: 0 });
   assert.equal(sent.length, 0);
 });
+
+test("a reminder for the wife goes to her secret address, replies reach the owner, and unknown keys are refused", async t => {
+  const sent = [];
+  t.mock.method(globalThis, "fetch", async (url, init) => {
+    sent.push(JSON.parse(init.body));
+    return { ok: true, status: 200, json: async () => ({ id: "x" }) };
+  });
+  t.mock.method(console, "error", () => {});
+  const rows = [{ id: "w1", due_at: 1, title: "Pick up the parcel", notes: "", recipient: "wife" }];
+
+  const configured = { ...env(reminderDatabase(rows)), REMINDER_TO_WIFE: "wife@example.com" };
+  assert.deepEqual(await runDueReminders(configured, 1000), { due: 1, sent: 1, failed: 0 });
+  assert.deepEqual(sent[0].to, ["wife@example.com"]);
+  assert.equal(sent[0].reply_to, "owner@example.com");
+  assert.match(sent[0].html, /Bilal set this reminder for you/);
+
+  // Without her secret nothing is sent, and the claim is released for a later run.
+  sent.length = 0;
+  const unconfigured = reminderDatabase(rows);
+  assert.deepEqual(await runDueReminders(env(unconfigured), 1000), { due: 1, sent: 0, failed: 1 });
+  assert.equal(sent.length, 0);
+  assert.match(unconfigured.calls.at(-1).sql, /SET sent_at = NULL/);
+
+  // An unrecognised key never falls back to the owner.
+  const stray = reminderDatabase([{ ...rows[0], recipient: "someone" }]);
+  assert.deepEqual(await runDueReminders(env(stray), 1000), { due: 1, sent: 0, failed: 1 });
+  assert.equal(sent.length, 0);
+
+  const now = Date.parse("2026-10-06T12:00:00Z");
+  assert.match(insertReminderSql({ id: "a", title: "t", dueAt: now + 1, recipient: "wife", now }), /'wife'\)$/);
+  assert.throws(() => insertReminderSql({ id: "a", title: "t", dueAt: now + 1, recipient: "x@example.com", now }), /--for must be one of: me, wife/);
+});

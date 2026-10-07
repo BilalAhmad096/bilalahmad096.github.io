@@ -296,8 +296,13 @@ export async function sendConfirmation(env, { kind, recipient, idempotencyKey },
 // Operational mail sent by the scheduled jobs (digest, reminders) rather than by a visitor.
 // It reports failures to the logs instead of raising visitor-facing errors, and it never
 // throws: a broken email must not take the cron run down with it.
-export async function sendOperationalEmail(env, { subject, text, html, idempotencyKey }) {
-  const recipient = env.DIGEST_TO_EMAIL || env.CONTACT_TO_EMAIL;
+// It goes to the owner unless a caller names another recipient.
+export function ownerAddress(env) {
+  return env?.DIGEST_TO_EMAIL || env?.CONTACT_TO_EMAIL;
+}
+
+export async function sendOperationalEmail(env, { subject, text, html, idempotencyKey, to, replyTo }) {
+  const recipient = to || ownerAddress(env);
   if (!env.RESEND_API_KEY || !recipient || !env.CONTACT_FROM_EMAIL) {
     console.error("Digest email is not configured");
     return false;
@@ -314,6 +319,7 @@ export async function sendOperationalEmail(env, { subject, text, html, idempoten
       body: JSON.stringify({
         from: env.CONTACT_FROM_EMAIL,
         to: [recipient],
+        ...(replyTo ? { reply_to: replyTo } : {}),
         subject,
         text,
         html

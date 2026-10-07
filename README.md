@@ -61,10 +61,11 @@ So a conversation follows the visitor between pages, the widget saves it in the 
 
 ## Personal reminders
 
-The same database holds a `reminders` table for reminders you set yourself. A cron every five minutes emails any that are due, through Resend, to `DIGEST_TO_EMAIL` (or `CONTACT_TO_EMAIL`). Times without an offset are UK time. The script needs `npx wrangler login`.
+The same database holds a `reminders` table for reminders you set yourself. A cron every five minutes emails any that are due, through Resend, to `DIGEST_TO_EMAIL` (or `CONTACT_TO_EMAIL`). Add `--for wife` to send one to the address in the `REMINDER_TO_WIFE` secret instead; her replies go to you. Rows hold only the recipient key, never an address. Times without an offset are UK time. The script needs `npx wrangler login`.
 
 ```bash
 npm run reminder -- add --at "2026-10-10 09:00" --title "Submit the review" --notes "Optional detail"
+npm run reminder -- add --at "2026-10-10 17:00" --title "Pick up the parcel" --for wife
 npm run reminder -- list
 npm run reminder -- cancel <id>
 ```

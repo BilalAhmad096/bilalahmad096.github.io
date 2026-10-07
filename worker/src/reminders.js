@@ -1,11 +1,25 @@
-import { sendOperationalEmail } from "./email.js";
+import { ownerAddress, sendOperationalEmail } from "./email.js";
 import { cardRow, emailDocument, escapeHtml, multilineHtml, textPanel } from "./email-layout.js";
 
 // Personal reminders the owner adds with `npm run reminder`. Nothing a visitor sends ever
-// reaches this table, and every email goes to the owner's own address.
+// reaches this table. Each row names a recipient key, never an address: the addresses
+// live in Worker secrets, so the table cannot be used to mail anyone else.
 export const REMINDER_CRON = "*/5 * * * *";
 const MAX_ATTEMPTS = 5;
 const BATCH_SIZE = 20;
+
+const RECIPIENTS = {
+  me: {
+    address: env => ownerAddress(env),
+    footer: "A reminder you set with <code>npm run reminder</code>, sent by the Ask Mintorian worker."
+  },
+  wife: {
+    address: env => env?.REMINDER_TO_WIFE,
+    footer: "Bilal set this reminder for you. Reply to this email to reach him.",
+    repliesToOwner: true
+  }
+};
+export const RECIPIENT_KEYS = Object.keys(RECIPIENTS);
 
 function dueAtLabel(dueAt) {
   return new Intl.DateTimeFormat("en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/London" }).format(new Date(dueAt));
@@ -14,6 +28,7 @@ function dueAtLabel(dueAt) {
 export function renderReminderEmail(reminder) {
   const when = dueAtLabel(reminder.due_at);
   const notes = String(reminder.notes || "").trim();
+  const recipient = RECIPIENTS[reminder.recipient] || RECIPIENTS.me;
   return {
     subject: `[Reminder] ${reminder.title}`,
     text: [reminder.title, `Due ${when}`, ...(notes ? ["", notes] : [])].join("\n"),
@@ -22,7 +37,7 @@ export function renderReminderEmail(reminder) {
       titleHtml: escapeHtml(reminder.title),
       subline: `Due ${when}`,
       bodyHtml: notes ? cardRow(textPanel("Notes", multilineHtml(notes)), 24) : "",
-      footerHtml: "A reminder you set with <code>npm run reminder</code>, sent by the Ask Mintorian worker."
+      footerHtml: recipient.footer
     })
   };
 }
@@ -38,7 +53,7 @@ export async function runDueReminders(env, now = Date.now()) {
 
   const result = await database
     .prepare(
-      `SELECT id, due_at, title, notes FROM reminders
+      `SELECT id, due_at, title, notes, recipient FROM reminders
         WHERE due_at <= ? AND sent_at IS NULL AND cancelled_at IS NULL AND attempts < ?
         ORDER BY due_at LIMIT ?`
     )
@@ -55,7 +70,20 @@ export async function runDueReminders(env, now = Date.now()) {
       .run();
     if (!claim?.meta?.changes) continue;
 
-    const delivered = await sendOperationalEmail(env, { ...renderReminderEmail(reminder), idempotencyKey: `reminder:${reminder.id}` });
+    const recipient = RECIPIENTS[reminder.recipient || "me"];
+    const to = recipient?.address(env);
+    let delivered = false;
+    if (to) {
+      delivered = await sendOperationalEmail(env, {
+        ...renderReminderEmail(reminder),
+        idempotencyKey: `reminder:${reminder.id}`,
+        to,
+        replyTo: recipient.repliesToOwner ? ownerAddress(env) : undefined
+      });
+    } else {
+      console.error("Reminder recipient is not configured", reminder.recipient);
+    }
+
     if (delivered) {
       sent += 1;
     } else {

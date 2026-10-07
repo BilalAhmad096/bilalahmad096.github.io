@@ -1,4 +1,6 @@
 // Helpers for scripts/reminder.mjs, kept separate so the time parsing can be tested.
+import { RECIPIENT_KEYS } from "../../worker/src/reminders.js";
+
 export const TIME_ZONE = "Europe/London";
 const LOCAL_TIME = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})$/;
 const MAX_TITLE = 200;
@@ -54,7 +56,8 @@ export function sqlString(value) {
   return `'${String(value).replace(/\u0000/g, "").replace(/'/g, "''")}'`;
 }
 
-export function insertReminderSql({ id, title, notes = "", dueAt, now = Date.now() }) {
+export function insertReminderSql({ id, title, notes = "", dueAt, recipient = "me", now = Date.now() }) {
+  if (!RECIPIENT_KEYS.includes(recipient)) throw new Error(`--for must be one of: ${RECIPIENT_KEYS.join(", ")}.`);
   const cleanTitle = String(title || "").replace(/\s+/g, " ").trim();
   if (!cleanTitle) throw new Error("A reminder needs a title.");
   if (cleanTitle.length > MAX_TITLE) throw new Error(`Keep the title under ${MAX_TITLE} characters; put detail in --notes.`);
@@ -62,5 +65,5 @@ export function insertReminderSql({ id, title, notes = "", dueAt, now = Date.now
   if (cleanNotes.length > MAX_NOTES) throw new Error(`Keep notes under ${MAX_NOTES} characters.`);
   if (!Number.isFinite(dueAt)) throw new Error("A reminder needs a due time.");
   if (dueAt <= now) throw new Error(`${formatLondon(dueAt)} is already in the past.`);
-  return `INSERT INTO reminders (id, created_at, due_at, title, notes) VALUES (${sqlString(id)}, ${now}, ${dueAt}, ${sqlString(cleanTitle)}, ${sqlString(cleanNotes)})`;
+  return `INSERT INTO reminders (id, created_at, due_at, title, notes, recipient) VALUES (${sqlString(id)}, ${now}, ${dueAt}, ${sqlString(cleanTitle)}, ${sqlString(cleanNotes)}, ${sqlString(recipient)})`;
 }

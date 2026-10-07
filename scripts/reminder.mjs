@@ -16,13 +16,22 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const WRANGLER = fileURLToPath(new URL("../node_modules/wrangler/bin/wrangler.js", import.meta.url));
 const DATABASE = "ask-mintorian-insights";
 
+// Cloudflare intermittently rejects a D1 request with 7403 before running it, and the same
+// request succeeds moments later, so that one error is retried.
+const TRANSIENT_ATTEMPTS = 4;
+
 // Spawned without a shell, so the SQL reaches wrangler as one argument with no quoting games.
 function execute(sql) {
-  const run = spawnSync(
-    process.execPath,
-    [WRANGLER, "d1", "execute", DATABASE, "--remote", "--json", "--config", "worker/wrangler.jsonc", "--command", sql],
-    { cwd: ROOT, encoding: "utf8" }
-  );
+  let run;
+  for (let attempt = 1; attempt <= TRANSIENT_ATTEMPTS; attempt += 1) {
+    run = spawnSync(
+      process.execPath,
+      [WRANGLER, "d1", "execute", DATABASE, "--remote", "--json", "--config", "worker/wrangler.jsonc", "--command", sql],
+      { cwd: ROOT, encoding: "utf8" }
+    );
+    if (run.status === 0 || !/"code":\s*7403/.test(run.stdout || "")) break;
+    if (attempt < TRANSIENT_ATTEMPTS) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2000 * attempt);
+  }
   if (run.status !== 0) {
     process.stderr.write(run.stderr || run.stdout || "wrangler failed\n");
     process.exit(run.status || 1);

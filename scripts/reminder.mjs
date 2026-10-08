@@ -6,6 +6,7 @@
 //   npm run reminder -- cancel <id> [<id>...]
 //   npm run reminder -- import sessions.ics --before 1d,2h [--for wife] [--dry-run]
 //   npm run reminder -- import-json reminders.json [--dry-run]
+//   npm run reminder -- sync-json reminders.json --prefix tt- [--dry-run]
 //
 // Times without an offset are UK time. Reminders go to the owner unless --for names another
 // recipient key. Needs `npx wrangler login`.
@@ -99,15 +100,40 @@ function importCalendar(file, options) {
 
 // A JSON array of { id, at, title, notes, for }, as written by a generator script. Each
 // item needs its own stable id so that re-importing the file adds only what is missing.
-function importJson(file, options) {
+function readJsonReminders(file, now) {
   if (!file) throw new Error("Give the path of a .json file.");
-  const now = Date.now();
-  const reminders = JSON.parse(readFileSync(file, "utf8")).map(item => {
+  return JSON.parse(readFileSync(file, "utf8")).map(item => {
     if (!/^[\w-]{4,40}$/.test(String(item.id || ""))) throw new Error(`Every item needs a stable id; got ${JSON.stringify(item.id)}.`);
     return { id: item.id, dueAt: parseDueAt(item.at), title: item.title, notes: item.notes, recipient: item.for || "me" };
   }).filter(reminder => reminder.dueAt > now);
+}
+
+function importJson(file, options) {
+  const now = Date.now();
+  const reminders = readJsonReminders(file, now);
   if (!reminders.length) return console.log("No future reminders in that file.");
   save(reminders, now, options["dry-run"]);
+}
+
+// Makes the upcoming reminders whose ids start with --prefix match the file exactly: ones no
+// longer in the file are cancelled, new ones are added, and unchanged ones are left alone.
+function syncJson(file, options) {
+  const prefix = String(options.prefix || "");
+  if (!/^[\w-]{2,20}$/.test(prefix)) throw new Error("Give the id prefix the file owns, e.g. --prefix tt-.");
+  const now = Date.now();
+  const reminders = readJsonReminders(file, now);
+  if (reminders.some(reminder => !reminder.id.startsWith(prefix))) throw new Error(`Every id in the file must start with ${prefix}.`);
+
+  const wanted = new Set(reminders.map(reminder => reminder.id));
+  const [{ results }] = execute(
+    `SELECT id FROM reminders WHERE id LIKE ${sqlString(`${prefix}%`)} AND sent_at IS NULL AND cancelled_at IS NULL`
+  );
+  const stale = results.map(row => row.id).filter(id => !wanted.has(id));
+  const fresh = reminders.filter(reminder => !results.some(row => row.id === reminder.id));
+  console.log(`${stale.length} to cancel, ${fresh.length} to add, ${reminders.length - fresh.length} unchanged.`);
+  if (options["dry-run"]) return;
+  if (stale.length) cancel(stale);
+  if (fresh.length) save(fresh, now, false);
 }
 
 try {
@@ -115,7 +141,7 @@ try {
     allowPositionals: true,
     options: {
       at: { type: "string" }, title: { type: "string" }, notes: { type: "string" }, for: { type: "string" },
-      before: { type: "string" }, "dry-run": { type: "boolean" }
+      before: { type: "string" }, prefix: { type: "string" }, "dry-run": { type: "boolean" }
     }
   });
   const [command, argument, ...rest] = positionals;
@@ -124,7 +150,8 @@ try {
   else if (command === "cancel") cancel([argument, ...rest].filter(Boolean));
   else if (command === "import") importCalendar(argument, values);
   else if (command === "import-json") importJson(argument, values);
-  else throw new Error("Usage: npm run reminder -- add --at \"YYYY-MM-DD HH:MM\" --title \"...\" [--for wife] | list | cancel <id>... | import <file.ics> --before 1d,2h | import-json <file.json>");
+  else if (command === "sync-json") syncJson(argument, values);
+  else throw new Error("Usage: npm run reminder -- add --at \"YYYY-MM-DD HH:MM\" --title \"...\" [--for wife] | list | cancel <id>... | import <file.ics> --before 1d,2h | import-json <file.json> | sync-json <file.json> --prefix tt-");
 } catch (error) {
   console.error(error.message);
   process.exit(1);

@@ -8,3 +8,4 @@ node_modules/
 .wrangler/
 coverage/
 npm-debug.log*
+private/

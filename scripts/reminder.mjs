@@ -3,8 +3,9 @@
 //
 //   npm run reminder -- add --at "2026-10-10 09:00" --title "Submit the review" [--notes "..."] [--for wife]
 //   npm run reminder -- list
-//   npm run reminder -- cancel <id>
+//   npm run reminder -- cancel <id> [<id>...]
 //   npm run reminder -- import sessions.ics --before 1d,2h [--for wife] [--dry-run]
+//   npm run reminder -- import-json reminders.json [--dry-run]
 //
 // Times without an offset are UK time. Reminders go to the owner unless --for names another
 // recipient key. Needs `npx wrangler login`.
@@ -63,25 +64,21 @@ function list() {
   }
 }
 
-function cancel(id) {
-  if (!id) throw new Error("Give the id from `npm run reminder -- list`.");
+function cancel(ids) {
+  if (!ids.length) throw new Error("Give one or more ids from `npm run reminder -- list`.");
   const [{ meta }] = execute(
-    `UPDATE reminders SET cancelled_at = ${Date.now()} WHERE id = ${sqlString(id)} AND sent_at IS NULL AND cancelled_at IS NULL`
+    `UPDATE reminders SET cancelled_at = ${Date.now()} WHERE id IN (${ids.map(sqlString).join(", ")}) AND sent_at IS NULL AND cancelled_at IS NULL`
   );
-  console.log(meta?.changes ? `Cancelled ${id}.` : `No upcoming reminder with id ${id}.`);
+  console.log(`Cancelled ${meta?.changes || 0} of ${ids.length} upcoming reminders.`);
 }
 
-// Statements use INSERT OR IGNORE with ids derived from each event, so a calendar can be
-// imported again after it changes without duplicating the reminders already there.
-function importCalendar(file, options) {
-  if (!file) throw new Error("Give the path of an .ics file.");
-  const recipient = options.for || "me";
-  const now = Date.now();
-  const reminders = eventReminders(parseIcs(readFileSync(file, "utf8")), parseLeadTimes(options.before), { recipient, now });
-  if (!reminders.length) return console.log("No future reminders to add from that calendar.");
-
-  for (const reminder of reminders) console.log(`${reminder.id}  ${formatLondon(reminder.dueAt, true)}  ${recipient.padEnd(4)}  ${reminder.title}`);
-  if (options["dry-run"]) return console.log(`Dry run: ${reminders.length} reminders, nothing saved.`);
+// Statements use INSERT OR IGNORE with stable ids, so a source can be imported again
+// after it changes without duplicating the reminders already there.
+function save(reminders, now, dryRun) {
+  for (const reminder of reminders) {
+    console.log(`${reminder.id}  ${formatLondon(reminder.dueAt, true)}  ${reminder.recipient.padEnd(4)}  ${reminder.title}`);
+  }
+  if (dryRun) return console.log(`Dry run: ${reminders.length} reminders, nothing saved.`);
 
   let added = 0;
   for (let start = 0; start < reminders.length; start += IMPORT_BATCH) {
@@ -92,6 +89,27 @@ function importCalendar(file, options) {
   console.log(`Added ${added} of ${reminders.length} reminders${added < reminders.length ? " (the rest were already there)" : ""}.`);
 }
 
+function importCalendar(file, options) {
+  if (!file) throw new Error("Give the path of an .ics file.");
+  const now = Date.now();
+  const reminders = eventReminders(parseIcs(readFileSync(file, "utf8")), parseLeadTimes(options.before), { recipient: options.for || "me", now });
+  if (!reminders.length) return console.log("No future reminders to add from that calendar.");
+  save(reminders, now, options["dry-run"]);
+}
+
+// A JSON array of { id, at, title, notes, for }, as written by a generator script. Each
+// item needs its own stable id so that re-importing the file adds only what is missing.
+function importJson(file, options) {
+  if (!file) throw new Error("Give the path of a .json file.");
+  const now = Date.now();
+  const reminders = JSON.parse(readFileSync(file, "utf8")).map(item => {
+    if (!/^[\w-]{4,40}$/.test(String(item.id || ""))) throw new Error(`Every item needs a stable id; got ${JSON.stringify(item.id)}.`);
+    return { id: item.id, dueAt: parseDueAt(item.at), title: item.title, notes: item.notes, recipient: item.for || "me" };
+  }).filter(reminder => reminder.dueAt > now);
+  if (!reminders.length) return console.log("No future reminders in that file.");
+  save(reminders, now, options["dry-run"]);
+}
+
 try {
   const { positionals, values } = parseArgs({
     allowPositionals: true,
@@ -100,12 +118,13 @@ try {
       before: { type: "string" }, "dry-run": { type: "boolean" }
     }
   });
-  const [command, argument] = positionals;
+  const [command, argument, ...rest] = positionals;
   if (command === "add") add(values);
   else if (command === "list") list();
-  else if (command === "cancel") cancel(argument);
+  else if (command === "cancel") cancel([argument, ...rest].filter(Boolean));
   else if (command === "import") importCalendar(argument, values);
-  else throw new Error("Usage: npm run reminder -- add --at \"YYYY-MM-DD HH:MM\" --title \"...\" [--for wife] | list | cancel <id> | import <file.ics> --before 1d,2h");
+  else if (command === "import-json") importJson(argument, values);
+  else throw new Error("Usage: npm run reminder -- add --at \"YYYY-MM-DD HH:MM\" --title \"...\" [--for wife] | list | cancel <id>... | import <file.ics> --before 1d,2h | import-json <file.json>");
 } catch (error) {
   console.error(error.message);
   process.exit(1);

@@ -3,18 +3,11 @@
   "source": "graphql",
   "login": "BilalAhmad096",
   "profileUrl": "https://github.com/BilalAhmad096",
-  "from": "2025-10-05",
-  "to": "2026-10-10",
+  "from": "2025-10-12",
+  "to": "2026-10-11",
   "totalContributions": 441,
   "busiestCount": 26,
   "days": [
-    {"date": "2025-10-05", "count": 2, "level": 1},
-    {"date": "2025-10-06", "count": 0, "level": 0},
-    {"date": "2025-10-07", "count": 0, "level": 0},
-    {"date": "2025-10-08", "count": 0, "level": 0},
-    {"date": "2025-10-09", "count": 0, "level": 0},
-    {"date": "2025-10-10", "count": 0, "level": 0},
-    {"date": "2025-10-11", "count": 0, "level": 0},
     {"date": "2025-10-12", "count": 0, "level": 0},
     {"date": "2025-10-13", "count": 0, "level": 0},
     {"date": "2025-10-14", "count": 0, "level": 0},
@@ -378,6 +371,7 @@
     {"date": "2026-10-07", "count": 4, "level": 1},
     {"date": "2026-10-08", "count": 2, "level": 1},
     {"date": "2026-10-09", "count": 0, "level": 0},
-    {"date": "2026-10-10", "count": 0, "level": 0}
+    {"date": "2026-10-10", "count": 0, "level": 0},
+    {"date": "2026-10-11", "count": 0, "level": 0}
   ]
 }

@@ -87,7 +87,7 @@ test("clean-energy alignment and public profile links are retrievable", () => {
   assert.match(contact.results[0].details.join(" "), /scholar\.google\.com/i);
 });
 
-test("two current part-time full-stack roles are explicitly retrievable", () => {
+test("current and past part-time full-stack roles are explicitly retrievable", () => {
   const result = searchKnowledgeBase({
     query: "two part-time full stack roles Dystil Just Jutz",
     categories: ["PROFILE", "PROFESSIONAL_EXPERIENCE"],
@@ -97,7 +97,8 @@ test("two current part-time full-stack roles are explicitly retrievable", () => 
   assert.ok(ids.includes("profile-summary"));
   assert.ok(ids.includes("experience-dystil"));
   assert.ok(ids.includes("experience-just-jutz"));
-  assert.match(result.results.find(record => record.id === "profile-summary").summary, /two part-time Full Stack Developer roles/i);
+  assert.match(result.results.find(record => record.id === "profile-summary").summary, /part-time Full Stack Developer role at Dystil\.AI/i);
+  assert.match(result.results.find(record => record.id === "experience-just-jutz").summary, /February 2026 to October 2026/);
   assert.deepEqual(result.results.find(record => record.id === "experience-dystil").links, [
     { label: "Visit Dystil.AI", url: "https://dystil.ai/" }
   ]);

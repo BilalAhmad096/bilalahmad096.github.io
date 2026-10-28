@@ -96,7 +96,7 @@ export function parseNseEquities(csv, industries = new Map()) {
 const NOT_SHARES = /\b(warrants?|rights?|(?<!(?:common|partnership|depositary) )units?|preferred|preference|notes? due|debentures?|subordinated)\b/i;
 
 // What follows the company in a security name, longest first.
-const SHARE_SUFFIX = /,?\s+(?:(?:New|Series [A-Z0-9]+|Class [A-Z0-9]+)\s+)*(?:Common Stock|Common Shares|Ordinary Shares|American Depositary Shares|American Depository Shares|ADS|Shares of Beneficial Interest|Common Units|Shares)\b.*$/i;
+const SHARE_SUFFIX = /,?\s+(?:(?:New|Sponsored|Sponosred|Unsponsored|Series [A-Z0-9]+|Class [A-Z0-9]+)\s+)*(?:Common Stock|Common Shares|Ordinary Shares|American Depositary Shares|American Depository Shares|ADS|Shares of Beneficial Interest|Common Units|Limited Partnership Units|Depositary Units|ADR|Shares)\b.*$/i;
 
 // "Agilent Technologies, Inc. Common Stock" -> "Agilent Technologies, Inc."
 export function companyName(security) {

@@ -104,6 +104,9 @@ test('company names drop the share description', () => {
     'Alibaba Group Holding Limited');
   assert.equal(companyName('Energy Transfer LP Common Units representing limited partner interests'), 'Energy Transfer LP');
   assert.equal(companyName('Common Stock'), 'Common Stock');
+  assert.equal(companyName('Brookfield Renewable Partners L.P. Limited Partnership Units'), 'Brookfield Renewable Partners L.P.');
+  assert.equal(companyName('Braskem SA ADR'), 'Braskem SA');
+  assert.equal(companyName('Banco Santander, S.A. Sponsored ADR (Spain)'), 'Banco Santander, S.A.');
 });
 
 test('a file only counts as changed when its companies change', () => {

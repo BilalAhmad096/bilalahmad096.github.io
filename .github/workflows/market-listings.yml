@@ -1,0 +1,68 @@
+# Keeps data/markets/india.json (NSE) and data/markets/us.json (NYSE), the
+# companies the Market Explorer on /tools/ searches, and commits them back to
+# the branch they were built on. The site is static, so this is how a new
+# listing reaches every visitor.
+#
+# Every source is public, so no token and no repository secret is involved.
+# A week with no new or delisted companies produces no commit. It also runs
+# when the build itself changes, so a change to the parsing lands with fresh
+# files instead of waiting for Monday.
+
+name: Market listings
+
+on:
+  schedule:
+    # Mondays, off the hour: the top of the hour is when scheduled workflows
+    # queue worldwide and start running late. Listings change slowly.
+    - cron: "17 3 * * 1"
+  push:
+    paths:
+      - "scripts/build-market-listings.mjs"
+      - "scripts/lib/market-listings.mjs"
+      - ".github/workflows/market-listings.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-listings-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # One exchange failing still lets the other's refresh be committed; the
+      # job fails afterwards so the miss is not silent.
+      - name: Build the listings
+        id: build
+        continue-on-error: true
+        run: node scripts/build-market-listings.mjs
+
+      - name: Commit the refreshed listings
+        run: |
+          if [ -z "$(git status --porcelain data/markets)" ]; then
+            echo "Listings unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/markets
+          git commit -m "Refresh the NSE and NYSE market listings"
+          # Someone may have pushed while this job was running; rebasing keeps
+          # the refresh from failing on a race it can resolve itself.
+          git pull --rebase --autostash
+          git push
+
+      - name: Fail if a market could not be built
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "At least one market could not be refreshed; see the build step."
+          exit 1

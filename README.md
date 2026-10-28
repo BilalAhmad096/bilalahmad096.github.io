@@ -138,6 +138,32 @@ npx wrangler deploy --dry-run --config worker/wrangler.jsonc
 
 For production, leave `ALLOWED_ORIGINS` restricted to the Mintorian domains and keep the KV binding enabled. Without KV, the Worker uses a best-effort in-memory limiter intended for local development only.
 
+## Market Explorer
+
+[`/tools/`](tools/index.html) lets visitors look up any company listed on India's
+National Stock Exchange (NSE) or the New York Stock Exchange (NYSE) by ticker,
+name or ISIN, and links each one to its quote, chart and filings. The Professional
+section of the Updates page links to it.
+
+The page is static: it searches `data/markets/india.json` and `data/markets/us.json`
+in the browser with [`js/lib/market-search.js`](js/lib/market-search.js). Those files
+are rebuilt every Monday by the `Market listings` workflow in
+[`.github/workflows/market-listings.yml`](.github/workflows/market-listings.yml), which
+runs [`scripts/build-market-listings.mjs`](scripts/build-market-listings.mjs) and
+commits any change. Its sources are all public:
+
+- India: NSE's equity list (`EQUITY_L.csv`), with industries from the Nifty Total Market index.
+- United States: Nasdaq Trader's directory of non-Nasdaq listings, kept to NYSE shares
+  (ETFs, preferreds, warrants and notes are left out), with CIKs from the SEC.
+
+To rebuild locally (needs network access to those sites):
+
+```powershell
+npm run build:markets
+```
+
+Shariah (halal) screening is planned as a later step.
+
 ## GitHub commit activity
 
 The home page carries a contribution calendar under **Commit Activity**. The site is

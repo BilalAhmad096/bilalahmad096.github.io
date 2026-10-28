@@ -3,7 +3,7 @@
     .replace(/\/index\.html$/i, '/')
     .replace(/\.html$/i, '/');
 
-  if (/^\/(experience|publications|research|updates)$/i.test(cleanPath)) {
+  if (/^\/(experience|publications|research|updates|tools)$/i.test(cleanPath)) {
     cleanPath += '/';
   }
 
@@ -57,6 +57,8 @@
   // 404.html is served at whatever address was missing, so its path says
   // nothing about which page it is; it marks itself instead.
   const key = document.body.classList.contains('page-404') ? '404'
+           // Tools has no item in the nav, so none is marked current.
+           : document.body.classList.contains('page-tools') ? 'tools'
            : file.includes('experience') ? 'experience'
            : file.includes('publications') ? 'publications'
            // 'research' also matches the retired 'researchgroup' path, which is

@@ -159,6 +159,25 @@
   min-width:0;
 }
 
+.market-chip{
+  margin-left:auto;
+  flex:0 0 auto;
+  padding:2px 9px;
+  border-radius:999px;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.market-chip--compliant{
+  background:var(--halal-bg);
+  color:var(--halal-ink);
+}
+
+.market-chip--noncompliant{
+  background:var(--haram-bg);
+  color:var(--haram-ink);
+}
+
 .market-empty{
   padding:10px 12px;
   color:var(--ink-muted);
@@ -240,9 +259,54 @@
   color:var(--accent);
 }
 
-.market-detail__note{
+/* Shariah status */
+.page-tools{
+  --halal-bg:#e3f5ea;
+  --halal-ink:#17663a;
+  --haram-bg:#fde8e8;
+  --haram-ink:#a12828;
+  --unscreened-bg:#eef1f6;
+}
+
+.market-shariah{
   margin:0 0 14px;
+  padding:12px 14px;
+  border-radius:var(--radius-sm);
+  border-left:4px solid var(--rule-core);
+  background:var(--unscreened-bg);
+}
+
+.market-shariah--compliant{
+  border-left-color:var(--halal-ink);
+  background:var(--halal-bg);
+}
+
+.market-shariah--noncompliant{
+  border-left-color:var(--haram-ink);
+  background:var(--haram-bg);
+}
+
+.market-shariah__label{
+  margin:0 0 4px;
+  font-family:linetoBold, system-ui;
+  font-size:16px;
+  color:var(--ink);
+}
+
+.market-shariah--compliant .market-shariah__label{ color:var(--halal-ink); }
+.market-shariah--noncompliant .market-shariah__label{ color:var(--haram-ink); }
+
+.market-shariah__text{
+  margin:0;
   font-size:14px;
+  line-height:1.5;
+  color:var(--ink);
+}
+
+.market-shariah__caveat{
+  margin:8px 0 0;
+  font-size:12.5px;
+  line-height:1.5;
   color:var(--ink-muted);
 }
 

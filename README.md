@@ -162,7 +162,21 @@ To rebuild locally (needs network access to those sites):
 npm run build:markets
 ```
 
-Shariah (halal) screening is planned as a later step.
+### Shariah status (NSE)
+
+Each NSE company shows a Shariah status taken from NSE's **Nifty 500 Shariah** index,
+whose constituents are the Nifty 500 companies that pass screening by Taqwaa Advisory
+and Shariah Investment Solutions (TASIS). The same weekly build downloads the Nifty 500
+and Nifty 500 Shariah constituent lists and marks every company:
+
+- **Shariah compliant**: in the Nifty 500 Shariah index.
+- **Not Shariah compliant**: in the Nifty 500 but not in its Shariah index.
+- **Not screened**: outside the Nifty 500, so the index does not cover it.
+
+Lists that cannot be NSE's (too few companies, or Shariah companies missing from the
+Nifty 500) are refused. If they cannot be read, every company keeps last week's status
+and the run fails so the miss is seen. Screening the companies outside the Nifty 500
+from their own filings, and US screening, are later steps.
 
 ## GitHub commit activity
 

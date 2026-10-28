@@ -105,3 +105,32 @@ export function companyLinks(market, company) {
   }
   return links;
 }
+
+// What the page says about a company's Shariah status. India's comes from
+// NSE's Nifty 500 Shariah index (the file's "shariah" block names it); a
+// market without that block has not been screened yet.
+export function shariahVerdict(company, data) {
+  const source = data && data.shariah;
+  if (!source) {
+    return { kind: 'pending', label: 'Shariah screening coming soon', text: 'Shariah (halal) screening for this market is coming soon.' };
+  }
+  if (company.sh === 'c') {
+    return {
+      kind: 'compliant',
+      label: 'Shariah compliant',
+      text: `Included in the ${source.index} index, so it passed the index's Shariah screening by ${source.screenedBy}.`
+    };
+  }
+  if (company.sh === 'x') {
+    return {
+      kind: 'noncompliant',
+      label: 'Not Shariah compliant',
+      text: `In the ${source.universe}, which the ${source.index} index screens, but not included in it, so it did not pass that screening.`
+    };
+  }
+  return {
+    kind: 'unscreened',
+    label: 'Not screened',
+    text: `Outside the ${source.universe}, so the ${source.index} index has not screened it. A verdict for smaller companies is planned.`
+  };
+}

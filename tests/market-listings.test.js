@@ -10,17 +10,21 @@ import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import {
+  SHARIAH_SOURCE,
+  carryOver,
+  checkShariahLists,
   companyName,
   nseDate,
   parseCsv,
   parseNseEquities,
   parseNseIndustries,
+  parseIndexMembers,
   parseNyseListings,
   parseSecCiks,
   sameCompanies,
   serialiseMarket
 } from '../scripts/lib/market-listings.mjs';
-import { buildIndex, companyLinks, normalise, search } from '../js/lib/market-search.js';
+import { buildIndex, companyLinks, normalise, search, shariahVerdict } from '../js/lib/market-search.js';
 
 const EQUITY_L = [
   'SYMBOL,NAME OF COMPANY, SERIES, DATE OF LISTING, PAID UP VALUE, MARKET LOT, ISIN NUMBER, FACE VALUE',
@@ -109,6 +113,53 @@ test('company names drop the share description', () => {
   assert.equal(companyName('Banco Santander, S.A. Sponsored ADR (Spain)'), 'Banco Santander, S.A.');
 });
 
+// Nifty 500 and Nifty 500 Shariah in the constituents format. TCS appears in
+// the Shariah list under its ISIN with an older symbol, as after a rename.
+const indexCsv = rows => ['Company Name,Industry,Symbol,Series,ISIN Code', ...rows].join('\n');
+const NIFTY500 = indexCsv([
+  'Reliance Industries Ltd.,Oil Gas & Consumable Fuels,RELIANCE,EQ,INE002A01018',
+  'Infosys Ltd.,Information Technology,INFY,EQ,INE009A01021',
+  'Tata Consultancy Services Ltd.,Information Technology,TCS,EQ,INE467B01029',
+  'State Bank of India,Financial Services,SBIN,EQ,INE062A01020'
+]);
+const NIFTY500_SHARIAH = indexCsv([
+  'Infosys Ltd.,Information Technology,INFY,EQ,INE009A01021',
+  'Tata Consultancy Services Ltd.,Information Technology,TCSOLD,EQ,INE467B01029'
+]);
+const lists = { universe: parseIndexMembers(NIFTY500), compliant: parseIndexMembers(NIFTY500_SHARIAH) };
+
+test('Shariah status: in the index, screened out, or outside the Nifty 500', () => {
+  const rows = parseNseEquities(EQUITY_L, new Map(), lists);
+  const sh = Object.fromEntries(rows.map(r => [r.s, r.sh ?? null]));
+  assert.deepEqual(sh, { ACME: null, INFY: 'c', 'M&M': null, RELIANCE: 'x', SBIN: 'x', TCS: 'c' });
+  assert.ok(parseNseEquities(EQUITY_L).every(r => r.sh === undefined));
+});
+
+test('Shariah lists that cannot be NSE\u2019s are refused', () => {
+  const many = n => ({ symbols: new Set(Array.from({ length: n }, (_, i) => `S${i}`)), isins: new Set() });
+  assert.doesNotThrow(() => checkShariahLists(many(500), many(200)));
+  assert.throws(() => checkShariahLists(many(500), many(0)), /Shariah list/);
+  assert.throws(() => checkShariahLists(many(500), many(500)), /Shariah list/);
+  assert.throws(() => checkShariahLists(many(20), many(10)), /Nifty 500 list/);
+  const strangers = { symbols: new Set(Array.from({ length: 100 }, (_, i) => `X${i}`)), isins: new Set() };
+  assert.throws(() => checkShariahLists(many(500), strangers), /not in the Nifty 500/);
+});
+
+test('a failed join keeps last week\u2019s values', () => {
+  const stored = [{ s: 'INFY', n: 'Infosys', sh: 'c', ind: 'IT' }, { s: 'GONE', n: 'Delisted', sh: 'x' }];
+  const rows = carryOver([{ s: 'INFY', n: 'Infosys' }, { s: 'NEW', n: 'New Co' }], stored, ['sh']);
+  assert.deepEqual(rows, [{ s: 'INFY', n: 'Infosys', sh: 'c' }, { s: 'NEW', n: 'New Co' }]);
+});
+
+test('the page words each Shariah status, and holds back where none exists', () => {
+  const data = { shariah: SHARIAH_SOURCE };
+  assert.equal(shariahVerdict({ sh: 'c' }, data).kind, 'compliant');
+  assert.match(shariahVerdict({ sh: 'c' }, data).text, /Nifty 500 Shariah.*TASIS/);
+  assert.equal(shariahVerdict({ sh: 'x' }, data).label, 'Not Shariah compliant');
+  assert.equal(shariahVerdict({}, data).kind, 'unscreened');
+  assert.equal(shariahVerdict({ sh: 'c' }, {}).kind, 'pending');
+});
+
 test('a file only counts as changed when its companies change', () => {
   const companies = [{ s: 'A', n: 'Agilent' }];
   const a = serialiseMarket({ market: 'us', exchange: 'NYSE', source: 'x', updated: '2026-10-01', companies });
@@ -116,6 +167,9 @@ test('a file only counts as changed when its companies change', () => {
   const c = serialiseMarket({ market: 'us', exchange: 'NYSE', source: 'x', updated: '2026-10-08', companies: [] });
   assert.ok(sameCompanies(a, b));
   assert.ok(!sameCompanies(a, c));
+  const d = serialiseMarket({ market: 'us', exchange: 'NYSE', source: 'x', updated: '2026-10-08', shariah: SHARIAH_SOURCE, companies });
+  assert.ok(!sameCompanies(a, d));
+  assert.deepEqual(JSON.parse(d).shariah, SHARIAH_SOURCE);
   assert.equal(JSON.parse(a).count, 1);
   assert.throws(() => serialiseMarket({ market: 'us', exchange: 'NYSE', source: 'x', updated: 'today', companies }));
 });

@@ -8,7 +8,7 @@
 // keeps the market and the chosen company (?market=us&symbol=KO), so a result
 // can be shared.
 
-import { buildIndex, companyLinks, search } from './lib/market-search.js';
+import { buildIndex, companyLinks, search, shariahVerdict } from './lib/market-search.js';
 
 const MARKETS = {
   india: { label: 'India', exchange: 'NSE', file: '/data/markets/india.json', example: 'RELIANCE or Infosys' },
@@ -100,6 +100,14 @@ function start(root) {
       name.className = 'market-result__name';
       name.textContent = company.n;
       button.append(sym, name);
+      const verdict = shariahVerdict(company, entry.data);
+      if (verdict.kind === 'compliant' || verdict.kind === 'noncompliant') {
+        const chip = document.createElement('span');
+        chip.className = `market-chip market-chip--${verdict.kind}`;
+        chip.textContent = verdict.kind === 'compliant' ? 'Halal' : 'Not halal';
+        chip.title = verdict.label;
+        button.append(chip);
+      }
       button.addEventListener('click', () => showDetail(company, entry.data));
       li.append(button);
       return li;
@@ -163,9 +171,23 @@ function start(root) {
       links.append(li);
     }
 
-    const note = document.createElement('p');
-    note.className = 'market-detail__note';
-    note.textContent = 'Shariah (halal) screening for this company is coming soon.';
+    const verdict = shariahVerdict(company, data);
+    const note = document.createElement('div');
+    note.className = `market-shariah market-shariah--${verdict.kind}`;
+    const label = document.createElement('p');
+    label.className = 'market-shariah__label';
+    label.textContent = verdict.label;
+    const why = document.createElement('p');
+    why.className = 'market-shariah__text';
+    why.textContent = verdict.text;
+    note.append(label, why);
+    if (verdict.kind !== 'pending') {
+      const caveat = document.createElement('p');
+      caveat.className = 'market-shariah__caveat';
+      caveat.textContent = 'The index is reviewed every six months and screening standards differ between scholars. '
+        + 'This is general information, not a fatwa or investment advice.';
+      note.append(caveat);
+    }
 
     const back = document.createElement('button');
     back.type = 'button';
@@ -178,7 +200,7 @@ function start(root) {
       input.focus();
     });
 
-    detail.append(head, dl, links, note, back);
+    detail.append(head, note, dl, links, back);
     detail.hidden = false;
     setAddress(company.s);
   }

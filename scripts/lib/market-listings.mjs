@@ -66,9 +66,54 @@ export function parseNseIndustries(csv) {
   return map;
 }
 
+// Any Nifty index constituents file -> the symbols and ISINs it lists. Both
+// are kept so a company that renames its symbol between the index's review and
+// NSE's equity list is still matched by its ISIN.
+export function parseIndexMembers(csv) {
+  const symbols = new Set();
+  const isins = new Set();
+  for (const r of records(csv)) {
+    if (r.SYMBOL) symbols.add(r.SYMBOL.toUpperCase());
+    if (r["ISIN CODE"]) isins.add(r["ISIN CODE"].toUpperCase());
+  }
+  return { symbols, isins };
+}
+
+function inIndex(members, symbol, isin) {
+  return members.symbols.has(symbol) || (!!isin && members.isins.has(isin.toUpperCase()));
+}
+
+// The Shariah screen this site reports: NSE's Nifty 500 Shariah index, whose
+// constituents are the Nifty 500 companies that pass screening by TASIS.
+export const SHARIAH_SOURCE = {
+  index: "Nifty 500 Shariah",
+  universe: "Nifty 500",
+  screenedBy: "Taqwaa Advisory and Shariah Investment Solutions (TASIS)"
+};
+
+// A pair of lists that cannot be what NSE publishes is refused, so a broken
+// download never marks the market non-compliant. The Shariah index is a
+// subset of the Nifty 500, a few hundred companies.
+export function checkShariahLists(universe, compliant) {
+  const n = compliant.symbols.size;
+  if (universe.symbols.size < 400) throw new Error(`Nifty 500 list has only ${universe.symbols.size} companies`);
+  if (n < 50 || n >= universe.symbols.size) throw new Error(`Nifty 500 Shariah list has ${n} companies`);
+  const outside = [...compliant.symbols].filter(sym => !universe.symbols.has(sym)).length;
+  if (outside > n * 0.1) throw new Error(`${outside} of ${n} Shariah companies are not in the Nifty 500 list`);
+}
+
+// "c": in the Shariah index. "x": in the Nifty 500 it screens but left out of
+// it. No status: outside the Nifty 500, so not screened.
+export function shariahStatus(lists, symbol, isin) {
+  if (!lists) return null;
+  if (inIndex(lists.compliant, symbol, isin)) return "c";
+  if (inIndex(lists.universe, symbol, isin)) return "x";
+  return null;
+}
+
 // EQUITY_L.csv -> rows for India. Every series NSE lists in the file is a
 // company's equity (EQ, BE, BZ, SM, ST ...), so none is dropped.
-export function parseNseEquities(csv, industries = new Map()) {
+export function parseNseEquities(csv, industries = new Map(), shariah = null) {
   const out = [];
   for (const r of records(csv)) {
     const symbol = (r.SYMBOL || "").toUpperCase();
@@ -83,6 +128,8 @@ export function parseNseEquities(csv, industries = new Map()) {
     if (Number.isFinite(face) && face > 0) row.face = face;
     const industry = industries.get(symbol);
     if (industry) row.ind = industry;
+    const sh = shariahStatus(shariah, symbol, row.isin);
+    if (sh) row.sh = sh;
     out.push(row);
   }
   return sortRows(out);
@@ -149,17 +196,32 @@ function sortRows(rows) {
     .sort((a, b) => a.s.localeCompare(b.s));
 }
 
-// The file one market is written to. Rows are sorted and the date is a day,
-// so a week with no new listings rewrites nothing.
-export function serialiseMarket({ market, exchange, source, updated, companies }) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(updated)) throw new Error(`bad updated date: ${updated}`);
-  return JSON.stringify({ market, exchange, source, updated, count: companies.length, companies }) + "\n";
+// When an enriching source could not be read this week, each company keeps
+// what the last good file said for those fields rather than losing them.
+export function carryOver(rows, storedRows, fields) {
+  const before = new Map((storedRows || []).map(r => [r.s, r]));
+  return rows.map(row => {
+    const old = before.get(row.s);
+    if (!old) return row;
+    const next = { ...row };
+    for (const f of fields) if (next[f] === undefined && old[f] !== undefined) next[f] = old[f];
+    return next;
+  });
 }
 
-// True when two serialised files hold the same companies, whatever their date.
+// The file one market is written to. Rows are sorted and the date is a day,
+// so a week with no new listings rewrites nothing. Extra fields (the Shariah
+// source) are written between the header and the companies.
+export function serialiseMarket({ market, exchange, source, updated, companies, ...extra }) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(updated)) throw new Error(`bad updated date: ${updated}`);
+  return JSON.stringify({ market, exchange, source, updated, ...extra, count: companies.length, companies }) + "\n";
+}
+
+// True when two serialised files say the same thing, whatever their date.
 export function sameCompanies(a, b) {
   try {
-    return JSON.stringify(JSON.parse(a).companies) === JSON.stringify(JSON.parse(b).companies);
+    const strip = ({ updated, ...rest }) => JSON.stringify(rest);
+    return strip(JSON.parse(a)) === strip(JSON.parse(b));
   } catch {
     return false;
   }

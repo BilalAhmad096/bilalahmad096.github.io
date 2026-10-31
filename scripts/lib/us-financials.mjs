@@ -64,6 +64,11 @@ export const ANNUAL_FIELDS = [
     ["us-gaap", "Revenues"],
     ["us-gaap", "RevenueFromContractWithCustomerExcludingAssessedTax"],
     ["us-gaap", "SalesRevenueNet"],
+    ["us-gaap", "RevenueFromContractWithCustomerIncludingAssessedTax"],
+    // Banks report revenue net of the interest they pay.
+    ["us-gaap", "RevenuesNetOfInterestExpense"],
+    ["us-gaap", "SalesRevenueGoodsNet"],
+    ["us-gaap", "SalesRevenueServicesNet"],
     ["ifrs-full", "Revenue"]
   ]],
   ["operatingIncome", [["us-gaap", "OperatingIncomeLoss"], ["ifrs-full", "ProfitLossFromOperatingActivities"]]],
@@ -71,6 +76,7 @@ export const ANNUAL_FIELDS = [
   ["interestExpense", [
     ["us-gaap", "InterestExpense"],
     ["us-gaap", "InterestExpenseNonoperating"],
+    ["us-gaap", "InterestExpenseDebt"],
     ["ifrs-full", "FinanceCosts"]
   ]],
   ["interestIncome", [

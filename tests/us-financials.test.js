@@ -19,7 +19,7 @@ import {
   sameFinancials,
   serialiseFinancials
 } from '../scripts/lib/us-financials.mjs';
-import { filingUrl, financialSections, formatCount, formatUsd, totalDebt } from '../js/lib/financials.js';
+import { filingUrl, financialSections, formatCount, formatUsd, shortTermDebt, totalDebt } from '../js/lib/financials.js';
 
 test('quarters are asked for only once they have ended, newest first', () => {
   assert.deepEqual(instantPeriods('2026-10-31', 3), ['CY2026Q3I', 'CY2026Q2I', 'CY2026Q1I']);
@@ -96,9 +96,13 @@ test('total debt adds the reported pieces without counting any twice', () => {
   assert.equal(totalDebt({ longTermDebt: 100, longTermDebtCurrent: 10, shortTermBorrowings: 5, commercialPaper: 2 }), 107);
   assert.equal(totalDebt({ longTermDebtNoncurrent: 90, debtCurrent: 20, shortTermBorrowings: 5 }), 110);
   assert.equal(totalDebt({ longTermDebtNoncurrent: 90, longTermDebtCurrent: 10, shortTermBorrowings: 5 }), 105);
-  assert.equal(totalDebt({ debtCurrent: 7 }), 7);
   assert.equal(totalDebt({ borrowings: 50 }), 50);
-  assert.equal(totalDebt({ shortTermBorrowings: 3, commercialPaper: 1 }), 4);
+  // Short-term pieces alone are not a total: they may be a small part of it.
+  assert.equal(totalDebt({ debtCurrent: 7 }), null);
+  assert.equal(totalDebt({ shortTermBorrowings: 72e9 }), null);
+  assert.equal(shortTermDebt({ shortTermBorrowings: 3, commercialPaper: 1 }), 4);
+  assert.equal(shortTermDebt({ debtCurrent: 7, shortTermBorrowings: 3 }), 7);
+  assert.equal(shortTermDebt({ assets: 1 }), null);
   assert.equal(totalDebt({ assets: 10 }), null);
   assert.equal(totalDebt({ longTermDebt: 0 }), 0);
 });
@@ -123,6 +127,8 @@ test('the card shows what was reported, links each filing, and omits the rest', 
   assert.equal(sections[0].filing, 'https://www.sec.gov/Archives/edgar/data/320193/accCY2026Q3I/');
   assert.equal(filingUrl(320193, '0000320193-26-000105'), 'https://www.sec.gov/Archives/edgar/data/320193/000032019326000105/');
   assert.deepEqual(financialSections(APPLE, undefined), []);
+  const bank = financialSections(19617, { bs: { end: '2026-06-30', accn: 'x', v: { assets: 5e12, shortTermBorrowings: 72.4e9 } } });
+  assert.deepEqual(bank[0].rows, [['Total assets', '$5.00T'], ['Short-term debt', '$72.4B']]);
 });
 
 test('a file only counts as changed when its figures change', () => {

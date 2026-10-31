@@ -4,12 +4,15 @@
 // Market Explorer card. No DOM and no fetch, so it runs identically in the page
 // and under node --test.
 
-// Total debt from the pieces a company reported, or null when it reported
-// none (unknown, which is not the same as no debt).
+// Total debt from the pieces a company reported, or null when it cannot be
+// told (unknown, which is not the same as no debt).
 //
 // LongTermDebt already includes the part due within a year, and DebtCurrent
 // already includes short-term borrowings and commercial paper, so each total
-// is built from pieces that do not overlap.
+// is built from pieces that do not overlap. A total needs a long-term figure:
+// a company whose only readable piece is short-term (JPMorgan files its
+// long-term debt in a breakdown the SEC's frames leave out) would otherwise
+// show a fraction of its debt as the whole.
 export function totalDebt(v = {}) {
   const has = k => typeof v[k] === 'number';
   const sum = (...keys) => keys.reduce((t, k) => t + (has(k) ? v[k] : 0), 0);
@@ -23,10 +26,15 @@ export function totalDebt(v = {}) {
       : sum('longTermDebtCurrent', 'shortTermBorrowings', 'commercialPaper');
     return v.longTermDebtNoncurrent + current;
   }
-  if (has('debtCurrent')) return v.debtCurrent;
   if (has('borrowings')) return v.borrowings;
-  const parts = ['longTermDebtCurrent', 'shortTermBorrowings', 'commercialPaper'].filter(has);
-  return parts.length ? sum(...parts) : null;
+  return null;
+}
+
+// The short-term pieces, shown on their own when no total can be given.
+export function shortTermDebt(v = {}) {
+  if (typeof v.debtCurrent === 'number') return v.debtCurrent;
+  const parts = ['longTermDebtCurrent', 'shortTermBorrowings', 'commercialPaper'].filter(k => typeof v[k] === 'number');
+  return parts.length ? parts.reduce((t, k) => t + v[k], 0) : null;
 }
 
 // 1234567890 -> "$1.23B"; -45600000 -> "−$45.6M".
@@ -86,7 +94,8 @@ export function financialSections(cik, entry) {
         ['Cash and equivalents', formatUsd(v.cash)],
         ['Short-term investments', formatUsd(v.shortInvestments)],
         ['Receivables', formatUsd(v.receivables)],
-        ['Total debt', formatUsd(totalDebt(v))]
+        ['Total debt', formatUsd(totalDebt(v))],
+        ['Short-term debt', totalDebt(v) === null ? formatUsd(shortTermDebt(v)) : null]
       ])
     });
   }

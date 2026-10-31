@@ -4,9 +4,11 @@
 //
 // India comes from NSE's equity list (EQUITY_L.csv), with industry joined in
 // from the Nifty Total Market constituents where a company is in that index.
-// The United States comes from Nasdaq Trader's directory of securities listed
-// on exchanges other than Nasdaq (otherlisted.txt), kept to NYSE, with the
-// SEC's CIK joined in so a company can link to its filings.
+// The United States comes from Nasdaq Trader's two symbol directories: the
+// securities listed on Nasdaq (nasdaqlisted.txt) and those listed elsewhere
+// (otherlisted.txt), kept to NYSE. The SEC's CIK is joined in so a company can
+// link to its filings. Each US row names its exchange, since a company lists
+// on one or the other.
 
 // A CSV line splitter that honours quoted fields, which NSE uses for company
 // names carrying commas.
@@ -95,8 +97,9 @@ export function parseNseEquities(csv, industries = new Map()) {
 // is caught by "Preferred".
 const NOT_SHARES = /\b(warrants?|rights?|(?<!(?:common|partnership|depositary) )units?|preferred|preference|notes? due|debentures?|subordinated)\b/i;
 
-// What follows the company in a security name, longest first.
-const SHARE_SUFFIX = /,?\s+(?:(?:New|Sponsored|Sponosred|Unsponsored|Series [A-Z0-9]+|Class [A-Z0-9]+)\s+)*(?:Common Stock|Common Shares|Ordinary Shares|American Depositary Shares|American Depository Shares|ADS|Shares of Beneficial Interest|Common Units|Limited Partnership Units|Depositary Units|ADR|Shares)\b.*$/i;
+// What follows the company in a security name, longest first. Nasdaq puts a
+// dash between the two ("Apple Inc. - Common Stock").
+const SHARE_SUFFIX = /,?\s+(?:-\s+)?(?:(?:New|Sponsored|Sponosred|Unsponsored|Series [A-Z0-9]+|Class [A-Z0-9]+)\s+)*(?:Common Stock|Common Shares|Ordinary Shares|American Depositary Shares|American Depository Shares|ADS|Shares of Beneficial Interest|Common Units|Limited Partnership Units|Depositary Units|ADR|Shares)\b.*$/i;
 
 // "Agilent Technologies, Inc. Common Stock" -> "Agilent Technologies, Inc."
 export function companyName(security) {
@@ -119,12 +122,40 @@ export function parseNyseListings(text, ciks = new Map()) {
     const security = r["SECURITY NAME"] || "";
     if (r.EXCHANGE !== "N" || r.ETF === "Y" || r["TEST ISSUE"] === "Y") continue;
     if (!isShareSymbol(symbol) || NOT_SHARES.test(security)) continue;
-    const row = { s: symbol, n: companyName(security), sec: security };
+    const row = { s: symbol, n: companyName(security), x: "NYSE", sec: security };
     const cik = ciks.get(symbol);
     if (cik) row.cik = cik;
     out.push(row);
   }
   return sortRows(out);
+}
+
+// Nasdaq's three tiers, by the file's "Market Category".
+const NASDAQ_TIERS = { Q: "Global Select Market", G: "Global Market", S: "Capital Market" };
+
+// nasdaqlisted.txt -> rows for Nasdaq. The same rules as NYSE: ETFs, test
+// issues and anything that is not a company's shares are left out.
+export function parseNasdaqListings(text, ciks = new Map()) {
+  const out = [];
+  for (const r of records(text, "|")) {
+    const symbol = (r.SYMBOL || "").toUpperCase();
+    const security = r["SECURITY NAME"] || "";
+    if (!symbol || r.ETF === "Y" || r["TEST ISSUE"] === "Y") continue;
+    if (!isShareSymbol(symbol) || NOT_SHARES.test(security)) continue;
+    const row = { s: symbol, n: companyName(security), x: "Nasdaq", sec: security };
+    const tier = NASDAQ_TIERS[r["MARKET CATEGORY"]];
+    if (tier) row.tier = tier;
+    const cik = ciks.get(symbol);
+    if (cik) row.cik = cik;
+    out.push(row);
+  }
+  return sortRows(out);
+}
+
+// Both US exchanges as one market. A symbol trades on one exchange only; were
+// one ever to appear in both files, its primary (Nasdaq's own) listing wins.
+export function mergeUsListings(nasdaq, nyse) {
+  return sortRows([...nasdaq, ...nyse]);
 }
 
 // SEC company_tickers_exchange.json -> Map(symbol -> CIK). The SEC writes a

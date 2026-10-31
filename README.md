@@ -141,7 +141,7 @@ For production, leave `ALLOWED_ORIGINS` restricted to the Mintorian domains and 
 ## Market Explorer
 
 [`/tools/`](tools/index.html) lets visitors look up any company listed on India's
-National Stock Exchange (NSE) or the New York Stock Exchange (NYSE) by ticker,
+National Stock Exchange (NSE) or the US exchanges, NYSE and Nasdaq, by ticker,
 name or ISIN, and links each one to its quote, chart and filings. The Professional
 section of the Updates page links to it.
 
@@ -153,8 +153,10 @@ runs [`scripts/build-market-listings.mjs`](scripts/build-market-listings.mjs) an
 commits any change. Its sources are all public:
 
 - India: NSE's equity list (`EQUITY_L.csv`), with industries from the Nifty Total Market index.
-- United States: Nasdaq Trader's directory of non-Nasdaq listings, kept to NYSE shares
-  (ETFs, preferreds, warrants and notes are left out), with CIKs from the SEC.
+- United States: Nasdaq Trader's two symbol directories, one for Nasdaq listings and one
+  for other exchanges (kept to NYSE), with CIKs from the SEC. Only companies' shares are
+  kept (ETFs, preferreds, warrants, units and notes are left out), and each company
+  names the exchange it lists on, with its tier for Nasdaq.
 
 To rebuild locally (needs network access to those sites):
 

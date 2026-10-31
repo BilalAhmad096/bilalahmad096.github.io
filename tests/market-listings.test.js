@@ -15,6 +15,8 @@ import {
   parseCsv,
   parseNseEquities,
   parseNseIndustries,
+  mergeUsListings,
+  parseNasdaqListings,
   parseNyseListings,
   parseSecCiks,
   sameCompanies,
@@ -56,12 +58,26 @@ const OTHERLISTED = [
   'File Creation Time: 1027202619:01||||||'
 ].join('\r\n');
 
+const NASDAQLISTED = [
+  'Symbol|Security Name|Market Category|Test Issue|Financial Status|Round Lot Size|ETF|NextShares',
+  'AAPL|Apple Inc. - Common Stock|Q|N|N|100|N|N',
+  'GOOGL|Alphabet Inc. - Class A Common Stock|Q|N|N|100|N|N',
+  'MSFT|Microsoft Corporation - Common Stock|Q|N|N|100|N|N',
+  'ACAHW|Acme Acquisition Corp - Warrant|S|N|N|100|N|N',
+  'ACAHU|Acme Acquisition Corp - Unit|S|N|N|100|N|N',
+  'QQQ|Invesco QQQ Trust, Series 1|G|N|N|100|Y|N',
+  'ZJZZT|NASDAQ TEST STOCK|G|Y|N|100|N|N',
+  'SMLC|Small Co Inc. - Common Stock|S|N|D|100|N|N',
+  'File Creation Time: 1030202619:01|||||||'
+].join('\r\n');
+
 const SEC_TICKERS = {
   fields: ['cik', 'name', 'ticker', 'exchange'],
   data: [
     [1090872, 'AGILENT TECHNOLOGIES, INC.', 'A', 'NYSE'],
     [1067983, 'BERKSHIRE HATHAWAY INC', 'BRK-B', 'NYSE'],
-    [21344, 'COCA COLA CO', 'KO', 'NYSE']
+    [21344, 'COCA COLA CO', 'KO', 'NYSE'],
+    [320193, 'Apple Inc.', 'AAPL', 'Nasdaq']
   ]
 };
 
@@ -97,6 +113,25 @@ test('NYSE listings keep companies’ shares and drop ETFs, preferreds, warrants
   assert.equal(rows.find(r => r.s === 'IBM').cik, undefined);
 });
 
+test('Nasdaq listings keep companies\u2019 shares with their tier, and drop ETFs, warrants, units and tests', () => {
+  const rows = parseNasdaqListings(NASDAQLISTED, parseSecCiks(SEC_TICKERS));
+  assert.deepEqual(rows.map(r => r.s), ['AAPL', 'GOOGL', 'MSFT', 'SMLC']);
+  assert.deepEqual(rows[0], {
+    s: 'AAPL', n: 'Apple Inc.', x: 'Nasdaq', sec: 'Apple Inc. - Common Stock', tier: 'Global Select Market', cik: 320193
+  });
+  assert.equal(rows.find(r => r.s === 'GOOGL').n, 'Alphabet Inc.');
+  assert.equal(rows.find(r => r.s === 'SMLC').tier, 'Capital Market');
+});
+
+test('the US market holds both exchanges, each row naming its own', () => {
+  const ciks = parseSecCiks(SEC_TICKERS);
+  const rows = mergeUsListings(parseNasdaqListings(NASDAQLISTED, ciks), parseNyseListings(OTHERLISTED, ciks));
+  assert.deepEqual(rows.map(r => `${r.s}:${r.x}`),
+    ['A:NYSE', 'AAPL:Nasdaq', 'BABA:NYSE', 'BEP:NYSE', 'BRK.B:NYSE', 'ET:NYSE', 'GOOGL:Nasdaq', 'IBM:NYSE', 'KO:NYSE', 'MSFT:Nasdaq', 'SMLC:Nasdaq']);
+  const twice = mergeUsListings([{ s: 'DUP', n: 'Dup', x: 'Nasdaq' }], [{ s: 'DUP', n: 'Dup', x: 'NYSE' }]);
+  assert.deepEqual(twice, [{ s: 'DUP', n: 'Dup', x: 'Nasdaq' }]);
+});
+
 test('company names drop the share description', () => {
   assert.equal(companyName('Agilent Technologies, Inc. Common Stock'), 'Agilent Technologies, Inc.');
   assert.equal(companyName('Berkshire Hathaway Inc. Class B Common Stock'), 'Berkshire Hathaway Inc.');
@@ -121,7 +156,8 @@ test('a file only counts as changed when its companies change', () => {
 });
 
 const india = buildIndex(parseNseEquities(EQUITY_L, parseNseIndustries(NIFTY_TOTAL)));
-const us = buildIndex(parseNyseListings(OTHERLISTED, parseSecCiks(SEC_TICKERS)));
+const us = buildIndex(mergeUsListings(
+  parseNasdaqListings(NASDAQLISTED, parseSecCiks(SEC_TICKERS)), parseNyseListings(OTHERLISTED, parseSecCiks(SEC_TICKERS))));
 const symbols = (index, q) => search(index, q).map(c => c.s);
 
 test('search: an exact ticker comes first, in any case', () => {
@@ -140,6 +176,8 @@ test('search: names match word by word, ignoring legal suffixes', () => {
   assert.equal(symbols(us, 'coca cola')[0], 'KO');
   assert.equal(symbols(us, 'Coca-Cola')[0], 'KO');
   assert.equal(symbols(us, 'berkshire')[0], 'BRK.B');
+  assert.equal(symbols(us, 'apple')[0], 'AAPL');
+  assert.equal(symbols(us, 'alphabet')[0], 'GOOGL');
 });
 
 test('search: ISIN finds the company; nothing matches nonsense or an empty box', () => {
@@ -157,10 +195,16 @@ test('links point at the right exchange and escape the symbol', () => {
   const nse = companyLinks('india', { s: 'M&M' });
   assert.ok(nse.every(l => l.href.startsWith('https://')));
   assert.ok(nse.some(l => l.href === 'https://www.nseindia.com/get-quotes/equity?symbol=M%26M'));
-  const nyse = companyLinks('us', { s: 'BRK.B', cik: 1067983 });
+  const nyse = companyLinks('us', { s: 'BRK.B', x: 'NYSE', cik: 1067983 });
+  assert.ok(nyse.some(l => l.href === 'https://www.nyse.com/quote/XNYS:BRK.B'));
   assert.ok(nyse.some(l => l.href === 'https://finance.yahoo.com/quote/BRK-B/'));
   assert.ok(nyse.some(l => l.href.endsWith('CIK=0001067983')));
   assert.ok(!companyLinks('us', { s: 'IBM' }).some(l => l.label === 'SEC filings'));
+  const nq = companyLinks('us', { s: 'AAPL', x: 'Nasdaq' });
+  assert.ok(nq.some(l => l.href === 'https://www.nasdaq.com/market-activity/stocks/aapl'));
+  assert.ok(nq.some(l => l.href === 'https://www.google.com/finance/quote/AAPL:NASDAQ'));
+  assert.ok(nq.some(l => l.href === 'https://www.tradingview.com/symbols/NASDAQ-AAPL/'));
+  assert.ok(!nq.some(l => l.label === 'NYSE quote'));
 });
 
 test('the tools page carries the explorer, and the updates page links to it', () => {

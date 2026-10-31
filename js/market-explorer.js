@@ -12,7 +12,7 @@ import { buildIndex, companyLinks, search } from './lib/market-search.js';
 
 const MARKETS = {
   india: { label: 'India', exchange: 'NSE', file: '/data/markets/india.json', example: 'RELIANCE or Infosys' },
-  us: { label: 'United States', exchange: 'NYSE', file: '/data/markets/us.json', example: 'KO or Coca-Cola' }
+  us: { label: 'United States', exchange: 'NYSE and Nasdaq', file: '/data/markets/us.json', example: 'AAPL or Coca-Cola' }
 };
 
 const root = document.getElementById('market-explorer');
@@ -71,7 +71,7 @@ function start(root) {
       const when = data.updated
         ? new Date(`${data.updated}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
         : null;
-      status.textContent = `${index.length.toLocaleString('en-GB')} ${data.exchange || MARKETS[key].exchange} companies`
+      status.textContent = `${index.length.toLocaleString('en-GB')} ${MARKETS[key].exchange} companies`
         + (when ? ` · updated ${when}` : '');
       if (symbol) {
         const match = index.find(e => e.company.s === symbol.toUpperCase());
@@ -100,6 +100,13 @@ function start(root) {
       name.className = 'market-result__name';
       name.textContent = company.n;
       button.append(sym, name);
+      // Two exchanges share the US tab, so each result says which it is on.
+      if (company.x) {
+        const exch = document.createElement('span');
+        exch.className = 'market-result__exchange';
+        exch.textContent = company.x;
+        button.append(exch);
+      }
       button.addEventListener('click', () => showDetail(company, entry.data));
       li.append(button);
       return li;
@@ -132,12 +139,13 @@ function start(root) {
     title.textContent = company.n;
     const badge = document.createElement('span');
     badge.className = 'market-detail__symbol';
-    badge.textContent = `${data.exchange || MARKETS[market].exchange}: ${company.s}`;
+    badge.textContent = `${company.x || (market === 'india' ? 'NSE' : 'NYSE')}: ${company.s}`;
     head.append(title, badge);
 
     const dl = document.createElement('dl');
     dl.className = 'market-detail__facts';
-    row(dl, 'Exchange', market === 'india' ? 'National Stock Exchange of India' : 'New York Stock Exchange');
+    row(dl, 'Exchange', market === 'india' ? 'National Stock Exchange of India'
+      : company.x === 'Nasdaq' ? `Nasdaq${company.tier ? ` (${company.tier})` : ''}` : 'New York Stock Exchange');
     row(dl, 'Ticker', company.s);
     row(dl, 'Industry', company.ind);
     row(dl, 'Security', company.sec);

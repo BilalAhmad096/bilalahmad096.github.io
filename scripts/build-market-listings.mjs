@@ -1,5 +1,5 @@
-// Builds data/markets/india.json and data/markets/us.json, the companies the
-// Market Explorer on /tools/ searches.
+// Builds data/markets/india.json (NSE) and data/markets/us.json (NYSE and
+// Nasdaq), the companies the Market Explorer on /tools/ searches.
 //
 // GitHub Pages serves a static tree, so the lists are fetched here, in a weekly
 // GitHub Action, and committed as files every visitor reads the same copy of.
@@ -17,6 +17,8 @@ import { fileURLToPath } from "node:url";
 import {
   parseNseEquities,
   parseNseIndustries,
+  mergeUsListings,
+  parseNasdaqListings,
   parseNyseListings,
   parseSecCiks,
   sameCompanies,
@@ -27,6 +29,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const NSE_EQUITIES = "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv";
 const NSE_INDUSTRIES = "https://nsearchives.nseindia.com/content/indices/ind_niftytotalmarket_list.csv";
+const NASDAQ_LISTINGS = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt";
 const NYSE_LISTINGS = "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt";
 const SEC_TICKERS = "https://www.sec.gov/files/company_tickers_exchange.json";
 
@@ -73,12 +76,14 @@ const MARKETS = {
     }
   },
   us: {
-    exchange: "NYSE",
-    source: "Nasdaq Trader symbol directory (NYSE listings), with CIKs from the SEC",
+    exchange: "NYSE + Nasdaq",
+    source: "Nasdaq Trader symbol directories (Nasdaq and NYSE listings), with CIKs from the SEC",
     async build() {
       const ciks = await optional("SEC CIKs",
         async () => parseSecCiks(await fetchText(SEC_TICKERS, SITE_AGENT)));
-      return parseNyseListings(await fetchText(NYSE_LISTINGS, BROWSER_AGENT), ciks);
+      return mergeUsListings(
+        parseNasdaqListings(await fetchText(NASDAQ_LISTINGS, BROWSER_AGENT), ciks),
+        parseNyseListings(await fetchText(NYSE_LISTINGS, BROWSER_AGENT), ciks));
     }
   }
 };

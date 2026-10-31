@@ -91,10 +91,14 @@ export function companyLinks(market, company) {
   }
   // Yahoo writes a share class with "-" (BRK-B); the others take "." (BRK.B).
   const yahoo = encodeURIComponent(company.s.replace('.', '-'));
+  // Rows built before Nasdaq was added carry no exchange; they were all NYSE.
+  const nasdaq = company.x === 'Nasdaq';
   const links = [
-    { label: 'NYSE quote', href: `https://www.nyse.com/quote/XNYS:${s}` },
-    { label: 'Google Finance', href: `https://www.google.com/finance/quote/${s}:NYSE` },
-    { label: 'TradingView chart', href: `https://www.tradingview.com/symbols/NYSE-${s}/` },
+    nasdaq
+      ? { label: 'Nasdaq quote', href: `https://www.nasdaq.com/market-activity/stocks/${encodeURIComponent(company.s.toLowerCase())}` }
+      : { label: 'NYSE quote', href: `https://www.nyse.com/quote/XNYS:${s}` },
+    { label: 'Google Finance', href: `https://www.google.com/finance/quote/${s}:${nasdaq ? 'NASDAQ' : 'NYSE'}` },
+    { label: 'TradingView chart', href: `https://www.tradingview.com/symbols/${nasdaq ? 'NASDAQ' : 'NYSE'}-${s}/` },
     { label: 'Yahoo Finance', href: `https://finance.yahoo.com/quote/${yahoo}/` }
   ];
   if (company.cik) {

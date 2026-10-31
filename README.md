@@ -160,13 +160,23 @@ commits any change. Its sources are all public:
 
 ### US financials
 
-Each US company card also shows its latest balance sheet (assets, liabilities, equity,
-cash, short-term investments, receivables, total debt), its latest annual results
-(revenue, operating income, net income, interest expense and income) and its shares
-outstanding, each linked to the SEC filing it came from. The same weekly workflow runs
+Each US company card also shows, each statement linked to the SEC filing it came from:
+
+- **Income statement** (latest full year): revenue, cost of revenue, gross profit, R&D,
+  SG&A, operating income, interest expense and income, income tax, net income.
+- **Balance sheet** (latest quarter): total and current assets, cash, short-term
+  investments, receivables, inventory, property and equipment, goodwill, total and
+  current liabilities, total debt, shareholders' equity.
+- **Cash flow** (latest full year): operating cash flow, capital expenditure, free cash
+  flow, dividends paid, share buybacks.
+- **Per share**: diluted and basic EPS, dividends per share, shares outstanding.
+- **Ratios and growth**, worked out in the browser by
+  [`js/lib/financials.js`](js/lib/financials.js): gross, operating and net margin,
+  return on equity, debt to assets, current ratio, and revenue, net income and EPS
+  growth on the year before. The same weekly workflow runs
 [`scripts/build-us-financials.mjs`](scripts/build-us-financials.mjs) after the listings,
 which reads the SEC's free XBRL "frames" API (`data.sec.gov`): one request returns one
-figure for every company for one period, so about 160 requests cover the whole market.
+figure for every company for one period, so about 300 requests cover the whole market.
 It writes `data/markets/us-financials.json`, which the page loads the first time a US
 company is opened.
 
@@ -174,7 +184,7 @@ Each statement is taken from a single period (the latest quarter a company repor
 total assets for, and the latest year it reported net income or revenue for), so figures
 are never mixed across quarters. Only US-dollar figures are read, so foreign companies
 that report in another currency show no financials yet. Share prices, and so market
-capitalisation, are not part of SEC filings and are not included.
+capitalisation and P/E, are not part of SEC filings and are not included.
 
 To rebuild locally (needs network access to those sites):
 

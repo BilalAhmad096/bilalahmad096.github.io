@@ -74,13 +74,93 @@ export function filingUrl(cik, accn) {
   return `https://www.sec.gov/Archives/edgar/data/${Number(cik)}/${String(accn).replace(/-/g, '')}/`;
 }
 
+// $1.23 per share; −$0.45.
+export function formatPerShare(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+  return `${value < 0 ? '−' : ''}$${Math.abs(value).toFixed(2)}`;
+}
+
+// 0.2534 -> "25.3%"; growth gets a sign: "+12.0%", "−4.5%".
+export function formatPercent(ratio, { signed = false } = {}) {
+  if (typeof ratio !== 'number' || !Number.isFinite(ratio)) return null;
+  const pct = ratio * 100;
+  const sign = pct < 0 ? '−' : signed && pct > 0 ? '+' : '';
+  return `${sign}${Math.abs(pct).toFixed(1)}%`;
+}
+
+function ratio(a, b) {
+  return typeof a === 'number' && typeof b === 'number' && b !== 0 ? a / b : null;
+}
+
+// Year-on-year change. Undefined from a loss, where a percentage misleads.
+export function growth(now, before) {
+  if (typeof now !== 'number' || typeof before !== 'number' || before <= 0) return null;
+  return (now - before) / before;
+}
+
+// Operating cash flow less capital spending, when both are known.
+export function freeCashFlow(v = {}) {
+  if (typeof v.operatingCashFlow !== 'number' || typeof v.capitalExpenditure !== 'number') return null;
+  return v.operatingCashFlow - v.capitalExpenditure;
+}
+
+// Gross profit as reported, or revenue less cost of revenue.
+function grossProfit(v) {
+  if (typeof v.grossProfit === 'number') return v.grossProfit;
+  if (typeof v.revenue === 'number' && typeof v.costOfRevenue === 'number') return v.revenue - v.costOfRevenue;
+  return null;
+}
+
+// Ratios worked out from the figures, each only when both sides are known.
+// Return on equity mixes the year's profit with the latest balance sheet, as
+// is usual for a quick view, and is left out when equity is negative.
+export function financialRatios(entry = {}) {
+  const fy = entry.fy?.v || {};
+  const bs = entry.bs?.v || {};
+  const prev = entry.fy?.prev?.v || {};
+  return {
+    grossMargin: ratio(grossProfit(fy), fy.revenue),
+    operatingMargin: ratio(fy.operatingIncome, fy.revenue),
+    netMargin: ratio(fy.netIncome, fy.revenue),
+    returnOnEquity: bs.equity > 0 ? ratio(fy.netIncome, bs.equity) : null,
+    debtToAssets: ratio(totalDebt(bs), bs.assets),
+    currentRatio: ratio(bs.currentAssets, bs.currentLiabilities),
+    revenueGrowth: growth(fy.revenue, prev.revenue),
+    netIncomeGrowth: growth(fy.netIncome, prev.netIncome),
+    epsGrowth: growth(fy.epsDiluted, prev.epsDiluted)
+  };
+}
+
 // The card's sections: a title, the period, the filing and labelled rows.
 // Rows a company did not report are left out rather than shown as zero.
 export function financialSections(cik, entry) {
   if (!entry) return [];
   const sections = [];
   const rows = list => list.filter(([, value]) => value !== null);
+  const year = entry.fy && (entry.fy.start
+    ? `Year ${formatDay(entry.fy.start)} to ${formatDay(entry.fy.end)}`
+    : `Year to ${formatDay(entry.fy.end)}`);
 
+  if (entry.fy) {
+    const v = entry.fy.v;
+    sections.push({
+      title: 'Income statement',
+      period: year,
+      filing: filingUrl(cik, entry.fy.accn),
+      rows: rows([
+        ['Revenue', formatUsd(v.revenue)],
+        ['Cost of revenue', formatUsd(v.costOfRevenue)],
+        ['Gross profit', formatUsd(grossProfit(v))],
+        ['Research and development', formatUsd(v.researchAndDevelopment)],
+        ['Selling, general and admin', formatUsd(v.sellingGeneralAdmin)],
+        ['Operating income', formatUsd(v.operatingIncome)],
+        ['Interest expense', formatUsd(v.interestExpense)],
+        ['Interest income', formatUsd(v.interestIncome)],
+        ['Income tax', formatUsd(v.incomeTax)],
+        ['Net income', formatUsd(v.netIncome)]
+      ])
+    });
+  }
   if (entry.bs) {
     const v = entry.bs.v;
     sections.push({
@@ -89,40 +169,67 @@ export function financialSections(cik, entry) {
       filing: filingUrl(cik, entry.bs.accn),
       rows: rows([
         ['Total assets', formatUsd(v.assets)],
-        ['Total liabilities', formatUsd(v.liabilities)],
-        ["Shareholders' equity", formatUsd(v.equity)],
+        ['Current assets', formatUsd(v.currentAssets)],
         ['Cash and equivalents', formatUsd(v.cash)],
         ['Short-term investments', formatUsd(v.shortInvestments)],
         ['Receivables', formatUsd(v.receivables)],
+        ['Inventory', formatUsd(v.inventory)],
+        ['Property and equipment', formatUsd(v.ppe)],
+        ['Goodwill', formatUsd(v.goodwill)],
+        ['Total liabilities', formatUsd(v.liabilities)],
+        ['Current liabilities', formatUsd(v.currentLiabilities)],
         ['Total debt', formatUsd(totalDebt(v))],
-        ['Short-term debt', totalDebt(v) === null ? formatUsd(shortTermDebt(v)) : null]
+        ['Short-term debt', totalDebt(v) === null ? formatUsd(shortTermDebt(v)) : null],
+        ["Shareholders' equity", formatUsd(v.equity)]
       ])
     });
   }
   if (entry.fy) {
     const v = entry.fy.v;
     sections.push({
-      title: 'Annual results',
-      period: entry.fy.start
-        ? `Year ${formatDay(entry.fy.start)} to ${formatDay(entry.fy.end)}`
-        : `Year to ${formatDay(entry.fy.end)}`,
+      title: 'Cash flow',
+      period: year,
       filing: filingUrl(cik, entry.fy.accn),
       rows: rows([
-        ['Revenue', formatUsd(v.revenue)],
-        ['Operating income', formatUsd(v.operatingIncome)],
-        ['Net income', formatUsd(v.netIncome)],
-        ['Interest expense', formatUsd(v.interestExpense)],
-        ['Interest income', formatUsd(v.interestIncome)]
+        ['Operating cash flow', formatUsd(v.operatingCashFlow)],
+        ['Capital expenditure', formatUsd(v.capitalExpenditure)],
+        ['Free cash flow', formatUsd(freeCashFlow(v))],
+        ['Dividends paid', formatUsd(v.dividendsPaid)],
+        ['Share buybacks', formatUsd(v.shareBuybacks)]
       ])
     });
   }
-  if (entry.shares) {
+  const perShare = rows([
+    ['Earnings per share (diluted)', formatPerShare(entry.fy?.v.epsDiluted)],
+    ['Earnings per share (basic)', formatPerShare(entry.fy?.v.epsBasic)],
+    ['Dividends per share', formatPerShare(entry.fy?.v.dividendsPerShare)],
+    ['Shares outstanding', entry.shares ? formatCount(entry.shares.val) : null]
+  ]);
+  if (perShare.length) {
     sections.push({
-      title: 'Shares',
-      period: `As of ${formatDay(entry.shares.end)}`,
+      title: 'Per share',
+      period: entry.fy ? year : `Shares as of ${formatDay(entry.shares.end)}`,
       filing: null,
-      rows: rows([['Shares outstanding', formatCount(entry.shares.val)]])
+      rows: perShare
     });
   }
-  return sections.filter(s => s.rows.length);
+  const r = financialRatios(entry);
+  const prevYear = entry.fy?.prev?.end ? `growth on the year to ${formatDay(entry.fy.prev.end)}` : null;
+  sections.push({
+    title: 'Ratios and growth',
+    period: ['Worked out from the figures above', prevYear].filter(Boolean).join('; '),
+    filing: null,
+    rows: rows([
+      ['Gross margin', formatPercent(r.grossMargin)],
+      ['Operating margin', formatPercent(r.operatingMargin)],
+      ['Net margin', formatPercent(r.netMargin)],
+      ['Return on equity', formatPercent(r.returnOnEquity)],
+      ['Debt to assets', formatPercent(r.debtToAssets)],
+      ['Current ratio', r.currentRatio === null ? null : r.currentRatio.toFixed(2)],
+      ['Revenue growth', formatPercent(r.revenueGrowth, { signed: true })],
+      ['Net income growth', formatPercent(r.netIncomeGrowth, { signed: true })],
+      ['EPS growth', formatPercent(r.epsGrowth, { signed: true })]
+    ])
+  });
+  return sections.filter(sec => sec.rows.length);
 }

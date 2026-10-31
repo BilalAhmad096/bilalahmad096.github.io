@@ -65,10 +65,13 @@ function start(root) {
       return;
     }
     const parts = [heading('Financials')];
-    for (const section of sections) {
-      const box = document.createElement('section');
+    // Each statement folds away; the first and the ratios start open, so the
+    // card leads with what most visitors look for.
+    for (const [i, section] of sections.entries()) {
+      const box = document.createElement('details');
       box.className = 'market-fin__section';
-      const h = document.createElement('h5');
+      box.open = i === 0 || section.title === 'Ratios and growth';
+      const h = document.createElement('summary');
       h.className = 'market-fin__title';
       h.textContent = section.title;
       const period = document.createElement('p');

@@ -1,7 +1,8 @@
 # Keeps data/markets/india.json (NSE) and data/markets/us.json (NYSE and
-# Nasdaq), the companies the Market Explorer on /tools/ searches, and commits
-# them back to the branch they were built on. The site is static, so this is
-# how a new listing reaches every visitor.
+# Nasdaq), the companies the Market Explorer on /tools/ searches, and
+# data/markets/us-financials.json, the US companies' latest figures from their
+# SEC filings, and commits them back to the branch they were built on. The
+# site is static, so this is how a new listing or filing reaches every visitor.
 #
 # Every source is public, so no token and no repository secret is involved.
 # A week with no new or delisted companies produces no commit. It also runs
@@ -19,6 +20,8 @@ on:
     paths:
       - "scripts/build-market-listings.mjs"
       - "scripts/lib/market-listings.mjs"
+      - "scripts/build-us-financials.mjs"
+      - "scripts/lib/us-financials.mjs"
       - ".github/workflows/market-listings.yml"
   workflow_dispatch:
 
@@ -46,6 +49,12 @@ jobs:
         continue-on-error: true
         run: node scripts/build-market-listings.mjs
 
+      # After the listings, so it reads this week's US companies.
+      - name: Build the US financials
+        id: financials
+        continue-on-error: true
+        run: node scripts/build-us-financials.mjs
+
       - name: Commit the refreshed listings
         run: |
           if [ -z "$(git status --porcelain data/markets)" ]; then
@@ -55,14 +64,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/markets
-          git commit -m "Refresh the NSE and US market listings"
+          git commit -m "Refresh the market listings and US financials"
           # Someone may have pushed while this job was running; rebasing keeps
           # the refresh from failing on a race it can resolve itself.
           git pull --rebase --autostash
           git push
 
       - name: Fail if a market could not be built
-        if: steps.build.outcome == 'failure'
+        if: steps.build.outcome == 'failure' || steps.financials.outcome == 'failure'
         run: |
-          echo "At least one market could not be refreshed; see the build step."
+          echo "Something could not be refreshed; see the build steps."
           exit 1

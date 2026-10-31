@@ -158,10 +158,29 @@ commits any change. Its sources are all public:
   kept (ETFs, preferreds, warrants, units and notes are left out), and each company
   names the exchange it lists on, with its tier for Nasdaq.
 
+### US financials
+
+Each US company card also shows its latest balance sheet (assets, liabilities, equity,
+cash, short-term investments, receivables, total debt), its latest annual results
+(revenue, operating income, net income, interest expense and income) and its shares
+outstanding, each linked to the SEC filing it came from. The same weekly workflow runs
+[`scripts/build-us-financials.mjs`](scripts/build-us-financials.mjs) after the listings,
+which reads the SEC's free XBRL "frames" API (`data.sec.gov`): one request returns one
+figure for every company for one period, so about 160 requests cover the whole market.
+It writes `data/markets/us-financials.json`, which the page loads the first time a US
+company is opened.
+
+Each statement is taken from a single period (the latest quarter a company reported
+total assets for, and the latest year it reported net income or revenue for), so figures
+are never mixed across quarters. Only US-dollar figures are read, so foreign companies
+that report in another currency show no financials yet. Share prices, and so market
+capitalisation, are not part of SEC filings and are not included.
+
 To rebuild locally (needs network access to those sites):
 
 ```powershell
 npm run build:markets
+npm run build:financials
 ```
 
 Shariah (halal) screening is planned as a later step.

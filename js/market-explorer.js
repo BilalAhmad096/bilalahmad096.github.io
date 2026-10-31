@@ -6,9 +6,13 @@
 //
 // Each market's list is fetched the first time its tab opens. The address
 // keeps the market and the chosen company (?market=us&symbol=KO), so a result
-// can be shared.
+// can be shared. A US company's figures from its SEC filings are fetched the
+// first time a US company is opened.
 
+import { financialSections, formatDay } from './lib/financials.js';
 import { buildIndex, companyLinks, search } from './lib/market-search.js';
+
+const US_FINANCIALS = '/data/markets/us-financials.json';
 
 const MARKETS = {
   india: { label: 'India', exchange: 'NSE', file: '/data/markets/india.json', example: 'RELIANCE or Infosys' },
@@ -28,6 +32,79 @@ function start(root) {
   const loaded = new Map();
   let market = 'india';
   let shown = [];
+  let financials = null;
+
+  function loadFinancials() {
+    if (!financials) {
+      financials = fetch(US_FINANCIALS, { cache: 'no-cache' })
+        .then(r => {
+          if (!r.ok) throw new Error(String(r.status));
+          return r.json();
+        });
+      financials.catch(() => { financials = null; });
+    }
+    return financials;
+  }
+
+  // The figures fill in below the facts once they arrive. A card the visitor
+  // has already left is not touched.
+  async function showFinancials(company, mount) {
+    mount.replaceChildren(heading('Financials'), message('Loading figures from SEC filings…'));
+    let data;
+    try {
+      data = await loadFinancials();
+    } catch {
+      if (mount.isConnected) mount.replaceChildren(heading('Financials'), message('The financial figures could not be loaded. Please try again shortly.'));
+      return;
+    }
+    if (!mount.isConnected) return;
+    const sections = financialSections(company.cik, data.companies?.[company.cik]);
+    if (!sections.length) {
+      mount.replaceChildren(heading('Financials'),
+        message('No figures in US dollars were found in this company\u2019s recent SEC filings. Companies that report in another currency are not covered yet.'));
+      return;
+    }
+    const parts = [heading('Financials')];
+    for (const section of sections) {
+      const box = document.createElement('section');
+      box.className = 'market-fin__section';
+      const h = document.createElement('h5');
+      h.className = 'market-fin__title';
+      h.textContent = section.title;
+      const period = document.createElement('p');
+      period.className = 'market-fin__period';
+      period.textContent = section.period;
+      if (section.filing) {
+        const a = document.createElement('a');
+        a.href = section.filing;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'filing';
+        period.append(' · ', a);
+      }
+      const dl = document.createElement('dl');
+      dl.className = 'market-fin__rows';
+      for (const [term, value] of section.rows) row(dl, term, value);
+      box.append(h, period, dl);
+      parts.push(box);
+    }
+    parts.push(message(`From the company\u2019s SEC filings, in US dollars. Updated weekly; last checked ${formatDay(data.updated)}.`, 'market-fin__source'));
+    mount.replaceChildren(...parts);
+  }
+
+  function heading(text) {
+    const h = document.createElement('h4');
+    h.className = 'market-fin__heading';
+    h.textContent = text;
+    return h;
+  }
+
+  function message(text, className = 'market-fin__message') {
+    const p = document.createElement('p');
+    p.className = className;
+    p.textContent = text;
+    return p;
+  }
 
   function load(key) {
     if (!loaded.has(key)) {
@@ -186,7 +263,14 @@ function start(root) {
       input.focus();
     });
 
-    detail.append(head, dl, links, note, back);
+    const parts = [head, dl, links];
+    if (market === 'us' && company.cik) {
+      const fin = document.createElement('div');
+      fin.className = 'market-fin';
+      parts.push(fin);
+      showFinancials(company, fin);
+    }
+    detail.append(...parts, note, back);
     detail.hidden = false;
     setAddress(company.s);
   }

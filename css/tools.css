@@ -247,6 +247,69 @@
   color:var(--accent);
 }
 
+/* US financials */
+.market-fin{
+  margin:0 0 16px;
+  padding-top:14px;
+  border-top:1px solid var(--rule-edge);
+}
+
+.market-fin__heading{
+  margin:0 0 10px;
+  font-family:linetoBold, system-ui;
+  font-size:17px;
+  color:var(--ink);
+}
+
+.market-fin__section{
+  margin-bottom:14px;
+}
+
+.market-fin__title{
+  margin:0;
+  font-family:linetoBold, system-ui;
+  font-size:15px;
+  color:var(--ink);
+}
+
+.market-fin__period{
+  margin:2px 0 8px;
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.market-fin__period a{
+  color:var(--accent);
+}
+
+.market-fin__rows{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) max-content;
+  gap:4px 18px;
+  margin:0;
+  max-width:420px;
+  font-size:15px;
+}
+
+.market-fin__rows dt{
+  color:var(--ink-muted);
+}
+
+.market-fin__rows dd{
+  margin:0;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  color:var(--ink);
+}
+
+.market-fin__message,
+.market-fin__source{
+  margin:0;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink-muted);
+}
+
 .market-detail__note{
   margin:0 0 14px;
   font-size:14px;

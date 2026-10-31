@@ -1,7 +1,7 @@
 # Keeps data/markets/india.json (NSE) and data/markets/us.json (NYSE and
 # Nasdaq), the companies the Market Explorer on /tools/ searches, and commits
-# them back to the branch they were built on. The site is static, so this is how a new
-# listing reaches every visitor.
+# them back to the branch they were built on. The site is static, so this is
+# how a new listing reaches every visitor.
 #
 # Every source is public, so no token and no repository secret is involved.
 # A week with no new or delisted companies produces no commit. It also runs

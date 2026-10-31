@@ -34,6 +34,9 @@ export function buildIndex(companies) {
       symbol: symbolKey(company.s),
       name,
       words: name.split(' ').filter(Boolean),
+      // The words that tell companies apart: "Coca-Cola Company (The)" is two
+      // words long, not four, beside "Coca-Cola Consolidated".
+      core: name.split(' ').filter(w => w && !LEGAL_WORDS.has(w)).length,
       isin: String(company.isin || '').toUpperCase()
     };
   });
@@ -51,7 +54,7 @@ function rank(entry, query, qSymbol, qWords) {
     const all = qWords.every(q => entry.words.some(w => w.startsWith(q)));
     if (all) {
       const first = entry.words[0]?.startsWith(qWords[0]) ? 0 : 1;
-      return 3 + first + entry.words.length / 100;
+      return 3 + first + entry.core / 100;
     }
     const joined = qWords.join(' ');
     if (joined.length >= 3 && entry.name.includes(joined)) return 5;
@@ -60,9 +63,20 @@ function rank(entry, query, qSymbol, qWords) {
   return Infinity;
 }
 
+// Names people still search by after a company renamed itself. Each points at
+// the symbols that should come first.
+const ALIASES = {
+  google: ['GOOGL', 'GOOG'],
+  facebook: ['META'],
+  instagram: ['META'],
+  whatsapp: ['META'],
+  youtube: ['GOOGL', 'GOOG']
+};
+
 export function search(index, query, limit = 20) {
   const q = String(query || '').trim();
   if (!q) return [];
+  const alias = ALIASES[normalise(q)];
   const qSymbol = symbolKey(q);
   const all = normalise(q).split(' ').filter(Boolean);
   // Legal words are dropped unless they are all the visitor typed.
@@ -71,7 +85,8 @@ export function search(index, query, limit = 20) {
 
   const hits = [];
   for (const entry of index) {
-    const r = rank(entry, q, qSymbol, qWords);
+    const a = alias ? alias.indexOf(entry.symbol) : -1;
+    const r = a >= 0 ? 0.5 + a / 100 : rank(entry, q, qSymbol, qWords);
     if (r !== Infinity) hits.push({ r, entry });
   }
   hits.sort((a, b) => a.r - b.r || a.entry.symbol.localeCompare(b.entry.symbol));

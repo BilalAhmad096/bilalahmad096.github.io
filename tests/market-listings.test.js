@@ -183,6 +183,12 @@ test('search: names match word by word, ignoring legal suffixes', () => {
   assert.equal(symbols(us, 'berkshire')[0], 'BRK.B');
   assert.equal(symbols(us, 'apple')[0], 'AAPL');
   assert.equal(symbols(us, 'alphabet')[0], 'GOOGL');
+  assert.equal(symbols(us, 'google')[0], 'GOOGL');
+  assert.equal(symbols(us, 'Google')[0], 'GOOGL');
+  assert.deepEqual(symbols(buildIndex([
+    { s: 'COKE', n: 'Coca-Cola Consolidated, Inc.' },
+    { s: 'KO', n: 'Coca-Cola Company (The)' }
+  ]), 'coca cola'), ['KO', 'COKE']);
 });
 
 test('search: ISIN finds the company; nothing matches nonsense or an empty box', () => {

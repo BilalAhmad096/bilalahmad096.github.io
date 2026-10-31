@@ -115,6 +115,7 @@ export const ANNUAL_FIELDS = [
   ]],
   ["capitalExpenditure", [
     ["us-gaap", "PaymentsToAcquirePropertyPlantAndEquipment"],
+    ["us-gaap", "PaymentsToAcquireProductiveAssets"],
     ["ifrs-full", "PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities"]
   ]],
   ["dividendsPaid", [

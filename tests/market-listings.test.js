@@ -11,6 +11,7 @@ import { test } from 'node:test';
 
 import {
   companyName,
+  nasdaqCompanyName,
   nseDate,
   parseCsv,
   parseNseEquities,
@@ -121,6 +122,10 @@ test('Nasdaq listings keep companies\u2019 shares with their tier, and drop ETFs
   });
   assert.equal(rows.find(r => r.s === 'GOOGL').n, 'Alphabet Inc.');
   assert.equal(rows.find(r => r.s === 'SMLC').tier, 'Capital Market');
+  assert.equal(nasdaqCompanyName('Alphabet Inc. - Class C Capital Stock'), 'Alphabet Inc.');
+  assert.equal(nasdaqCompanyName('Tesla, Inc.  - Common Stock'), 'Tesla, Inc.');
+  assert.equal(nasdaqCompanyName('Ares Capital Corporation - Closed End Fund'), 'Ares Capital Corporation');
+  assert.equal(nasdaqCompanyName('Plain Name Inc. Common Stock'), 'Plain Name Inc.');
 });
 
 test('the US market holds both exchanges, each row naming its own', () => {

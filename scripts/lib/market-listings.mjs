@@ -130,6 +130,13 @@ export function parseNyseListings(text, ciks = new Map()) {
   return sortRows(out);
 }
 
+// Nasdaq always writes "<company> - <security>", so the company is what comes
+// before the first dash, whatever the security is called.
+export function nasdaqCompanyName(security) {
+  const [company] = security.split(/\s+-\s+/);
+  return company && company !== security ? company.trim() : companyName(security);
+}
+
 // Nasdaq's three tiers, by the file's "Market Category".
 const NASDAQ_TIERS = { Q: "Global Select Market", G: "Global Market", S: "Capital Market" };
 
@@ -142,7 +149,7 @@ export function parseNasdaqListings(text, ciks = new Map()) {
     const security = r["SECURITY NAME"] || "";
     if (!symbol || r.ETF === "Y" || r["TEST ISSUE"] === "Y") continue;
     if (!isShareSymbol(symbol) || NOT_SHARES.test(security)) continue;
-    const row = { s: symbol, n: companyName(security), x: "Nasdaq", sec: security };
+    const row = { s: symbol, n: nasdaqCompanyName(security), x: "Nasdaq", sec: security };
     const tier = NASDAQ_TIERS[r["MARKET CATEGORY"]];
     if (tier) row.tier = tier;
     const cik = ciks.get(symbol);

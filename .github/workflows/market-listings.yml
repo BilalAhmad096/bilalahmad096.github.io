@@ -1,6 +1,6 @@
-# Keeps data/markets/india.json (NSE) and data/markets/us.json (NYSE), the
-# companies the Market Explorer on /tools/ searches, and commits them back to
-# the branch they were built on. The site is static, so this is how a new
+# Keeps data/markets/india.json (NSE) and data/markets/us.json (NYSE and
+# Nasdaq), the companies the Market Explorer on /tools/ searches, and commits
+# them back to the branch they were built on. The site is static, so this is how a new
 # listing reaches every visitor.
 #
 # Every source is public, so no token and no repository secret is involved.
@@ -55,7 +55,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/markets
-          git commit -m "Refresh the NSE and NYSE market listings"
+          git commit -m "Refresh the NSE and US market listings"
           # Someone may have pushed while this job was running; rebasing keeps
           # the refresh from failing on a race it can resolve itself.
           git pull --rebase --autostash

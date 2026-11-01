@@ -61,27 +61,36 @@ export function businessScreen(sic) {
 
 const num = x => (typeof x === 'number' && Number.isFinite(x) ? x : null);
 
-// Debt for the screen. A total when one can be told; failing that, a company
-// that reports no debt and no interest expense is taken to have none, and one
-// whose short-term debt alone breaks the limit fails on that. Anything else is
-// unknown.
-function screenDebt(bs, fy) {
+// Debt for the screen: the total when one can be told. Otherwise two bounds
+// can still settle the test. Short-term debt alone is a floor, which can
+// prove a failure. Total liabilities are a ceiling, since debt is part of
+// them, which can prove a pass. Where neither settles it, debt is unknown.
+function screenDebt(bs) {
   const total = totalDebt(bs);
-  if (total !== null) return { value: total, note: null, floor: false };
+  if (total !== null) return { value: total, bound: null, note: null };
   const short = shortTermDebt(bs);
-  if (short !== null) return { value: short, note: 'Only short-term debt was found; long-term debt may be missing.', floor: true };
-  if (num(fy.interestExpense) === null || fy.interestExpense === 0) {
-    return { value: 0, note: 'No debt or interest expense was found in the filings, so debt is taken as zero.', floor: false };
+  if (short !== null && bs.assets > 0 && short / bs.assets >= LIMITS.debt) {
+    return { value: short, bound: 'floor', note: 'Only short-term debt could be read, and it alone is over the limit.' };
   }
-  return { value: null, note: 'The company reports interest expense but its debt could not be read.', floor: false };
+  const liabilities = num(bs.liabilities) ?? (num(bs.assets) !== null && num(bs.equity) !== null ? bs.assets - bs.equity : null);
+  if (liabilities !== null) {
+    return {
+      value: liabilities,
+      bound: 'ceiling',
+      note: 'Debt could not be read from the filings; this is total liabilities, which debt cannot exceed.'
+    };
+  }
+  return { value: null, bound: null, note: 'Debt could not be read from the filings.' };
 }
 
 // One check: its ratio, the limit, and whether it passed (null when unknown).
-// A floor is a lower bound: it can prove a failure but not a pass.
-function check(key, label, numerator, denominator, limit, { floor = false, note = null } = {}) {
+// A floor can prove a failure but not a pass; a ceiling, a pass but not a
+// failure.
+function check(key, label, numerator, denominator, limit, { bound = null, note = null } = {}) {
   const ratio = numerator !== null && denominator ? numerator / denominator : null;
   let pass = ratio === null ? null : ratio < limit;
-  if (floor && pass) pass = null;
+  if (bound === 'floor' && pass) pass = null;
+  if (bound === 'ceiling' && !pass) pass = null;
   return { key, label, ratio, limit, pass, note };
 }
 
@@ -93,7 +102,7 @@ export function screenCompany(entry = {}, sic = null) {
   const business = businessScreen(sic);
   const assets = num(bs.assets) > 0 ? bs.assets : null;
 
-  const debt = screenDebt(bs, fy);
+  const debt = screenDebt(bs);
   const cash = num(bs.cash);
   const securities = (num(bs.shortInvestments) || 0) + (num(bs.longInvestments) || 0);
   const interestBearing = cash === null ? null : cash + securities;
@@ -102,7 +111,7 @@ export function screenCompany(entry = {}, sic = null) {
   const revenue = num(fy.revenue) > 0 ? fy.revenue : null;
 
   const checks = [
-    check('debt', 'Debt ÷ total assets', debt.value, assets, LIMITS.debt, { floor: debt.floor, note: debt.note }),
+    check('debt', debt.bound === 'ceiling' ? 'Total liabilities ÷ total assets' : 'Debt ÷ total assets', debt.value, assets, LIMITS.debt, { bound: debt.bound, note: debt.note }),
     check('cash', 'Cash and interest-bearing securities ÷ total assets', interestBearing, assets, LIMITS.cash),
     check('receivables', 'Receivables and cash ÷ total assets', receivablesAndCash, assets, LIMITS.receivables)
   ];

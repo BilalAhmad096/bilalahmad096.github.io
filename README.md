@@ -196,9 +196,10 @@ financial ratios against total assets and so need no share price. The rules live
   conventional banking, lending, securities dealing and insurance, investment funds,
   alcohol, tobacco, hotels and casinos, weapons, film and cinemas, and recorded music
   fail; REITs, amusement and recreation, and meat packing need review.
-- **Debt ÷ total assets** below 33.33%. Finance leases count as debt. A company with no
-  debt and no interest expense in its filings is taken to have none; one with interest
-  expense but no readable debt cannot be screened.
+- **Debt ÷ total assets** below 33.33%. Finance leases count as debt. Debt is never
+  assumed to be zero: when it cannot be read, total liabilities (which debt cannot
+  exceed) under a third of assets still prove a pass, and short-term debt alone over the
+  limit proves a failure; otherwise the company cannot be screened.
 - **Cash and interest-bearing securities ÷ total assets** below 33.33%, counting
   short-term investments and long-term debt securities.
 - **Receivables and cash ÷ total assets** below 33.33%.

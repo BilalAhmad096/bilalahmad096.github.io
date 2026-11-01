@@ -65,21 +65,27 @@ test('missing figures leave a company unscreened rather than passed', () => {
   assert.equal(screenCompany(company({ ...clean, cash: undefined }), '3571').status, 'insufficient');
 });
 
-test('debt: none reported and no interest paid reads as zero; interest paid but no debt is unknown', () => {
-  const noDebt = { assets: 1000, cash: 100, receivables: 50 };
-  const zero = screenCompany(company(noDebt, { revenue: 100 }), '3571');
-  assert.equal(zero.status, 'compliant');
-  assert.equal(zero.checks[0].ratio, 0);
-  assert.match(zero.checks[0].note, /taken as zero/);
-  const unknown = screenCompany(company(noDebt, { interestExpense: 20 }), '3571');
-  assert.equal(unknown.status, 'insufficient');
-  assert.equal(unknown.checks[0].pass, null);
+test('debt that cannot be read is settled by bounds, never assumed to be zero', () => {
+  // Liabilities are a ceiling: under a third of assets proves the debt test.
+  const light = screenCompany(company({ assets: 1000, liabilities: 200, cash: 100, receivables: 50 }), '3571');
+  assert.equal(light.status, 'compliant');
+  assert.equal(light.checks[0].label, 'Total liabilities ÷ total assets');
+  assert.equal(light.checks[0].ratio, 0.2);
+  assert.match(light.checks[0].note, /cannot exceed/);
+  // A high ceiling proves nothing.
+  const heavy = screenCompany(company({ assets: 1000, liabilities: 700, cash: 100 }), '3571');
+  assert.equal(heavy.checks[0].pass, null);
+  assert.equal(heavy.status, 'insufficient');
+  // Without reported liabilities, assets less equity stands in for them.
+  assert.equal(screenCompany(company({ assets: 1000, equity: 900, cash: 100 }), '3571').status, 'compliant');
+  assert.equal(screenCompany(company({ assets: 1000, cash: 100 }), '3571').status, 'insufficient');
 });
 
 test('debt: short-term debt alone can prove a failure but not a pass', () => {
   const big = screenCompany(company({ assets: 1000, cash: 10, shortTermBorrowings: 400 }), '3571');
   assert.equal(big.status, 'noncompliant');
-  const small = screenCompany(company({ assets: 1000, cash: 10, shortTermBorrowings: 50 }), '3571');
+  assert.match(big.checks[0].note, /over the limit/);
+  const small = screenCompany(company({ assets: 1000, cash: 10, shortTermBorrowings: 50, liabilities: 600 }), '3571');
   assert.equal(small.checks[0].pass, null);
   assert.equal(small.status, 'insufficient');
 });

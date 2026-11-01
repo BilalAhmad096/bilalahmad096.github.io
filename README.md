@@ -186,11 +186,44 @@ are never mixed across quarters. Only US-dollar figures are read, so foreign com
 that report in another currency show no financials yet. Share prices, and so market
 capitalisation and P/E, are not part of SEC filings and are not included.
 
+### Shariah screen (US)
+
+Each US company is screened in the style of the MSCI Islamic indices, which measure
+financial ratios against total assets and so need no share price. The rules live in
+[`js/lib/shariah-screen.js`](js/lib/shariah-screen.js), shared by the build and the page:
+
+- **Business activity**, from the company's SEC industry code (SIC):
+  conventional banking, lending, securities dealing and insurance, investment funds,
+  alcohol, tobacco, hotels and casinos, weapons, film and cinemas, and recorded music
+  fail; REITs, amusement and recreation, and meat packing need review.
+- **Debt ÷ total assets** below 33.33%. Finance leases count as debt. A company with no
+  debt and no interest expense in its filings is taken to have none; one with interest
+  expense but no readable debt cannot be screened.
+- **Cash and interest-bearing securities ÷ total assets** below 33.33%, counting
+  short-term investments and long-term debt securities.
+- **Receivables and cash ÷ total assets** below 33.33%.
+- **Interest income ÷ revenue** below 5%, where interest income is reported. The same
+  share is shown as the dividend purification rate.
+
+A company is *Shariah compliant* when it passes all of them, *not compliant* when it
+fails any, *needs review* when only its industry is unclear, and *not enough data*
+otherwise. The industry code shows only a company's main business, so revenue from a
+non-permissible side line is not caught.
+
+The weekly workflow runs [`scripts/build-us-industries.mjs`](scripts/build-us-industries.mjs),
+which caches each company's SIC code from the SEC (`data/markets/us-industries.json`;
+new companies plus a few hundred re-checks a week), then
+[`scripts/build-us-screening.mjs`](scripts/build-us-screening.mjs), which writes each
+company's status and industry to `data/markets/us-screening.json` for the search
+results. The card works the screen out again to show each check.
+
 To rebuild locally (needs network access to those sites):
 
 ```powershell
 npm run build:markets
+npm run build:industries
 npm run build:financials
+npm run build:screening
 ```
 
 Shariah (halal) screening is planned as a later step.

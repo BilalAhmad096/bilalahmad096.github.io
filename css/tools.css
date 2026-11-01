@@ -166,6 +166,110 @@
   color:var(--ink-muted);
 }
 
+/* Shariah status: chips in results, and the panel on a company's card */
+.page-tools{
+  --halal-bg:#e3f5ea;
+  --halal-ink:#17663a;
+  --haram-bg:#fde8e8;
+  --haram-ink:#a12828;
+  --review-bg:#fdf3dc;
+  --review-ink:#7a5300;
+  --unscreened-bg:#eef1f6;
+}
+
+.market-chip{
+  margin-left:8px;
+  flex:0 0 auto;
+  padding:2px 9px;
+  border-radius:999px;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.market-result__exchange + .market-chip{
+  margin-left:8px;
+}
+
+.market-result__name + .market-chip{
+  margin-left:auto;
+}
+
+.market-chip--compliant{
+  background:var(--halal-bg);
+  color:var(--halal-ink);
+}
+
+.market-chip--noncompliant{
+  background:var(--haram-bg);
+  color:var(--haram-ink);
+}
+
+.market-shariah{
+  margin:0 0 16px;
+  padding:12px 14px;
+  border-radius:var(--radius-sm);
+  border-left:4px solid var(--rule-core);
+  background:var(--unscreened-bg);
+}
+
+.market-shariah--compliant{ border-left-color:var(--halal-ink); background:var(--halal-bg); }
+.market-shariah--noncompliant{ border-left-color:var(--haram-ink); background:var(--haram-bg); }
+.market-shariah--review{ border-left-color:var(--review-ink); background:var(--review-bg); }
+
+.market-shariah__label{
+  margin:0 0 4px;
+  font-family:linetoBold, system-ui;
+  font-size:16px;
+  color:var(--ink);
+}
+
+.market-shariah--compliant .market-shariah__label{ color:var(--halal-ink); }
+.market-shariah--noncompliant .market-shariah__label{ color:var(--haram-ink); }
+.market-shariah--review .market-shariah__label{ color:var(--review-ink); }
+
+.market-shariah__text{
+  margin:0 0 8px;
+  font-size:14px;
+  line-height:1.5;
+  color:var(--ink);
+}
+
+.market-shariah__checks{
+  margin:0 0 8px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  font-size:14px;
+  line-height:1.45;
+}
+
+.market-shariah__check{
+  display:grid;
+  grid-template-columns:1.2em 1fr;
+  column-gap:6px;
+}
+
+.market-shariah__mark{
+  font-family:linetoBold, system-ui;
+}
+
+.market-shariah__check--pass .market-shariah__mark{ color:var(--halal-ink); }
+.market-shariah__check--fail .market-shariah__mark{ color:var(--haram-ink); }
+.market-shariah__check--unknown .market-shariah__mark{ color:var(--ink-muted); }
+
+.market-shariah__note{
+  grid-column:2;
+  font-size:12.5px;
+  color:var(--ink-muted);
+}
+
+.market-shariah__caveat{
+  margin:4px 0 0;
+  font-size:12.5px;
+  line-height:1.5;
+  color:var(--ink-muted);
+}
+
 .market-empty{
   padding:10px 12px;
   color:var(--ink-muted);

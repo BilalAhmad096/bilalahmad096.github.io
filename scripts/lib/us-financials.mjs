@@ -41,6 +41,13 @@ export const BALANCE_FIELDS = [
     ["us-gaap", "MarketableSecuritiesCurrent"],
     ["us-gaap", "AvailableForSaleSecuritiesDebtSecuritiesCurrent"]
   ]],
+  // Debt securities held for more than a year: interest-bearing, so they count
+  // with cash in the Shariah screen. Equity stakes (LongTermInvestments) are
+  // not interest-bearing and are left out.
+  ["longInvestments", [
+    ["us-gaap", "MarketableSecuritiesNoncurrent"],
+    ["us-gaap", "AvailableForSaleSecuritiesDebtSecuritiesNoncurrent"]
+  ]],
   ["receivables", [
     ["us-gaap", "AccountsReceivableNetCurrent"],
     ["us-gaap", "ReceivablesNetCurrent"],
@@ -54,10 +61,9 @@ export const BALANCE_FIELDS = [
   // Debt is kept as the pieces companies report; js/lib/financials.js adds
   // them up without counting a current portion twice.
   ["longTermDebt", [["us-gaap", "LongTermDebt"]]],
-  ["longTermDebtNoncurrent", [
-    ["us-gaap", "LongTermDebtNoncurrent"],
-    ["us-gaap", "LongTermDebtAndCapitalLeaseObligations"]
-  ]],
+  ["longTermDebtNoncurrent", [["us-gaap", "LongTermDebtNoncurrent"]]],
+  // The same, with finance leases already folded in.
+  ["longTermDebtAndLeasesNoncurrent", [["us-gaap", "LongTermDebtAndCapitalLeaseObligations"]]],
   ["longTermDebtCurrent", [
     ["us-gaap", "LongTermDebtCurrent"],
     ["us-gaap", "LongTermDebtAndCapitalLeaseObligationsCurrent"]
@@ -65,7 +71,15 @@ export const BALANCE_FIELDS = [
   ["debtCurrent", [["us-gaap", "DebtCurrent"]]],
   ["shortTermBorrowings", [["us-gaap", "ShortTermBorrowings"]]],
   ["commercialPaper", [["us-gaap", "CommercialPaper"]]],
-  ["borrowings", [["ifrs-full", "Borrowings"]]]
+  ["borrowings", [["ifrs-full", "Borrowings"]]],
+  ["financeLease", [["us-gaap", "FinanceLeaseLiability"]]],
+  ["financeLeaseNoncurrent", [["us-gaap", "FinanceLeaseLiabilityNoncurrent"]]],
+  ["financeLeaseCurrent", [["us-gaap", "FinanceLeaseLiabilityCurrent"]]],
+  // What smaller companies tag instead of LongTermDebt.
+  ["seniorNotes", [["us-gaap", "SeniorNotes"]]],
+  ["notesPayable", [["us-gaap", "LongTermNotesPayable"], ["us-gaap", "NotesPayable"]]],
+  ["convertibleNotes", [["us-gaap", "ConvertibleNotesPayable"], ["us-gaap", "ConvertibleDebtNoncurrent"]]],
+  ["lineOfCredit", [["us-gaap", "LineOfCredit"], ["us-gaap", "LongTermLineOfCredit"]]]
 ];
 
 // Results and cash flows for a full year.

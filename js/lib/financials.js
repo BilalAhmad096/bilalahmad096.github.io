@@ -9,24 +9,29 @@
 //
 // LongTermDebt already includes the part due within a year, and DebtCurrent
 // already includes short-term borrowings and commercial paper, so each total
-// is built from pieces that do not overlap. A total needs a long-term figure:
-// a company whose only readable piece is short-term (JPMorgan files its
-// long-term debt in a breakdown the SEC's frames leave out) would otherwise
-// show a fraction of its debt as the whole.
+// is built from pieces that do not overlap. Finance leases are debt; they are
+// added unless the tag read already includes them. A total needs a long-term
+// figure: a company whose only readable piece is short-term (JPMorgan files
+// its long-term debt in a breakdown the SEC's frames leave out) would
+// otherwise show a fraction of its debt as the whole.
 export function totalDebt(v = {}) {
   const has = k => typeof v[k] === 'number';
   const sum = (...keys) => keys.reduce((t, k) => t + (has(k) ? v[k] : 0), 0);
+  const current = () => (has('debtCurrent')
+    ? v.debtCurrent
+    : sum('longTermDebtCurrent', 'shortTermBorrowings', 'commercialPaper'));
+  const leases = () => (has('financeLease') ? v.financeLease : sum('financeLeaseNoncurrent', 'financeLeaseCurrent'));
 
-  if (has('longTermDebt')) {
-    return v.longTermDebt + sum('shortTermBorrowings', 'commercialPaper');
-  }
-  if (has('longTermDebtNoncurrent')) {
-    const current = has('debtCurrent')
-      ? v.debtCurrent
-      : sum('longTermDebtCurrent', 'shortTermBorrowings', 'commercialPaper');
-    return v.longTermDebtNoncurrent + current;
-  }
+  if (has('longTermDebt')) return v.longTermDebt + sum('shortTermBorrowings', 'commercialPaper') + leases();
+  if (has('longTermDebtNoncurrent')) return v.longTermDebtNoncurrent + current() + leases();
+  if (has('longTermDebtAndLeasesNoncurrent')) return v.longTermDebtAndLeasesNoncurrent + current();
   if (has('borrowings')) return v.borrowings;
+  // Notes, convertibles and credit lines are separate instruments; a
+  // company's NotesPayable can be its senior notes, so it is only used alone.
+  const notes = ['seniorNotes', 'convertibleNotes', 'lineOfCredit'].filter(has);
+  if (notes.length || has('notesPayable')) {
+    return (notes.length ? sum(...notes) : v.notesPayable) + sum('shortTermBorrowings', 'commercialPaper') + leases();
+  }
   return null;
 }
 
@@ -172,6 +177,7 @@ export function financialSections(cik, entry) {
         ['Current assets', formatUsd(v.currentAssets)],
         ['Cash and equivalents', formatUsd(v.cash)],
         ['Short-term investments', formatUsd(v.shortInvestments)],
+        ['Long-term debt securities', formatUsd(v.longInvestments)],
         ['Receivables', formatUsd(v.receivables)],
         ['Inventory', formatUsd(v.inventory)],
         ['Property and equipment', formatUsd(v.ppe)],

@@ -9,14 +9,19 @@
 // can be shared. A US company's figures from its SEC filings are fetched the
 // first time a US company is opened.
 
-import { financialSections, formatDay } from './lib/financials.js';
+import { financialSections, formatDay, formatPercent } from './lib/financials.js';
 import { buildIndex, companyLinks, search } from './lib/market-search.js';
+import { CODE_STATUS, METHOD, STATUS_TEXT, screenCompany } from './lib/shariah-screen.js';
 
 const US_FINANCIALS = '/data/markets/us-financials.json';
 
 const MARKETS = {
   india: { label: 'India', exchange: 'NSE', file: '/data/markets/india.json', example: 'RELIANCE or Infosys' },
-  us: { label: 'United States', exchange: 'NYSE and Nasdaq', file: '/data/markets/us.json', example: 'AAPL or Coca-Cola' }
+  us: {
+    label: 'United States', exchange: 'NYSE and Nasdaq', file: '/data/markets/us.json', example: 'AAPL or Coca-Cola',
+    // Each company's industry and Shariah status, for the result chips.
+    screening: '/data/markets/us-screening.json'
+  }
 };
 
 const root = document.getElementById('market-explorer');
@@ -48,16 +53,18 @@ function start(root) {
 
   // The figures fill in below the facts once they arrive. A card the visitor
   // has already left is not touched.
-  async function showFinancials(company, mount) {
+  async function showFinancials(company, mount, panel, sic) {
     mount.replaceChildren(heading('Financials'), message('Loading figures from SEC filings…'));
     let data;
     try {
       data = await loadFinancials();
     } catch {
       if (mount.isConnected) mount.replaceChildren(heading('Financials'), message('The financial figures could not be loaded. Please try again shortly.'));
+      if (panel.isConnected) panel.replaceChildren(message('The Shariah screen could not be run because the figures did not load.'));
       return;
     }
     if (!mount.isConnected) return;
+    showShariah(panel, screenCompany(data.companies?.[company.cik], sic));
     const sections = financialSections(company.cik, data.companies?.[company.cik]);
     if (!sections.length) {
       mount.replaceChildren(heading('Financials'),
@@ -95,6 +102,72 @@ function start(root) {
     mount.replaceChildren(...parts);
   }
 
+  // The verdict, then the working: each check with its figure and limit.
+  function showShariah(panel, result) {
+    const text = STATUS_TEXT[result.status];
+    panel.className = `market-shariah market-shariah--${result.status}`;
+    const label = message(text.label, 'market-shariah__label');
+    let summary;
+    if (result.business.verdict === 'fail') summary = `Main business: ${result.business.reason.toLowerCase()}, which is not permissible.`;
+    else if (result.status === 'noncompliant') summary = 'Fails the financial screen marked below.';
+    else if (result.status === 'review') summary = `${result.business.reason}. The ratios pass, but the business needs a closer look.`;
+    else if (result.status === 'insufficient') summary = 'Some figures this screen needs were not found in the company\u2019s filings.';
+    else summary = 'Passes the business screen and every financial ratio below.';
+
+    const list = document.createElement('ul');
+    list.className = 'market-shariah__checks';
+    const item = (pass, labelText, value) => {
+      const li = document.createElement('li');
+      li.className = `market-shariah__check market-shariah__check--${pass === true ? 'pass' : pass === false ? 'fail' : 'unknown'}`;
+      const mark = document.createElement('span');
+      mark.className = 'market-shariah__mark';
+      mark.setAttribute('aria-hidden', 'true');
+      mark.textContent = pass === true ? '✓' : pass === false ? '✗' : '?';
+      const sr = document.createElement('span');
+      sr.className = 'visually-hidden';
+      sr.textContent = pass === true ? 'Passes: ' : pass === false ? 'Fails: ' : 'Unknown: ';
+      const body = document.createElement('span');
+      body.textContent = `${labelText}: ${value}`;
+      li.append(mark, sr, body);
+      return li;
+    };
+    const b = result.business;
+    list.append(item(
+      b.verdict === 'pass' ? true : b.verdict === 'fail' ? false : null,
+      'Business activity',
+      b.verdict === 'pass' ? 'permissible industry' : b.reason
+    ));
+    for (const c of result.checks) {
+      const value = c.ratio === null ? 'not available' : `${formatPercent(c.ratio)} (limit ${formatPercent(c.limit)})`;
+      const li = item(c.pass, c.label, value);
+      if (c.note) {
+        const note = document.createElement('span');
+        note.className = 'market-shariah__note';
+        note.textContent = c.note;
+        li.append(note);
+      }
+      list.append(li);
+    }
+
+    const parts = [label, message(summary, 'market-shariah__text'), list];
+    if (result.purification !== null && result.status !== 'noncompliant') {
+      parts.push(message(`Purification: about ${formatPercent(result.purification)} of dividends, the share of revenue earned as interest, would be given to charity.`, 'market-shariah__text'));
+    }
+    parts.push(message(`${METHOD.name}${result.asOf ? `, from the balance sheet of ${formatDay(result.asOf)}` : ''}. `
+      + 'The industry code shows only a company\u2019s main business, and standards differ between scholars. '
+      + 'This is general information, not a fatwa or investment advice.', 'market-shariah__caveat'));
+    panel.replaceChildren(...parts);
+  }
+
+  // The SEC writes industries in capitals: "SERVICES-PREPACKAGED SOFTWARE".
+  function titleCase(text) {
+    const small = new Set(['and', 'or', 'of', 'the', 'for', 'in', 'to', 'nec']);
+    return text.toLowerCase().replace(/[a-z][a-z.']*/g, (w, i) => {
+      if (w === 'nec') return 'NEC';
+      return i > 0 && small.has(w) ? w : w[0].toUpperCase() + w.slice(1);
+    });
+  }
+
   function heading(text) {
     const h = document.createElement('h4');
     h.className = 'market-fin__heading';
@@ -116,7 +189,14 @@ function start(root) {
           if (!r.ok) throw new Error(String(r.status));
           return r.json();
         })
-        .then(data => ({ data, index: buildIndex(data.companies || []) }));
+        .then(async data => {
+          // Without the screening file the tab still works, just unlabelled.
+          const extra = MARKETS[key].screening;
+          data.screening = extra
+            ? await fetch(extra, { cache: 'no-cache' }).then(r => (r.ok ? r.json() : {})).then(j => j.companies || {}).catch(() => ({}))
+            : {};
+          return { data, index: buildIndex(data.companies || []) };
+        });
       // A failed load is forgotten, so opening the tab again retries it.
       promise.catch(() => loaded.delete(key));
       loaded.set(key, promise);
@@ -187,6 +267,15 @@ function start(root) {
         exch.textContent = company.x;
         button.append(exch);
       }
+      const code = company.cik && entry.data.screening?.[company.cik]?.s;
+      const chip = code && STATUS_TEXT[CODE_STATUS[code]]?.chip;
+      if (chip) {
+        const tag = document.createElement('span');
+        tag.className = `market-chip market-chip--${CODE_STATUS[code]}`;
+        tag.textContent = chip;
+        tag.title = STATUS_TEXT[CODE_STATUS[code]].label;
+        button.append(tag);
+      }
       button.addEventListener('click', () => showDetail(company, entry.data));
       li.append(button);
       return li;
@@ -228,6 +317,8 @@ function start(root) {
       : company.x === 'Nasdaq' ? `Nasdaq${company.tier ? ` (${company.tier})` : ''}` : 'New York Stock Exchange');
     row(dl, 'Ticker', company.s);
     row(dl, 'Industry', company.ind);
+    const usIndustry = market === 'us' && company.cik ? data.screening?.[company.cik] : null;
+    if (usIndustry?.d) row(dl, 'Industry', `${titleCase(usIndustry.d)} (SIC ${usIndustry.sic})`);
     row(dl, 'Security', company.sec);
     row(dl, 'ISIN', company.isin);
     row(dl, 'Series', company.series);
@@ -251,9 +342,16 @@ function start(root) {
       links.append(li);
     }
 
-    const note = document.createElement('p');
-    note.className = 'market-detail__note';
-    note.textContent = 'Shariah (halal) screening for this company is coming soon.';
+    // India's screening is still to come; a US company is screened from its
+    // SEC figures once they load.
+    const note = document.createElement('div');
+    if (market === 'us') {
+      note.className = 'market-shariah';
+      note.append(message(company.cik ? 'Running the Shariah screen…' : 'This company has no SEC record, so it cannot be screened.', 'market-shariah__text'));
+    } else {
+      note.className = 'market-detail__note';
+      note.textContent = 'Shariah (halal) screening for this company is coming soon.';
+    }
 
     const back = document.createElement('button');
     back.type = 'button';
@@ -266,14 +364,14 @@ function start(root) {
       input.focus();
     });
 
-    const parts = [head, dl, links];
+    const parts = market === 'us' ? [head, note, dl, links] : [head, dl, links];
     if (market === 'us' && company.cik) {
       const fin = document.createElement('div');
       fin.className = 'market-fin';
       parts.push(fin);
-      showFinancials(company, fin);
+      showFinancials(company, fin, note, data.screening?.[company.cik]?.sic);
     }
-    detail.append(...parts, note, back);
+    detail.append(...parts, ...(market === 'us' ? [] : [note]), back);
     detail.hidden = false;
     setAddress(company.s);
   }

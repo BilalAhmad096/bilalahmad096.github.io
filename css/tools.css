@@ -32,7 +32,6 @@
   color:var(--ink-muted);
   font-size:15px;
   line-height:1.55;
-  max-width:62ch;
 }
 
 .tool-card__note{

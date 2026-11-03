@@ -11,9 +11,12 @@
 
 import { financialSections, formatDay, formatPercent } from './lib/financials.js';
 import { buildIndex, companyLinks, search } from './lib/market-search.js';
+import { apiBaseFor, formatChange, formatPrice, formatQuoteTime, valuation, valuationRows } from './lib/quote.js';
 import { CODE_STATUS, METHOD, STATUS_TEXT, screenCompany } from './lib/shariah-screen.js';
 
 const US_FINANCIALS = '/data/markets/us-financials.json';
+// A price shown on an open card is asked for again this often.
+const QUOTE_REFRESH_MS = 60_000;
 
 const MARKETS = {
   india: { label: 'India', exchange: 'NSE', file: '/data/markets/india.json', example: 'RELIANCE or Infosys' },
@@ -34,6 +37,7 @@ function start(root) {
   const results = root.querySelector('#market-results');
   const detail = root.querySelector('#market-detail');
 
+  const apiBase = apiBaseFor(location.hostname, root.dataset.apiBase);
   const loaded = new Map();
   let market = 'india';
   let shown = [];
@@ -100,6 +104,64 @@ function start(root) {
     }
     parts.push(message(`From the company\u2019s SEC filings, in US dollars. Updated weekly; last checked ${formatDay(data.updated)}.`, 'market-fin__source'));
     mount.replaceChildren(...parts);
+  }
+
+  // The latest price, then market cap and P/E against the SEC figures. It is
+  // asked for again each minute while the card stays open and the tab is
+  // visible, and stops once the visitor moves on.
+  async function showQuote(company, mount, data) {
+    const shareClasses = data.companies.filter(c => c.cik && c.cik === company.cik).length || 1;
+    const draw = (quote, entry) => {
+      const price = document.createElement('p');
+      price.className = 'market-quote__price';
+      price.textContent = formatPrice(quote.price);
+      const change = formatChange(quote.change, quote.changePercent);
+      if (change) {
+        const span = document.createElement('span');
+        span.className = `market-quote__change market-quote__change--${quote.change > 0 ? 'up' : quote.change < 0 ? 'down' : 'flat'}`;
+        span.textContent = change;
+        price.append(' ', span);
+      }
+      const when = message(`${formatQuoteTime(quote.time) || 'Latest'} · price from ${quote.source}`, 'market-quote__time');
+      const parts = [price, when];
+      const rows = valuationRows(valuation(quote.price, entry, { shareClasses }));
+      if (rows.length) {
+        const dl = document.createElement('dl');
+        dl.className = 'market-quote__rows';
+        for (const [term, value] of rows) row(dl, term, value);
+        parts.push(dl);
+      }
+      mount.replaceChildren(...parts);
+    };
+
+    const fetchQuote = () => fetch(`${apiBase}/v1/quote?symbol=${encodeURIComponent(company.s)}`)
+      .then(r => r.json().then(body => ({ ok: r.ok, body })));
+
+    let shown = false;
+    const tick = async () => {
+      try {
+        const [{ ok, body }, figures] = await Promise.all([fetchQuote(), loadFinancials().catch(() => null)]);
+        if (!mount.isConnected) return;
+        if (ok && body.quote) {
+          draw(body.quote, figures?.companies?.[company.cik]);
+          shown = true;
+        } else if (!shown) {
+          // The Worker's own wording for the cases it knows; anything else
+          // (an older Worker without prices, say) gets a plain line.
+          const known = ['quote_not_found', 'quotes_busy', 'quotes_not_configured'].includes(body?.code);
+          mount.replaceChildren(message(known ? body.message : 'Live prices are not available right now.', 'market-quote__time'));
+        }
+      } catch {
+        if (mount.isConnected && !shown) mount.replaceChildren(message('The price could not be loaded.', 'market-quote__time'));
+      }
+    };
+
+    mount.replaceChildren(message('Loading the latest price…', 'market-quote__time'));
+    await tick();
+    const timer = setInterval(() => {
+      if (!mount.isConnected) { clearInterval(timer); return; }
+      if (document.visibilityState === 'visible') tick();
+    }, QUOTE_REFRESH_MS);
   }
 
   // The verdict, then the working: each check with its figure and limit.
@@ -364,7 +426,10 @@ function start(root) {
       input.focus();
     });
 
-    const parts = market === 'us' ? [head, note, dl, links] : [head, dl, links];
+    const quote = document.createElement('div');
+    quote.className = 'market-quote';
+    if (market === 'us') showQuote(company, quote, data);
+    const parts = market === 'us' ? [head, quote, note, dl, links] : [head, dl, links];
     if (market === 'us' && company.cik) {
       const fin = document.createElement('div');
       fin.className = 'market-fin';

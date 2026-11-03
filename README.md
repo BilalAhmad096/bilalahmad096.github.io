@@ -186,6 +186,34 @@ are never mixed across quarters. Only US-dollar figures are read, so foreign com
 that report in another currency show no financials yet. Share prices, and so market
 capitalisation and P/E, are not part of SEC filings and are not included.
 
+### Live prices (US)
+
+A US company card shows its latest price and the day's change, refreshed each minute
+while the card is open, with market cap and P/E worked out from the SEC figures
+(shares outstanding and last fiscal year's diluted EPS; market cap is left out for
+companies with several share classes, and P/E after a loss).
+
+The page asks the Worker's `GET /v1/quote?symbol=AAPL`
+([`worker/src/quotes.js`](worker/src/quotes.js)), which calls Finnhub with the
+`FINNHUB_API_KEY` Worker secret, so the key never reaches the browser. Quotes are cached
+for a minute, calls to Finnhub share a per-minute budget kept below the free plan's 60
+(`QUOTE_UPSTREAM_PER_MINUTE`, default 50), and each visitor is rate limited
+(`QUOTE_RATE_LIMIT`, default 60 a minute). Check that your Finnhub plan allows prices to
+be shown on a public website.
+
+### Deploying the Worker from GitHub
+
+The `Deploy Worker` workflow ([`.github/workflows/deploy-worker.yml`](.github/workflows/deploy-worker.yml))
+tests and deploys the Worker whenever `worker/` changes on `main`, or by hand from the
+Actions tab. Add two repository secrets under Settings → Secrets and variables → Actions:
+
+- `CLOUDFLARE_API_TOKEN`: a Cloudflare API token made from the "Edit Cloudflare Workers"
+  template, limited to this account.
+- `FINNHUB_API_KEY`: stored as the Worker secret of the same name on each deploy.
+
+Without the token the workflow stops without deploying. Secrets already on the Worker
+are left as they are.
+
 ### Shariah screen (US)
 
 Each US company is screened in the style of the MSCI Islamic indices, which measure

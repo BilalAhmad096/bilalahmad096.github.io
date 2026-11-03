@@ -3,6 +3,7 @@ import { recordTurn, runWeeklyDigest } from "./insights.js";
 import { REMINDER_CRON, runDueReminders } from "./reminders.js";
 import { getAgentConfiguration, runAgent } from "./openai.js";
 import { getKnowledgeMetadata } from "./knowledge.js";
+import { quoteResponse } from "./quotes.js";
 import {
   RequestError,
   assertAllowedOrigin,
@@ -162,9 +163,18 @@ export default {
         integrations: {
           ai: Boolean(env.OPENAI_API_KEY || env.AI_API_KEY),
           contactDelivery: Boolean(env.RESEND_API_KEY && env.CONTACT_TO_EMAIL && env.CONTACT_FROM_EMAIL),
+          quotes: Boolean(env.FINNHUB_API_KEY),
           liveCalendar: false
         }
       });
+    }
+
+    if (request.method === "GET" && url.pathname === "/v1/quote") {
+      try {
+        return await quoteResponse(request, env, ctx);
+      } catch (error) {
+        return errorResponse(request, env, error);
+      }
     }
 
     if (request.method === "POST" && url.pathname === "/v1/chat") {

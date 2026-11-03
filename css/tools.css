@@ -351,6 +351,45 @@
   color:var(--accent);
 }
 
+/* Latest price (US) */
+.market-quote{
+  margin:-4px 0 14px;
+}
+
+.market-quote__price{
+  margin:0;
+  font-family:linetoBold, system-ui;
+  font-size:26px;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+.market-quote__change{
+  font-family:LinetoBook, system-ui;
+  font-size:16px;
+}
+
+.market-quote__change--up{ color:var(--halal-ink); }
+.market-quote__change--down{ color:var(--haram-ink); }
+.market-quote__change--flat{ color:var(--ink-muted); }
+
+.market-quote__time{
+  margin:2px 0 0;
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+.market-quote__rows{
+  display:grid;
+  grid-template-columns:max-content max-content;
+  gap:2px 18px;
+  margin:8px 0 0;
+  font-size:15px;
+}
+
+.market-quote__rows dt{ color:var(--ink-muted); }
+.market-quote__rows dd{ margin:0; font-variant-numeric:tabular-nums; }
+
 /* US financials */
 .market-fin{
   margin:0 0 16px;

@@ -236,7 +236,11 @@ applies at Meezan Bank and in the KMI-30 index. The rules live in
   kinds of company. So does a group's **generic** code, which the SEC often assigns in
   place of the specific one: Brown-Forman and Coca-Cola are both filed under 2080
   (beverages) and Live Nation under 7900 rather than 7990, so passing those would label
-  a distiller halal.
+  a distiller halal. Broadcasting and streaming (4832, 4833, 4841, 7841) need review for
+  the same reason: the 1987 classification put film and music on 7812–7833 and 3652,
+  which still catch a studio or a cinema chain, but the SEC files Netflix under video
+  rental, from its DVD-by-post days, and Comcast under cable television although it owns
+  a film studio.
 - **Illiquid assets ÷ total assets** at least 25%, liquid being cash, the securities it
   is parked in, and receivables — a debt owed in money is money. This is the numeric
   form of "not in ignorable quantity".

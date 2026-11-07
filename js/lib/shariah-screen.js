@@ -70,6 +70,17 @@ const RULES = [
   { from: 3795, to: 3795, verdict: 'fail', reason: 'Tanks and armoured vehicles' },
   { from: 7812, to: 7833, verdict: 'fail', reason: 'Film production, distribution or cinemas' },
   { from: 3652, to: 3652, verdict: 'fail', reason: 'Recorded music' },
+  // The codes above are where the 1987 classification put film and music, and
+  // they still catch a studio or a cinema chain. Broadcasting and streaming
+  // moved the same business onto the codes below, which the SEC has not
+  // revisited: Netflix is filed under video rental, from its DVD-by-post days,
+  // and Comcast under cable television although it owns a film studio. Each of
+  // these carries news and sport as readily as film and music, so the code
+  // cannot settle it either way.
+  { from: 4832, to: 4832, verdict: 'review', reason: 'Radio broadcasting: the output may be music as readily as speech' },
+  { from: 4833, to: 4833, verdict: 'review', reason: 'Television broadcasting: the output ranges from news and sport to film and music' },
+  { from: 4841, to: 4841, verdict: 'review', reason: 'Cable and pay television: may carry or produce film and music' },
+  { from: 7841, to: 7841, verdict: 'review', reason: 'Video rental: the code predates the streaming studios filed under it' },
   { from: 2011, to: 2011, verdict: 'review', reason: 'Meat packing: may include pork' },
   { from: 2013, to: 2013, verdict: 'review', reason: 'Prepared meats: may include pork' }
 ];

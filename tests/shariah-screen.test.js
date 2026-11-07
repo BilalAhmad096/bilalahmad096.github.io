@@ -47,6 +47,22 @@ test('a group’s generic code never passes on behalf of the specific ones', () 
   assert.equal(businessScreen('3652').verdict, 'fail');
 });
 
+test('broadcasting and streaming need review, wherever the SEC filed them', () => {
+  // A studio or a cinema chain is still caught outright.
+  assert.equal(businessScreen('7812').verdict, 'fail');
+  assert.equal(businessScreen('7830').verdict, 'fail');
+  // Netflix under video rental, Comcast under cable, Fox under television,
+  // SiriusXM under radio: the same business on codes that cannot settle it.
+  assert.equal(businessScreen('7841').verdict, 'review');
+  assert.match(businessScreen('7841').reason, /streaming/);
+  assert.equal(businessScreen('4841').verdict, 'review');
+  assert.equal(businessScreen('4833').verdict, 'review');
+  assert.equal(businessScreen('4832').verdict, 'review');
+  // Neighbouring communications codes are untouched.
+  assert.equal(businessScreen('4813').verdict, 'pass');
+  assert.equal(businessScreen('4899').verdict, 'pass');
+});
+
 const company = (bs, fy = {}, extra = {}) => ({ bs: { end: '2026-06-30', v: bs }, fy: { v: fy }, ...extra });
 const clean = { assets: 1000, cash: 100, shortInvestments: 50, longInvestments: 50, receivables: 100, longTermDebt: 200 };
 

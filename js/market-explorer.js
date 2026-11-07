@@ -57,18 +57,20 @@ function start(root) {
 
   // The figures fill in below the facts once they arrive. A card the visitor
   // has already left is not touched.
-  async function showFinancials(company, mount, panel, sic) {
+  async function showFinancials(company, mount, screen) {
     mount.replaceChildren(heading('Financials'), message('Loading figures from SEC filings…'));
     let data;
     try {
       data = await loadFinancials();
     } catch {
       if (mount.isConnected) mount.replaceChildren(heading('Financials'), message('The financial figures could not be loaded. Please try again shortly.'));
-      if (panel.isConnected) panel.replaceChildren(message('The Shariah screen could not be run because the figures did not load.'));
+      if (screen.panel.isConnected) screen.panel.replaceChildren(message('The Shariah screen could not be run because the figures did not load.'));
       return;
     }
     if (!mount.isConnected) return;
-    showShariah(panel, screenCompany(data.companies?.[company.cik], sic));
+    screen.entry = data.companies?.[company.cik];
+    screen.ready = true;
+    screen.rescreen();
     const sections = financialSections(company.cik, data.companies?.[company.cik]);
     if (!sections.length) {
       mount.replaceChildren(heading('Financials'),
@@ -109,9 +111,13 @@ function start(root) {
   // The latest price, then market cap and P/E against the SEC figures. It is
   // asked for again each minute while the card stays open and the tab is
   // visible, and stops once the visitor moves on.
-  async function showQuote(company, mount, data) {
-    const shareClasses = data.companies.filter(c => c.cik && c.cik === company.cik).length || 1;
+  async function showQuote(company, mount, screen) {
+    const shareClasses = screen.shareClasses;
     const draw = (quote, entry) => {
+      // The price also settles Usmani's condition that a share cost more than
+      // the liquid amount it represents, so the screen is run again with it.
+      screen.price = quote.price;
+      screen.rescreen();
       const price = document.createElement('p');
       price.className = 'market-quote__price';
       price.textContent = formatPrice(quote.price);
@@ -173,8 +179,10 @@ function start(root) {
     if (result.business.verdict === 'fail') summary = `Main business: ${result.business.reason.toLowerCase()}, which is not permissible.`;
     else if (result.status === 'noncompliant') summary = 'Fails the financial screen marked below.';
     else if (result.status === 'review') summary = `${result.business.reason}. The ratios pass, but the business needs a closer look.`;
+    else if (result.status === 'notScreenable') summary = 'This company files no balance sheet with the SEC, so the financial tests cannot be run at all. '
+      + 'Most of these are funds, trusts and foreign filers rather than companies with gaps in their figures.';
     else if (result.status === 'insufficient') summary = 'Some figures this screen needs were not found in the company\u2019s filings.';
-    else summary = 'Passes the business screen and every financial ratio below.';
+    else summary = 'Passes the business screen and every test below.';
 
     const list = document.createElement('ul');
     list.className = 'market-shariah__checks';
@@ -200,8 +208,7 @@ function start(root) {
       b.verdict === 'pass' ? 'permissible industry' : b.reason
     ));
     for (const c of result.checks) {
-      const value = c.ratio === null ? 'not available' : `${formatPercent(c.ratio)} (limit ${formatPercent(c.limit)})`;
-      const li = item(c.pass, c.label, value);
+      const li = item(c.pass, c.label, checkValue(c));
       if (c.note) {
         const note = document.createElement('span');
         note.className = 'market-shariah__note';
@@ -215,10 +222,30 @@ function start(root) {
     if (result.purification !== null && result.status !== 'noncompliant') {
       parts.push(message(`Purification: about ${formatPercent(result.purification)} of dividends, the share of revenue earned as interest, would be given to charity.`, 'market-shariah__text'));
     }
+    // Usmani's second condition is a duty on the shareholder, not a test of
+    // the company, so it belongs with the verdict rather than in the list.
+    if (result.status === 'compliant' || result.status === 'review') {
+      parts.push(message('His conditions also ask the shareholder to object to any interest dealing rather than consent to it, '
+        + 'preferably by raising it at the annual general meeting.', 'market-shariah__text'));
+    }
     parts.push(message(`${METHOD.name}${result.asOf ? `, from the balance sheet of ${formatDay(result.asOf)}` : ''}. `
+      + 'Thresholds are the ones his Shariah board applies at Meezan Bank; his own conditions fix no percentage. '
       + 'The industry code shows only a company\u2019s main business, and standards differ between scholars. '
       + 'This is general information, not a fatwa or investment advice.', 'market-shariah__caveat'));
     panel.replaceChildren(...parts);
+  }
+
+  // What a check reads as on the card: a share of assets against its limit, a
+  // floor it has to reach, or the price set against the liquid assets a share
+  // represents.
+  function checkValue(c) {
+    if (c.kind === 'price') {
+      return c.perShare <= 0
+        ? `${formatPrice(c.price)} a share, with no net liquid assets to exceed`
+        : `${formatPrice(c.price)} a share against ${formatPrice(c.perShare)} of net liquid assets`;
+    }
+    if (c.ratio === null) return 'not available';
+    return `${formatPercent(c.ratio)} (${c.kind === 'min' ? 'minimum' : 'limit'} ${formatPercent(c.limit)})`;
   }
 
   // The SEC writes industries in capitals: "SERVICES-PREPACKAGED SOFTWARE".
@@ -426,15 +453,32 @@ function start(root) {
       input.focus();
     });
 
+    // One screen per card, shared by the figures and the price: the filings
+    // settle most of it, and the price adds Usmani's last condition when it
+    // arrives. Either can land first, so each stores what it has and asks for
+    // the screen to be drawn again.
+    const screen = {
+      entry: null,
+      ready: false,
+      price: null,
+      sic: data.screening?.[company.cik]?.sic,
+      shareClasses: company.cik ? data.companies.filter(c => c.cik === company.cik).length || 1 : 1,
+      panel: note,
+      rescreen() {
+        if (!this.ready || !this.panel.isConnected) return;
+        showShariah(this.panel, screenCompany(this.entry, this.sic, { price: this.price, shareClasses: this.shareClasses }));
+      }
+    };
+
     const quote = document.createElement('div');
     quote.className = 'market-quote';
-    if (market === 'us') showQuote(company, quote, data);
+    if (market === 'us') showQuote(company, quote, screen);
     const parts = market === 'us' ? [head, quote, note, dl, links] : [head, dl, links];
     if (market === 'us' && company.cik) {
       const fin = document.createElement('div');
       fin.className = 'market-fin';
       parts.push(fin);
-      showFinancials(company, fin, note, data.screening?.[company.cik]?.sic);
+      showFinancials(company, fin, screen);
     }
     detail.append(...parts, ...(market === 'us' ? [] : [note]), back);
     detail.hidden = false;

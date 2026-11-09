@@ -20,8 +20,8 @@ test('the business screen reads the main industry from its SIC code', () => {
   assert.equal(businessScreen('6021').verdict, 'fail');       // national banks
   assert.equal(businessScreen('6311').verdict, 'fail');       // life insurance
   assert.equal(businessScreen('2082').verdict, 'fail');       // brewers
-  assert.equal(businessScreen('2111').verdict, 'fail');       // cigarettes
-  assert.equal(businessScreen('3760').verdict, 'fail');       // missiles
+  assert.equal(businessScreen('2111').verdict, 'review');     // cigarettes
+  assert.equal(businessScreen('3760').verdict, 'review');     // missiles
   assert.equal(businessScreen('6798').verdict, 'review');     // REITs
   assert.equal(businessScreen('2011').verdict, 'review');     // meat packing
   assert.equal(businessScreen('6500').verdict, 'pass');       // real estate
@@ -180,6 +180,67 @@ test('debt: short-term debt alone can prove a failure but not a pass', () => {
   const small = screenCompany(company({ assets: 1000, cash: 10, shortTermBorrowings: 50, liabilities: 600 }), '3571');
   assert.equal(small.checks[0].pass, null);
   assert.equal(small.status, 'insufficient');
+});
+
+test('preference shares count as interest-bearing debt, as KMI defines it', () => {
+  // 200 of debt and 180 of preferred is 38% of assets: over the 37% limit.
+  const r = screenCompany(company({ ...clean, preferredStock: 180 }), '3571');
+  assert.equal(r.checks[0].ratio, 0.38);
+  assert.equal(r.status, 'noncompliant');
+  assert.match(r.checks[0].note, /preference shares/);
+  // They sit in equity, so the liabilities ceiling needs them added as well.
+  const ceiling = screenCompany(company({ assets: 1000, liabilities: 300, preferredStock: 100, cash: 100 }), '3571');
+  assert.equal(ceiling.checks[0].ratio, 0.4);
+  assert.equal(ceiling.checks[0].pass, null);
+  assert.equal(screenCompany(company(clean), '3571').checks[0].note, null);
+});
+
+test('investments are held below 33% of assets, KMI’s own figure', () => {
+  assert.equal(LIMITS.investments, 0.33);
+  // 330 of cash and securities is at the limit, not below it.
+  assert.equal(screenCompany(company({ ...clean, longInvestments: 180 }), '3571').checks[1].pass, false);
+  assert.equal(screenCompany(company({ ...clean, longInvestments: 170 }), '3571').checks[1].pass, true);
+});
+
+test('interest income not reported on its own is bounded, never assumed', () => {
+  const income = (fy) => screenCompany(company(clean, { revenue: 1000, ...fy }), '3571');
+  const incomeCheck = r => r.checks.find(c => c.key === 'interestIncome');
+  // Net interest of 60 on 1000 of revenue: earned at least 6%, so it fails.
+  const floor = income({ interestNet: 60 });
+  assert.equal(incomeCheck(floor).pass, false);
+  assert.equal(floor.status, 'noncompliant');
+  assert.equal(floor.purificationBound, 'floor');
+  // A net figure under the limit settles nothing, so the test is left out.
+  assert.equal(incomeCheck(income({ interestNet: 20 })), undefined);
+  assert.equal(income({ interestNet: 20 }).status, 'compliant');
+  assert.equal(income({ interestNet: -50 }).purification, null);
+  // Interest and other income of 30 is a ceiling: interest is under 3%.
+  const ceiling = income({ interestAndOtherIncome: 30 });
+  assert.equal(incomeCheck(ceiling).pass, true);
+  assert.equal(incomeCheck(ceiling).label, 'Interest and other income ÷ revenue');
+  assert.equal(ceiling.purification, 0.03);
+  assert.equal(ceiling.purificationBound, 'ceiling');
+  // A high ceiling proves nothing either.
+  assert.equal(incomeCheck(income({ interestAndOtherIncome: 80 })), undefined);
+  // A reported figure is used as it stands, whatever the bounds say.
+  const reported = income({ interestIncome: 10, interestNet: 90, interestAndOtherIncome: 5 });
+  assert.equal(incomeCheck(reported).ratio, 0.01);
+  assert.equal(reported.purificationBound, null);
+});
+
+test('tobacco and weapons need review: neither Usmani nor KMI names them as forbidden', () => {
+  for (const sic of ['2111', '2100', '5194', '3480', '3484', '3760', '3795']) {
+    assert.equal(businessScreen(sic).verdict, 'review', sic);
+    assert.match(businessScreen(sic).reason, /scholars differ/);
+  }
+  // Review never rescues a company that fails the ratios.
+  assert.equal(screenCompany(company({ ...clean, longTermDebt: 380 }), '2111').status, 'noncompliant');
+  assert.equal(screenCompany(company(clean), '3480').status, 'review');
+});
+
+test('poultry processors need review, since the meat is not slaughtered the Islamic way', () => {
+  assert.equal(businessScreen('2015').verdict, 'review');
+  assert.equal(businessScreen('2016').verdict, 'pass');
 });
 
 test('total debt adds finance leases and falls back to notes, without double counting', () => {

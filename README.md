@@ -225,33 +225,46 @@ shares be negotiable, which on the Hanafi view they are whatever the proportion 
 liquid assets, so long as the illiquid part is "not in ignorable quantity" and the price
 exceeds the liquid amount the share represents.
 
-Usmani fixes no percentage himself, so the thresholds are the ones his own Shariah board
-applies at Meezan Bank and in the KMI-30 index. The rules live in
+Usmani fixes no percentage himself, so the thresholds are the six criteria of the
+[KMI-30 index methodology](https://www.psx.com.pk/psx/themes/psx/uploads/KMI_30-Index-(New-Broucher).pdf),
+whose companies are screened by Al Meezan, under the Shariah board he chairs. Where the
+SEC figures are coarser than KMI's definitions, the screen takes the stricter reading:
+all cash counts as interest-bearing (KMI counts only interest-bearing deposits), every
+security counts as liquid (KMI counts shares in compliant companies as illiquid), and
+interest income is set against revenue alone (KMI adds other income). The rules live in
 [`js/lib/shariah-screen.js`](js/lib/shariah-screen.js), shared by the build and the page:
 
 - **Business activity**, from the company's SEC industry code (SIC):
   conventional banking, lending, securities dealing and insurance, investment funds,
-  alcohol, tobacco, weapons, film and cinemas, and recorded music fail; REITs, hotels,
-  amusement and recreation, and meat packing need review, because the code covers both
-  kinds of company. So does a group's **generic** code, which the SEC often assigns in
+  alcohol, film and cinemas, and recorded music fail; REITs, hotels, amusement and
+  recreation, and meat packing need review, because the code covers both kinds of
+  company. Tobacco and weapons need review too: neither Usmani's conditions nor KMI name
+  them as forbidden, and scholars differ on both. So does a group's **generic** code, which the SEC often assigns in
   place of the specific one: Brown-Forman and Coca-Cola are both filed under 2080
   (beverages) and Live Nation under 7900 rather than 7990, so passing those would label
   a distiller halal. Broadcasting and streaming (4832, 4833, 4841, 7841) need review for
   the same reason: the 1987 classification put film and music on 7812–7833 and 3652,
   which still catch a studio or a cinema chain, but the SEC files Netflix under video
   rental, from its DVD-by-post days, and Comcast under cable television although it owns
-  a film studio.
+  a film studio. Poultry slaughtering (2015) needs review too: KMI rules out selling
+  haram meat as well as pork, and US poultry is not, as a rule, slaughtered the Islamic way.
 - **Illiquid assets ÷ total assets** at least 25%, liquid being cash, the securities it
   is parked in, and receivables — a debt owed in money is money. This is the numeric
   form of "not in ignorable quantity".
-- **Interest-bearing debt ÷ total assets** below 37%. Finance leases count as debt. Debt
-  is never assumed to be zero: when it cannot be read, total liabilities (which debt
-  cannot exceed) under the limit still prove a pass, and short-term debt alone over it
-  proves a failure; otherwise the company cannot be screened.
-- **Cash and interest-bearing securities ÷ total assets** below 33.33%, counting
-  short-term investments and long-term debt securities.
-- **Interest income ÷ revenue** below 5%, where interest income is reported. The same
-  share is shown as the dividend purification rate.
+- **Interest-bearing debt ÷ total assets** below 37%. Finance leases and preference
+  shares count as debt, as KMI defines it. Debt is never assumed to be zero: when it
+  cannot be read, total liabilities (which debt cannot exceed) under the limit still
+  prove a pass, and short-term debt alone over it proves a failure; otherwise the
+  company cannot be screened.
+- **Cash and interest-bearing securities ÷ total assets** below 33%, KMI's figure,
+  counting short-term investments and long-term debt securities.
+- **Interest income ÷ revenue** below 5%. Where interest income is not reported on its
+  own it is bounded the same way as debt: positive net interest (earned less paid) at
+  or over 5% proves a failure, and interest and other income together under 5% prove a
+  pass. Where neither settles it, the test is left out and the card says so. The same
+  share is shown as the dividend purification rate ("up to" or "at least" when it
+  comes from a bound), with Usmani's note that purifying capital gains in the same
+  proportion is the more cautious view.
 - **Market price vs net liquid assets per share**, the price having to exceed
   `(liquid assets − total liabilities) ÷ shares`. This needs a live price, so only the
   card runs it, once the quote arrives; the weekly build leaves it out. Usmani calls a
@@ -262,13 +275,14 @@ A company is *Shariah compliant* when it passes all of them, *not compliant* whe
 fails any, *needs review* when only its industry is unclear, *not enough data* when the
 filings leave a figure unreadable, and *no SEC figures to screen* when there is no
 balance sheet at all — mostly funds, trusts and foreign filers, kept separate so the
-genuine data gaps stay visible. Over the 5,588 listed companies that comes out at
-roughly 1,620 compliant, 2,600 not, 850 with nothing to screen, 440 short of a figure
-and 82 needing review.
+genuine data gaps stay visible. Over the 5,585 listed companies that comes out at
+roughly 1,590 compliant, 2,610 not, 850 with nothing to screen, 430 short of a figure
+and 105 needing review.
 
 Known limits. The industry code shows only a company's main business, so revenue from a
-non-permissible side line is not caught — Usmani's own 5% test on that needs segment
-data the SEC frames do not carry. Two further generic codes are left passing rather than
+non-permissible side line is not caught — KMI's 5% test counts that income too, which
+needs segment data the SEC frames do not carry. About 1,000 of the compliant companies
+report no interest income figure, so their 5% test has not run. Two further generic codes are left passing rather than
 flagged, for want of a better signal: 2000 (food, which may include pork) and 5900
 (retail, which covers pawn lending and adult titles); the companies under them that are
 clearly out fail the financial tests anyway. Standards also differ between scholars, and
@@ -291,8 +305,6 @@ npm run build:industries
 npm run build:financials
 npm run build:screening
 ```
-
-Shariah (halal) screening is planned as a later step.
 
 ## GitHub commit activity
 

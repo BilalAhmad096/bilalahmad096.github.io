@@ -219,17 +219,26 @@ function start(root) {
     }
 
     const parts = [label, message(summary, 'market-shariah__text'), list];
+    const holdable = result.status === 'compliant' || result.status === 'review';
     if (result.purification !== null && result.status !== 'noncompliant') {
-      parts.push(message(`Purification: about ${formatPercent(result.purification)} of dividends, the share of revenue earned as interest, would be given to charity.`, 'market-shariah__text'));
+      const share = formatPercent(result.purification);
+      const amount = result.purificationBound === 'ceiling' ? `up to ${share}`
+        : result.purificationBound === 'floor' ? `at least ${share}` : `about ${share}`;
+      parts.push(message(`Purification: ${amount} of dividends, the share of revenue earned as interest, would be given to charity. `
+        + 'Usmani counts purifying capital gains in the same proportion as the more cautious view.', 'market-shariah__text'));
+    } else if (holdable && result.checks.length && !result.checks.some(c => c.key === 'interestIncome')) {
+      // A screen that ran without the 5% test should say so, not pass in silence.
+      parts.push(message('The filings report no interest income figure, so the 5% income test could not be run and no '
+        + 'purification rate can be given.', 'market-shariah__text'));
     }
     // Usmani's second condition is a duty on the shareholder, not a test of
     // the company, so it belongs with the verdict rather than in the list.
-    if (result.status === 'compliant' || result.status === 'review') {
+    if (holdable) {
       parts.push(message('His conditions also ask the shareholder to object to any interest dealing rather than consent to it, '
-        + 'preferably by raising it at the annual general meeting.', 'market-shariah__text'));
+        + 'preferably by raising it at the annual general meeting or in a letter to the management.', 'market-shariah__text'));
     }
     parts.push(message(`${METHOD.name}${result.asOf ? `, from the balance sheet of ${formatDay(result.asOf)}` : ''}. `
-      + 'Thresholds are the ones his Shariah board applies at Meezan Bank; his own conditions fix no percentage. '
+      + 'Thresholds are the KMI-30 index’s, screened by Al Meezan, whose Shariah board he chairs; his own conditions fix no percentage. '
       + 'The industry code shows only a company\u2019s main business, and standards differ between scholars. '
       + 'This is general information, not a fatwa or investment advice.', 'market-shariah__caveat'));
     panel.replaceChildren(...parts);

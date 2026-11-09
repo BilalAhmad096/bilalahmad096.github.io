@@ -79,7 +79,10 @@ export const BALANCE_FIELDS = [
   ["seniorNotes", [["us-gaap", "SeniorNotes"]]],
   ["notesPayable", [["us-gaap", "LongTermNotesPayable"], ["us-gaap", "NotesPayable"]]],
   ["convertibleNotes", [["us-gaap", "ConvertibleNotesPayable"], ["us-gaap", "ConvertibleDebtNoncurrent"]]],
-  ["lineOfCredit", [["us-gaap", "LineOfCredit"], ["us-gaap", "LongTermLineOfCredit"]]]
+  ["lineOfCredit", [["us-gaap", "LineOfCredit"], ["us-gaap", "LongTermLineOfCredit"]]],
+  // Preference shares carry a fixed return, so the KMI-30 methodology counts
+  // them as interest-bearing debt for the Shariah screen.
+  ["preferredStock", [["us-gaap", "PreferredStockValue"]]]
 ];
 
 // Results and cash flows for a full year.
@@ -115,8 +118,18 @@ export const ANNUAL_FIELDS = [
   ["interestIncome", [
     ["us-gaap", "InvestmentIncomeInterest"],
     ["us-gaap", "InterestIncomeOther"],
-    ["us-gaap", "InvestmentIncomeInterestAndDividend"]
+    ["us-gaap", "InvestmentIncomeInterestAndDividend"],
+    ["us-gaap", "InterestIncomeOperating"]
   ]],
+  // Most companies report no interest income line of its own. Two other
+  // figures can still bound it for the Shariah screen: net interest (earned
+  // less paid), which when positive is a floor, and interest and other income
+  // together, which it cannot exceed.
+  ["interestNet", [
+    ["us-gaap", "InterestIncomeExpenseNonoperatingNet"],
+    ["us-gaap", "InterestIncomeExpenseNet"]
+  ]],
+  ["interestAndOtherIncome", [["us-gaap", "InterestAndOtherIncome"]]],
   ["epsBasic", [["us-gaap", "EarningsPerShareBasic"], ["ifrs-full", "BasicEarningsLossPerShare"]], PER_SHARE],
   ["epsDiluted", [["us-gaap", "EarningsPerShareDiluted"], ["ifrs-full", "DilutedEarningsLossPerShare"]], PER_SHARE],
   ["dividendsPerShare", [

@@ -14,31 +14,43 @@
 // whatever the proportion of liquid assets, so long as the illiquid part is
 // "not in ignorable quantity" and the price exceeds the liquid amount the
 // share represents. He fixes no percentage himself, so the figures are the
-// ones his board applies at Meezan:
+// six criteria of the KMI-30 methodology (Pakistan Stock Exchange, screened by
+// Al Meezan, whose Shariah board he chairs):
 //
 //   illiquid assets                at least 25% of total assets;
-//   interest-bearing debt          below 37% of total assets;
-//   interest-bearing investments   below 33.33% of total assets;
-//   interest income                below 5% of revenue;
+//   interest-bearing debt          below 37% of total assets, preference
+//                                  shares included;
+//   non-compliant investments      below 33% of total assets;
+//   non-compliant income           below 5% of total revenue;
 //   market price per share         above net liquid assets per share.
 //
 // Debt is measured against total assets, not market capitalisation: filings
 // give the one without a price, and it does not move with the market.
 //
+// Where the filings fall short of KMI's definitions, the screen takes the
+// stricter reading. All cash counts as interest-bearing, where KMI counts only
+// interest-bearing deposits; all securities count as liquid, where KMI counts
+// shares in compliant companies as illiquid; and interest income is set
+// against revenue alone, where KMI adds other income to the denominator.
+// KMI's price test passes a price equal to the net liquid assets; Usmani's own
+// example forbids that too, so equal fails here.
+//
 // The business screen can only see a company's main industry. A company whose
 // main business is permissible but which earns some revenue from a
-// non-permissible line (a hotel chain's bar, say) is not caught by it.
+// non-permissible line (a hotel chain's bar, say) is not caught by it, and the
+// income test sees only interest, not that revenue.
 
 import { shortTermDebt, totalDebt } from './financials.js';
 
-export const LIMITS = { debt: 0.37, investments: 1 / 3, illiquid: 0.25, interestIncome: 0.05 };
+export const LIMITS = { debt: 0.37, investments: 0.33, illiquid: 0.25, interestIncome: 0.05 };
 
 export const METHOD = {
   name: 'Hanafi screen on Mufti Taqi Usmani’s conditions',
   note: 'Business activity from the SEC industry code; illiquid assets at least 25% of total assets; '
-    + 'interest-bearing debt below 37% and interest-bearing investments below 33.33% of total assets; '
+    + 'interest-bearing debt (preference shares included) below 37% and interest-bearing investments below 33% of total assets; '
     + 'interest income below 5% of revenue; and the share price above the net liquid assets it represents. '
-    + 'Thresholds as applied by Meezan Bank, whose Shariah board Usmani chairs; his own conditions fix no percentage.'
+    + 'Thresholds from the KMI-30 methodology, screened by Al Meezan, whose Shariah board Usmani chairs; '
+    + 'his own conditions fix no percentage.'
 };
 
 // SIC code ranges and what they mean for the business screen. "fail" is a
@@ -58,16 +70,19 @@ const RULES = [
   { from: 2082, to: 2085, verdict: 'fail', reason: 'Alcoholic beverages' },
   { from: 5180, to: 5182, verdict: 'fail', reason: 'Beer, wine or spirits wholesale' },
   { from: 5813, to: 5813, verdict: 'fail', reason: 'Bars and drinking places' },
-  { from: 2100, to: 2199, verdict: 'fail', reason: 'Tobacco products' },
-  { from: 5194, to: 5194, verdict: 'fail', reason: 'Tobacco wholesale' },
+  // Tobacco and weapons are not on the lists of forbidden businesses in
+  // Usmani's conditions or in the KMI-30 methodology, and scholars differ on
+  // both, so they need review rather than failing outright.
+  { from: 2100, to: 2199, verdict: 'review', reason: 'Tobacco products: not on Usmani’s or KMI’s list of forbidden businesses, and scholars differ on it' },
+  { from: 5194, to: 5194, verdict: 'review', reason: 'Tobacco wholesale: not on Usmani’s or KMI’s list of forbidden businesses, and scholars differ on it' },
   // The SEC files ordinary hotel groups and casino operators under the same
   // code, so it cannot settle the question on its own.
   { from: 7011, to: 7011, verdict: 'review', reason: 'Hotels: the code covers both hotel groups and casino operators' },
   { from: 7900, to: 7900, verdict: 'review', reason: 'Amusement and recreation: the generic code also covers gambling and entertainment' },
   { from: 7990, to: 7999, verdict: 'review', reason: 'Amusement and recreation: may include gambling' },
-  { from: 3480, to: 3489, verdict: 'fail', reason: 'Weapons and ammunition' },
-  { from: 3760, to: 3769, verdict: 'fail', reason: 'Guided missiles and space vehicles' },
-  { from: 3795, to: 3795, verdict: 'fail', reason: 'Tanks and armoured vehicles' },
+  { from: 3480, to: 3489, verdict: 'review', reason: 'Weapons and ammunition: not on Usmani’s or KMI’s list of forbidden businesses, and scholars differ on it' },
+  { from: 3760, to: 3769, verdict: 'review', reason: 'Guided missiles and space vehicles: not on Usmani’s or KMI’s list of forbidden businesses, and scholars differ on weapons' },
+  { from: 3795, to: 3795, verdict: 'review', reason: 'Tanks and armoured vehicles: not on Usmani’s or KMI’s list of forbidden businesses, and scholars differ on it' },
   { from: 7812, to: 7833, verdict: 'fail', reason: 'Film production, distribution or cinemas' },
   { from: 3652, to: 3652, verdict: 'fail', reason: 'Recorded music' },
   // The codes above are where the 1987 classification put film and music, and
@@ -82,7 +97,10 @@ const RULES = [
   { from: 4841, to: 4841, verdict: 'review', reason: 'Cable and pay television: may carry or produce film and music' },
   { from: 7841, to: 7841, verdict: 'review', reason: 'Video rental: the code predates the streaming studios filed under it' },
   { from: 2011, to: 2011, verdict: 'review', reason: 'Meat packing: may include pork' },
-  { from: 2013, to: 2013, verdict: 'review', reason: 'Prepared meats: may include pork' }
+  { from: 2013, to: 2013, verdict: 'review', reason: 'Prepared meats: may include pork' },
+  // KMI rules out selling haram meat as well as pork, and meat a poultry
+  // processor sells is not, as a rule, slaughtered the Islamic way.
+  { from: 2015, to: 2015, verdict: 'review', reason: 'Poultry slaughtering: the meat is not, as a rule, slaughtered the Islamic way' }
 ];
 
 // A SIC code -> { verdict: 'pass' | 'fail' | 'review' | 'unknown', reason }.
@@ -109,22 +127,56 @@ function liabilitiesOf(bs) {
 // can still settle the test. Short-term debt alone is a floor, which can
 // prove a failure. Total liabilities are a ceiling, since debt is part of
 // them, which can prove a pass. Where neither settles it, debt is unknown.
+//
+// Preference shares are added to each: KMI counts them as interest-bearing
+// debt, and they sit in equity, not in liabilities, so the ceiling needs them
+// too.
 function screenDebt(bs) {
+  const preferred = Math.max(0, num(bs.preferredStock) || 0);
+  const withPreferred = note => (preferred > 0 ? `${note ? `${note} ` : ''}Includes preference shares, which count as debt.` : note);
   const total = totalDebt(bs);
-  if (total !== null) return { value: total, bound: null, note: null };
+  if (total !== null) return { value: total + preferred, bound: null, note: withPreferred(null) };
   const short = shortTermDebt(bs);
-  if (short !== null && bs.assets > 0 && short / bs.assets >= LIMITS.debt) {
-    return { value: short, bound: 'floor', note: 'Only short-term debt could be read, and it alone is over the limit.' };
+  if (short !== null && bs.assets > 0 && (short + preferred) / bs.assets >= LIMITS.debt) {
+    return {
+      value: short + preferred,
+      bound: 'floor',
+      note: withPreferred('Only short-term debt could be read, and it alone is over the limit.')
+    };
   }
   const liabilities = liabilitiesOf(bs);
   if (liabilities !== null) {
     return {
-      value: liabilities,
+      value: liabilities + preferred,
       bound: 'ceiling',
-      note: 'Debt could not be read from the filings; this is total liabilities, which debt cannot exceed.'
+      note: withPreferred('Debt could not be read from the filings; this is total liabilities, which debt cannot exceed.')
     };
   }
   return { value: null, bound: null, note: 'Debt could not be read from the filings.' };
+}
+
+// Interest income for the screen, on the same footing as debt. Reported, it
+// is exact. Otherwise net interest, when positive, is a floor (a company
+// cannot net more than it earned), and interest and other income together are
+// a ceiling. A bound only counts where it settles the 5% test; where nothing
+// does, the test is left out, as it is for a company that reports no figure.
+function screenInterestIncome(fy, revenue) {
+  const reported = num(fy.interestIncome);
+  if (reported !== null) return { value: reported, bound: null, note: null };
+  if (revenue === null) return null;
+  const net = num(fy.interestNet);
+  if (net !== null && net > 0 && net / revenue >= LIMITS.interestIncome) {
+    return { value: net, bound: 'floor', note: 'Interest income is not reported on its own; this is net interest, which it is at least.' };
+  }
+  const combined = num(fy.interestAndOtherIncome);
+  if (combined !== null && combined >= 0 && combined / revenue < LIMITS.interestIncome) {
+    return {
+      value: combined,
+      bound: 'ceiling',
+      note: 'Interest income is not reported on its own; this is interest and other income together, which it cannot exceed.'
+    };
+  }
+  return null;
 }
 
 // One check: its ratio, the limit, and whether it passed (null when unknown).
@@ -174,8 +226,8 @@ export function screenCompany(entry, sic = null, { price = null, shareClasses = 
   // receivables, which count as liquid because a debt owed in money is money.
   const liquid = cash === null ? null : cash + securities + (num(bs.receivables) || 0);
   const illiquid = liquid === null || assets === null ? null : assets - liquid;
-  const interestIncome = num(fy.interestIncome);
   const revenue = num(fy.revenue) > 0 ? fy.revenue : null;
+  const interest = screenInterestIncome(fy, revenue);
 
   const checks = [
     check('debt', debt.bound === 'ceiling' ? 'Total liabilities ÷ total assets' : 'Interest-bearing debt ÷ total assets',
@@ -183,9 +235,13 @@ export function screenCompany(entry, sic = null, { price = null, shareClasses = 
     check('investments', 'Cash and interest-bearing securities ÷ total assets', interestBearing, assets, LIMITS.investments),
     check('illiquid', 'Illiquid assets ÷ total assets', illiquid, assets, LIMITS.illiquid, { kind: 'min' })
   ];
-  // Interest income only counts when reported; most companies report none.
-  if (interestIncome !== null && revenue !== null) {
-    checks.push(check('interestIncome', 'Interest income ÷ revenue', interestIncome, revenue, LIMITS.interestIncome));
+  // Interest income only counts when it can be read or bounded; many
+  // companies report none, and the card says so.
+  if (interest && revenue !== null) {
+    checks.push(check('interestIncome',
+      interest.bound === 'ceiling' ? 'Interest and other income ÷ revenue'
+        : interest.bound === 'floor' ? 'Net interest ÷ revenue' : 'Interest income ÷ revenue',
+      interest.value, revenue, LIMITS.interestIncome, { bound: interest.bound, note: interest.note }));
   }
 
   // Usmani's price condition: a share must cost more than the liquid amount
@@ -217,10 +273,14 @@ export function screenCompany(entry, sic = null, { price = null, shareClasses = 
   else if (business.verdict === 'review') status = 'review';
   else status = 'compliant';
 
-  // The share of income to give away from dividends, where it can be told.
-  const purification = interestIncome !== null && revenue !== null ? Math.max(0, interestIncome / revenue) : null;
+  // The share of income to give away from dividends, where it can be told:
+  // Usmani's proportion of interest in the company's income. From a ceiling
+  // it is an upper bound, which gives away a little more than is due; from a
+  // floor, a lower one.
+  const purification = interest && revenue !== null ? Math.max(0, interest.value / revenue) : null;
+  const purificationBound = purification === null ? null : interest.bound;
 
-  return { status, business, checks, purification, asOf: entry.bs?.end || null };
+  return { status, business, checks, purification, purificationBound, asOf: entry.bs?.end || null };
 }
 
 // The words for each status, shared by the search results and the card.

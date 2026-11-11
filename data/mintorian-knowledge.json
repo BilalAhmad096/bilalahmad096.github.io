@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-09-20",
+  "lastVerified": "2026-11-11",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -221,6 +221,26 @@
       "status": "verified"
     },
     {
+      "id": "publication-accepted-resilience-review",
+      "category": "PUBLICATIONS",
+      "title": "Deterministic, Stochastic, and Data-Driven Methods for Power System Resilience Enhancement: A Comparative Review",
+      "summary": "A paper by Bilal Ahmad, Aqib Nazir and Victor Hugo Gonzales-Sanchez, accepted for publication.",
+      "details": ["Status: accepted for publication. The venue, date and DOI are not yet publicly listed, and the assistant must not infer them."],
+      "keywords": ["publication", "paper", "accepted", "review", "power system resilience", "resilience enhancement", "deterministic", "stochastic", "data-driven", "aqib nazir", "victor hugo gonzales-sanchez"],
+      "source": { "label": "Publications", "url": "/publications/" },
+      "status": "verified_limited"
+    },
+    {
+      "id": "publication-accepted-explainable-ml-power-flow",
+      "category": "PUBLICATIONS",
+      "title": "Explainable Machine Learning for Power Flow Analysis: A Comprehensive Comparative Study",
+      "summary": "A paper by Bilal Ahmad, Aqib Nazir and Laiz Souto, accepted for publication.",
+      "details": ["Status: accepted for publication. The venue, date and DOI are not yet publicly listed, and the assistant must not infer them."],
+      "keywords": ["publication", "paper", "accepted", "explainable machine learning", "explainable ai", "xai", "machine learning", "power flow", "comparative study", "aqib nazir", "laiz souto"],
+      "source": { "label": "Publications", "url": "/publications/" },
+      "status": "verified_limited"
+    },
+    {
       "id": "publication-icsmartgrid-2025",
       "category": "PUBLICATIONS",
       "title": "A Comparative Analysis of Machine Learning Based Power Flow Study with Custom Made Open Source Python Codes",
@@ -252,16 +272,6 @@
       "keywords": ["publication", "paper", "review", "thyristor", "grid-tied inverter", "solar pv", "i2ct", "2019"],
       "source": { "label": "Publications, I2CT 2019", "url": "https://doi.org/10.1109/i2ct45611.2019.9033670" },
       "status": "verified"
-    },
-    {
-      "id": "publication-forthcoming-ijrer",
-      "category": "PUBLICATIONS",
-      "title": "Forthcoming journal paper, title not publicly listed",
-      "summary": "The Mintorian publications page notes a forthcoming paper in the International Journal of Renewable Energy Research, but does not publicly list a verified title, author list, date or results.",
-      "details": ["The assistant must not infer or invent the missing bibliographic details."],
-      "keywords": ["publication", "forthcoming", "journal", "ijrer", "international journal of renewable energy research"],
-      "source": { "label": "Publications", "url": "/publications/" },
-      "status": "verified_limited"
     },
     {
       "id": "project-weather-reliability",

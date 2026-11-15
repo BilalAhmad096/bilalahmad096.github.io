@@ -508,3 +508,59 @@
     margin-bottom:8px;
   }
 }
+
+/* IPO Shariah screens: publication-style cards under the Market Explorer */
+.tool-section-title{
+  margin:36px 0 14px;
+  font-family:linetoBold, system-ui;
+  font-size:22px;
+  color:var(--ink);
+}
+
+.ipo-item{
+  align-items:start;
+}
+
+.ipo-summary{
+  margin:10px 0 12px;
+  font-size:15px;
+  line-height:1.55;
+  color:var(--ink);
+}
+
+.ipo-standard{
+  margin:12px 0 6px;
+  font-family:linetoBold, system-ui;
+  font-size:15px;
+  color:var(--ink);
+}
+
+.ipo-checks{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin:0;
+  font-size:14.5px;
+  line-height:1.5;
+  color:var(--ink);
+}
+
+.ipo-check{
+  display:grid;
+  grid-template-columns:1.2em 1fr;
+  column-gap:6px;
+}
+
+.ipo-check__mark{
+  font-family:linetoBold, system-ui;
+}
+
+.ipo-check--pass .ipo-check__mark{ color:var(--halal-ink); }
+.ipo-check--fail .ipo-check__mark{ color:var(--haram-ink); }
+
+.ipo-note{
+  margin:12px 0 0;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink-muted);
+}

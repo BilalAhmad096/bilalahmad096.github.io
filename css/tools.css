@@ -564,3 +564,7 @@
   line-height:1.5;
   color:var(--ink-muted);
 }
+
+.ipo-summary a{
+  color:var(--accent);
+}

@@ -568,3 +568,7 @@
 .ipo-summary a{
   color:var(--accent);
 }
+
+.ipo-note a{
+  color:var(--accent);
+}

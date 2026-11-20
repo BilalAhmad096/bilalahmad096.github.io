@@ -181,10 +181,14 @@ export function instantPeriods(today, count = 5) {
   return out;
 }
 
-// The calendar years to look back over, newest first ("CY2025"). Three, so a
-// company whose latest is a year behind still has the year before it.
-export function annualPeriods(today, count = 3) {
-  const year = Number(today.slice(0, 4)) - 1;
+// The calendar years to look back over, newest first ("CY2026"). The SEC files
+// a fiscal year under the calendar year it mostly falls in, so a year ending
+// in September 2026 is CY2026 and is on file long before the calendar year
+// ends; the current year is asked for from the start, and a company whose
+// latest is the year before simply has nothing in it yet. Four, so a company
+// whose latest is a year behind still has the year before that.
+export function annualPeriods(today, count = 4) {
+  const year = Number(today.slice(0, 4));
   return Array.from({ length: count }, (_, i) => `CY${year - i}`);
 }
 

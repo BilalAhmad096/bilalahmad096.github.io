@@ -275,8 +275,8 @@ A company is *Shariah compliant* when it passes all of them, *not compliant* whe
 fails any, *needs review* when only its industry is unclear, *not enough data* when the
 filings leave a figure unreadable, and *no SEC figures to screen* when there is no
 balance sheet at all — mostly funds, trusts and foreign filers, kept separate so the
-genuine data gaps stay visible. Over the 5,585 listed companies that comes out at
-roughly 1,590 compliant, 2,610 not, 850 with nothing to screen, 430 short of a figure
+genuine data gaps stay visible. Over the 5,580 listed companies that comes out at
+roughly 1,640 compliant, 2,600 not, 830 with nothing to screen, 415 short of a figure
 and 105 needing review.
 
 Known limits. The industry code shows only a company's main business, so revenue from a

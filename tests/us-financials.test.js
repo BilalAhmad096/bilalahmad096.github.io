@@ -28,7 +28,25 @@ test('quarters are asked for only once they have ended, newest first', () => {
   assert.deepEqual(instantPeriods('2026-10-31', 3), ['CY2026Q3I', 'CY2026Q2I', 'CY2026Q1I']);
   assert.deepEqual(instantPeriods('2026-09-30', 2), ['CY2026Q2I', 'CY2026Q1I']);
   assert.deepEqual(instantPeriods('2026-01-15', 2), ['CY2025Q4I', 'CY2025Q3I']);
-  assert.deepEqual(annualPeriods('2026-10-31'), ['CY2025', 'CY2024', 'CY2023']);
+  // The current year too: Micron's year to September 2026 is filed as CY2026.
+  assert.deepEqual(annualPeriods('2026-10-31'), ['CY2026', 'CY2025', 'CY2024', 'CY2023']);
+});
+
+test('a fiscal year ending this year is read ahead of last year’s', () => {
+  const today = '2026-11-20';
+  const frames = new Map();
+  const put = (tag, period, val, end, start) => {
+    const key = frameKey(['us-gaap', tag], 'USD', period);
+    if (!frames.has(key)) frames.set(key, new Map());
+    frames.get(key).set(1, { val, end, start, accn: 'a' });
+  };
+  put('Assets', 'CY2026Q3I', 196, '2026-09-03');
+  put('NetIncomeLoss', 'CY2026', 85, '2026-09-03', '2025-08-29');
+  put('NetIncomeLoss', 'CY2025', 9, '2025-08-28', '2024-08-30');
+  const company = assembleFinancials([1], frames, today)[1];
+  assert.equal(company.fy.end, '2026-09-03');
+  assert.equal(company.fy.v.netIncome, 85);
+  assert.equal(company.fy.prev.v.netIncome, 9);
 });
 
 test('frame URLs follow the SEC’s layout, and every field is asked for in every period', () => {

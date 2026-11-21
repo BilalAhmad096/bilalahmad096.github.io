@@ -6,7 +6,7 @@ const STOP_WORDS = new Set([
   "a", "about", "all", "an", "and", "any", "anything", "are", "as", "at", "be", "been", "bilal",
   "both", "can", "could", "did", "do", "does", "for", "from", "get", "give", "has",
   "have", "he", "her", "him", "his", "how", "i", "in", "into", "is", "it", "its",
-  "just", "know", "like", "make", "many", "may", "me", "might", "much", "must",
+  "just", "know", "like", "list", "make", "many", "may", "me", "might", "much", "must",
   "need", "of", "on", "or", "our", "out", "over", "please", "say", "see", "should",
   "show", "some", "something", "such", "tell", "than", "that", "the", "their", "them", "then",
   "there", "these", "they", "this", "those", "to", "under", "us", "use", "used",
@@ -34,6 +34,9 @@ const INTENT_HINTS = new Map([
   ["projects", ["PROJECTS", "RESEARCH"]],
   ["publication", ["PUBLICATIONS"]],
   ["publications", ["PUBLICATIONS"]],
+  ["papers", ["PUBLICATIONS"]],
+  ["updates", ["UPDATES"]],
+  ["news", ["UPDATES"]],
   ["recommendation", ["RECOMMENDATIONS"]],
   ["recommendations", ["RECOMMENDATIONS"]],
   ["skill", ["TECHNICAL_SKILLS"]],
@@ -186,8 +189,17 @@ function queryTerms(query) {
     if (extra) expanded.push(...extra.split(" "));
   }
 
+  const terms = expanded.filter(term => term.length > 1 && !STOP_WORDS.has(term));
+  // "Latest professional updates" asks for the dated announcements as a group.
+  // Keep specific terms such as "PyPI" or a company name searchable.
+  const generalUpdates = intents.has("UPDATES") && terms.every(term =>
+    ["latest", "recent", "professional", "new"].includes(term)
+  );
+  const generalPublications = intents.has("PUBLICATIONS") && terms.every(term =>
+    ["latest", "recent", "most", "new"].includes(term)
+  );
   return {
-    terms: [...new Set(expanded.filter(term => term.length > 1 && !STOP_WORDS.has(term)))],
+    terms: generalUpdates || generalPublications ? [] : [...new Set(terms)],
     intents: [...intents].filter(category => KNOWLEDGE_CATEGORIES.includes(category))
   };
 }
@@ -241,7 +253,11 @@ function publicRecord(record) {
   };
 }
 
-export function searchKnowledgeBase({ query, categories = [], limit = 5 } = {}) {
+export function searchKnowledgeBase(args = {}) {
+  return searchRecords(args, 8);
+}
+
+function searchRecords({ query, categories = [], limit = 5 }, maxResults) {
   const safeQuery = String(query || "").slice(0, 500);
   const { terms, intents } = queryTerms(safeQuery);
   const requestedCategories = new Set(
@@ -249,7 +265,7 @@ export function searchKnowledgeBase({ query, categories = [], limit = 5 } = {}) 
       .map(category => String(category).toUpperCase())
       .filter(category => KNOWLEDGE_CATEGORIES.includes(category))
   );
-  const cappedLimit = Math.max(1, Math.min(Number(limit) || 5, 8));
+  const cappedLimit = Math.max(1, Math.min(Number(limit) || 5, maxResults));
 
   // A question built entirely from function words ("What is his background?") leaves no
   // term to score, so fall back to the category its phrasing implies rather than refusing.
@@ -276,6 +292,12 @@ export function searchKnowledgeBase({ query, categories = [], limit = 5 } = {}) 
     .filter(item => terms.length === 0 || item.score > 0)
     .sort((left, right) => {
       if (right.score !== left.score) return right.score - left.score;
+      if (effectiveCategories.size === 1 && effectiveCategories.has("UPDATES")) {
+        return right.entry.record.announcementMonth.localeCompare(left.entry.record.announcementMonth);
+      }
+      // Keep the bibliography's editorial order (submissions, acceptances, then
+      // published papers newest first) when the visitor has given no topic.
+      if (!terms.length && effectiveCategories.size === 1 && effectiveCategories.has("PUBLICATIONS")) return 0;
       if (intentRank) {
         const leftRank = intentRank.get(left.entry.record.category) ?? Number.MAX_SAFE_INTEGER;
         const rightRank = intentRank.get(right.entry.record.category) ?? Number.MAX_SAFE_INTEGER;
@@ -306,7 +328,7 @@ export function searchKnowledgeBase({ query, categories = [], limit = 5 } = {}) 
 }
 
 export function searchPublications(args = {}) {
-  return searchKnowledgeBase({ ...args, categories: ["PUBLICATIONS"] });
+  return searchKnowledgeBase({ limit: 8, ...args, categories: ["PUBLICATIONS"] });
 }
 
 // Visitors call the Research page studies "projects" as readily as the older engineering
@@ -318,7 +340,8 @@ export function getProjectDetails({ project_name: projectName } = {}) {
 
 export function getProfileInformation({ section = "PROFILE" } = {}) {
   const category = KNOWLEDGE_CATEGORIES.includes(section) ? section : "PROFILE";
-  return searchKnowledgeBase({ query: "", categories: [category], limit: 8 });
+  const limit = RECORD_INDEX.length;
+  return searchRecords({ query: "", categories: [category], limit }, limit);
 }
 
 export function getContactOptions({ intent = "general" } = {}) {

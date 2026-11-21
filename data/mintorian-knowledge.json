@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-11-11",
+  "lastVerified": "2026-11-21",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -16,6 +16,7 @@
     { "id": "experience", "label": "Experience", "url": "/experience/" },
     { "id": "publications", "label": "Publications", "url": "/publications/" },
     { "id": "updates", "label": "Updates", "url": "/updates/" },
+    { "id": "tools", "label": "Market Explorer", "url": "/tools/" },
     { "id": "contact", "label": "Email Bilal", "url": "mailto:connect@mintorian.com" }
   ],
   "categoryCoverage": {
@@ -32,6 +33,7 @@
     "PRESENTATIONS": "verified_records_available",
     "RESEARCH_INTERESTS": "verified_records_available",
     "EVENTS": "verified_records_available",
+    "UPDATES": "verified_records_available",
     "RECOMMENDATIONS": "verified_records_available",
     "EXTRACURRICULAR": "verified_records_available",
     "CONTACT": "verified_records_available",
@@ -47,7 +49,7 @@
         "His research combines data-driven learning with physically interpretable models.",
         "The stated goals include grid resilience, flexibility and transparent decision support.",
         "His profile spans academic research, electrical engineering, applied machine learning and software engineering.",
-        "His current part-time, remote Full Stack Developer role is at Dystil.AI, listed from April 2026 to present.",
+        "His current roles on the Experience page are Full Stack Developer at Dystil.AI (part-time, remote, since April 2026), Teaching Assistant at Bath (since January 2026) and Graduate Teaching Assistant in Bath's Electrical Engineering Department (part-time, since September 2026).",
         "His part-time, remote Full Stack Developer role at Just Jutz ran from February 2026 to October 2026."
       ],
       "keywords": ["profile", "about", "biography", "power systems researcher", "machine learning", "full stack developer", "part-time roles", "dystil", "just jutz"],
@@ -124,7 +126,7 @@
         "Raising demand exposes the point of the demonstration. Around 110 per cent the index begins ordering outages wrongly, because a spread of mid-loaded branches out-scores a single genuine overload. That failure is called masking, and the page presents it as the reason the problem is still worth researching.",
         "The solver is checked against the case's own published solution to within 0.0013 pu and converges in four iterations from a flat start.",
         "Stated assumptions: line ratings are chosen rather than taken from the case, which lists every thermal limit as zero; the voltage band is widened to 0.94 to 1.10 pu so that the intact solution fits inside it; generation does not re-dispatch after an outage; and generator VAr limits are not enforced.",
-        "It runs entirely in the visitor's browser and needs JavaScript. The older /contingency/ address redirects to /research/#contingency."
+        "It runs entirely in the visitor's browser and needs JavaScript. The demonstration opens at /research/#contingency."
       ],
       "keywords": ["project 02", "project two", "contingency", "contingency screening", "n-1", "n minus 1", "ieee 14-bus", "14 bus", "test system", "power flow", "ac power flow", "newton raphson", "load flow", "outage", "trip a line", "severity index", "performance index", "masking", "demo", "demonstration", "interactive", "simulation", "browser"],
       "source": { "label": "Research, contingency screening", "url": "/research/#contingency" },
@@ -158,6 +160,7 @@
       "summary": "The Mintorian home page carries a live panel called GB Grid, Right Now, showing Great Britain's carbon intensity, where the power is coming from, and what the transmission system is metering for the current half hour. It is read from public feeds each time the page loads.",
       "details": [
         "The two sources are the Carbon Intensity API at carbonintensity.org.uk for intensity and the national generation mix, and Elexon's BMRS data service for half-hourly metered output in MW.",
+        "The panel labels a forecast when the current measurement is unavailable. It also shows settled readings over the past 24 hours and the highest and lowest half-hours recorded by this site. These are site records, not all-time GB records.",
         "The two are shown separately and never added together: the carbon-intensity mix includes embedded solar and small wind, while Elexon meters the transmission system only and so excludes that embedded generation.",
         "No figure from this panel is in this knowledge base. Never state a current carbon intensity, generation share or metered output. Point the visitor at the panel or at the published sources instead.",
         "The panel is live third-party grid data, not a research result of Bilal's and not a claim about his work."
@@ -169,6 +172,7 @@
     {
       "id": "phd-bath",
       "category": "PHD",
+      "crossListedIn": ["EDUCATION"],
       "title": "PhD in Power System Reliability",
       "summary": "Bilal is pursuing a PhD at the University of Bath on power-system reliability.",
       "details": [
@@ -221,6 +225,16 @@
       "status": "verified"
     },
     {
+      "id": "publication-submitted-adaptive-cvr",
+      "category": "PUBLICATIONS",
+      "title": "Adaptive Conservation Voltage Reduction with Time-Varying Load Sensitivity in Distribution Networks with high penetration of Photovoltaics and Electric Vehicles",
+      "summary": "Bilal's Publications page lists this conference paper by Aqib Nazir, Bilal Ahmad and Furong Li as submitted to the 2025 IEEE PES General Meeting (PESGM'25).",
+      "details": ["The listing gives the submission venue. It supplies no acceptance decision, publication date or DOI."],
+      "keywords": ["paper", "submitted", "submission", "adaptive conservation voltage reduction", "cvr", "load sensitivity", "photovoltaics", "electric vehicles", "aqib nazir", "furong li", "pesgm", "general meeting"],
+      "source": { "label": "Publications", "url": "/publications/" },
+      "status": "verified_limited"
+    },
+    {
       "id": "publication-accepted-resilience-review",
       "category": "PUBLICATIONS",
       "title": "Deterministic, Stochastic, and Data-Driven Methods for Power System Resilience Enhancement: A Comparative Review",
@@ -247,7 +261,7 @@
       "summary": "A conference paper by Bilal Ahmad and Onyema Nduka, published at IEEE icSmartGrid 2025.",
       "details": [
         "DOI: 10.1109/icsmartgrid66138.2025.11071830",
-        "This is the most directly relevant listed publication for machine-learning-assisted power-flow analysis."
+        "The paper compares machine-learning approaches to power-flow analysis using open-source Python code."
       ],
       "keywords": ["publication", "paper", "machine learning", "power flow", "python", "icsmartgrid", "2025", "onyema nduka", "contingency", "scopf"],
       "source": { "label": "Publications, icSmartGrid 2025", "url": "https://doi.org/10.1109/icsmartgrid66138.2025.11071830" },
@@ -271,6 +285,33 @@
       "details": ["DOI: 10.1109/i2ct45611.2019.9033670"],
       "keywords": ["publication", "paper", "review", "thyristor", "grid-tied inverter", "solar pv", "i2ct", "2019"],
       "source": { "label": "Publications, I2CT 2019", "url": "https://doi.org/10.1109/i2ct45611.2019.9033670" },
+      "status": "verified"
+    },
+    {
+      "id": "mintorian-python-package",
+      "category": "PROJECTS",
+      "crossListedIn": ["UPDATES", "TECHNICAL_SKILLS"],
+      "announcementMonth": "2026-11",
+      "title": "mintorian Python package on PyPI",
+      "summary": "Bilal released version 0.1.0 of mintorian, his open-source Python framework for power system optimisation, on PyPI on 19 November 2026.",
+      "details": [
+        "Version 0.1.0 models buses, lines, generators and loads. It solves DC power flow and DC optimal power flow for least-cost dispatch with locational marginal prices.",
+        "Install the package with pip install mintorian. Version 0.1.0 requires Python 3.10 or later and depends on NumPy and SciPy."
+      ],
+      "keywords": ["pypi", "package", "pip", "install", "release", "professional update", "python framework", "dc opf", "locational marginal prices"],
+      "source": { "label": "mintorian on PyPI", "url": "https://pypi.org/project/mintorian/" },
+      "status": "verified"
+    },
+    {
+      "id": "market-explorer",
+      "category": "PROJECTS",
+      "crossListedIn": ["UPDATES"],
+      "announcementMonth": "2026-10",
+      "title": "Market Explorer",
+      "summary": "The October 2026 professional update announced Market Explorer. Visitors can look up Indian NSE and US NYSE and Nasdaq listings by ticker or company name on the Tools page.",
+      "details": ["For US companies the tool also displays price and SEC filing data and a Hanafi Shariah screen when the data are available. For current company figures or a screening result, consult the tool directly."],
+      "keywords": ["market explorer", "tools page", "stock market", "stocks", "ticker", "nse", "nyse", "nasdaq", "shariah", "professional update"],
+      "source": { "label": "Market Explorer", "url": "/tools/" },
       "status": "verified"
     },
     {
@@ -373,7 +414,7 @@
       "title": "Full Stack Developer at Dystil.AI",
       "summary": "Bilal has worked part-time and remotely as a Full Stack Developer at Dystil.AI since April 2026.",
       "details": ["The public profile lists front-end and back-end development, feature implementation, code review and release support."],
-      "keywords": ["experience", "employment", "dystil", "full stack", "developer", "2026"],
+      "keywords": ["experience", "employment", "current role", "currently working", "dystil", "full stack", "developer", "2026"],
       "source": { "label": "Professional experience", "url": "/experience/" },
       "links": [{ "label": "Visit Dystil.AI", "url": "https://dystil.ai/" }],
       "status": "verified"
@@ -395,7 +436,7 @@
       "title": "Graduate Teaching Assistant in the Electrical Engineering Department, University of Bath",
       "summary": "Bilal has served as a part-time Graduate Teaching Assistant in the Electrical Engineering Department at the University of Bath since September 2026.",
       "details": ["The public profile lists support for labs and tutorials in the Electrical Engineering Department."],
-      "keywords": ["experience", "teaching", "graduate teaching assistant", "gta", "teaching assistant", "electrical engineering", "university of bath", "2026"],
+      "keywords": ["experience", "current role", "currently working", "teaching", "graduate teaching assistant", "gta", "teaching assistant", "electrical engineering", "university of bath", "2026"],
       "source": { "label": "Professional experience", "url": "/experience/" },
       "status": "verified"
     },
@@ -405,7 +446,7 @@
       "title": "Teaching Assistant at the University of Bath",
       "summary": "Bilal has served as a Teaching Assistant at the University of Bath since January 2026.",
       "details": ["The public profile lists support for labs, tutorials and grading across computing and electrical modules."],
-      "keywords": ["experience", "teaching", "teaching assistant", "university of bath", "2026"],
+      "keywords": ["experience", "current role", "currently working", "teaching", "teaching assistant", "university of bath", "2026"],
       "source": { "label": "Professional experience", "url": "/experience/" },
       "status": "verified"
     },
@@ -534,7 +575,8 @@
     {
       "id": "partnership-psr-inc-2026",
       "category": "RESEARCH",
-      "crossListedIn": ["COLLABORATION"],
+      "crossListedIn": ["COLLABORATION", "UPDATES"],
+      "announcementMonth": "2026-08",
       "title": "Partnership with PSR Inc.",
       "summary": "Bilal's public Updates page announces a partnership with PSR Inc. in August 2026: PSR will provide weather forecasts through PSRCast, which will be used to assess power-system resilience.",
       "details": [
@@ -635,7 +677,7 @@
       "id": "extracurricular-travel",
       "category": "EXTRACURRICULAR",
       "title": "Publicly listed travel destinations",
-      "summary": "Bilal's public Updates page has a Travelling section listing destinations from his travels.",
+      "summary": "Bilal's public Updates page counts 22 countries across four continents. It lists England, Scotland and Wales separately. The four continents represented are Europe, Asia, Africa and North America.",
       "details": [
         "Listed destinations: Germany, France, Italy, the Netherlands, Switzerland, Belgium, Spain, England, Scotland, Wales, Ireland, the United States, Saudi Arabia, the United Arab Emirates, Turkey, Bahrain, Egypt, Nepal, Indonesia, Malaysia, Denmark and Sweden.",
         "The page does not state travel dates, duration, frequency or trip purpose for these destinations."

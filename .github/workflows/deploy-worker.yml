@@ -1,5 +1,5 @@
 # Deploys the Cloudflare Worker (worker/), which serves Ask Mintorian and the
-# Market Explorer's live prices, when its code changes on main, or by hand
+# Market Explorer's live prices, when its code or knowledge changes on main, or by hand
 # from the Actions tab.
 #
 # It needs two repository secrets (Settings > Secrets and variables > Actions):
@@ -18,6 +18,7 @@ on:
     branches: [main]
     paths:
       - "worker/**"
+      - "data/mintorian-knowledge.json"
       - ".github/workflows/deploy-worker.yml"
   workflow_dispatch:
 

@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync, statSync } from "node:fs";
+import knowledge from "../data/mintorian-knowledge.json" with { type: "json" };
 import {
   getKnowledgeMetadata,
   getProfileInformation,
@@ -7,6 +9,56 @@ import {
   searchKnowledgeBase,
   searchPublications
 } from "../worker/src/knowledge.js";
+
+test("every knowledge record can be found by title in its section", () => {
+  for (const record of knowledge.records) {
+    const match = searchKnowledgeBase({ query: record.title, categories: [record.category], limit: 1 });
+    assert.equal(match.results[0]?.id, record.id, record.title);
+  }
+  for (const section of Object.keys(knowledge.categoryCoverage)) {
+    const expected = knowledge.records.filter(r => r.category === section || r.crossListedIn?.includes(section));
+    assert.deepEqual(new Set(getProfileInformation({ section }).results.map(r => r.id)), new Set(expected.map(r => r.id)), section);
+  }
+});
+
+test("local knowledge sources and navigation point to existing files and anchors", () => {
+  const links = [...knowledge.navigation, ...knowledge.records.flatMap(r => [r.source, ...(r.links || [])])];
+  for (const href of new Set(links.map(link => link.url).filter(url => url.startsWith("/")))) {
+    const [path, anchor] = href.split("#");
+    const file = new URL(`..${path}${path.endsWith("/") ? "index.html" : ""}`, import.meta.url);
+    assert.ok(statSync(file).isFile(), href);
+    if (anchor) assert.ok(readFileSync(file, "utf8").includes(`id="${anchor}"`), href);
+  }
+});
+
+test("the complete bibliography agrees with the public titles and publication statuses", () => {
+  const html = readFileSync(new URL("../publications/index.html", import.meta.url), "utf8");
+  const publications = getProfileInformation({ section: "PUBLICATIONS" }).results;
+  const articles = [...html.matchAll(/<article class="pub-item"[^>]*>([\s\S]*?)<\/article>/g)];
+  assert.equal(publications.length, articles.length);
+  for (const query of ["papers", "list his publications", "latest publications"]) {
+    assert.deepEqual(searchPublications({ query }).results, publications, query);
+  }
+  for (const [, article] of articles) {
+    const title = article.match(/class="pub-title">([\s\S]*?)<\/h2>/)[1].replace(/\s+/g, " ").trim();
+    const status = article.match(/class="pub-publisher">(Submitted|Accepted|Published)/)[1].toLowerCase();
+    const record = publications.find(r => r.title === title);
+    assert.ok(record, title);
+    assert.ok(record.summary.toLowerCase().includes(status), title);
+  }
+});
+
+test("current jobs, professional news and the travel count answer visitor questions", () => {
+  const jobs = searchKnowledgeBase({ query: "Where does Bilal currently work?", limit: 3 });
+  assert.deepEqual(new Set(jobs.results.map(r => r.id)), new Set(["experience-dystil", "experience-bath-gta", "experience-bath-ta"]));
+  for (const query of ["What are his latest professional updates?", "latest news"]) {
+    const news = searchKnowledgeBase({ query, limit: 3 });
+    assert.deepEqual(news.results.map(r => r.id), ["mintorian-python-package", "market-explorer", "partnership-psr-inc-2026"]);
+  }
+  assert.match(getProjectDetails({ project_name: "pip install mintorian" }).results[0].summary, /version 0\.1\.0/);
+  assert.equal(getProjectDetails({ project_name: "Market Explorer" }).results[0].source.url, "/tools/");
+  assert.match(searchKnowledgeBase({ query: "How many continents?", limit: 1 }).results[0].summary, /22 countries across four continents/);
+});
 
 test("knowledge base exposes verified records and all required categories", () => {
   const metadata = getKnowledgeMetadata();

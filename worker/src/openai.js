@@ -108,7 +108,7 @@ const toolDefinitions = [
   {
     type: "function",
     name: "search_publications",
-    description: "Search Bilal's verified publication records and bibliographic details.",
+    description: "Find a specific publication by topic, title, author, venue, status or year. For the full list or a count, use get_profile_information with PUBLICATIONS.",
     strict: true,
     parameters: {
       type: "object",
@@ -137,7 +137,7 @@ const toolDefinitions = [
   {
     type: "function",
     name: "get_profile_information",
-    description: "Retrieve all verified public records from one specific profile section.",
+    description: "Retrieve a complete section for lists or counts. Use PUBLICATIONS for the complete bibliography and distinguish submitted, accepted and published papers. Use PROFESSIONAL_EXPERIENCE for all positions and their dates, and UPDATES for dated professional announcements.",
     strict: true,
     parameters: {
       type: "object",

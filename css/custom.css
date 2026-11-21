@@ -32,7 +32,7 @@
   --section-publications: #eceff3;  /* clearly distinct light slate */
   --section-footer:       #0a1638;  /* existing dark navy footer */
   --section-updates-pro:    #f5f6fa;  /* soft gray-blue */
-  --section-updates-person: #f1f3f6;  /* soft lilac/blue */
+  --section-updates-life:   #eef2f8;  /* cooler band, so interests and travel sit apart from the professional list */
   --section-recognition:    #f0f4fa;  /* cool close, dropping away from Skills */
   --section-activity:       #f8fafd;  /* the lightest band, lifting hard out of the projects band */
   --section-grid:           #edf1f8;  /* cools after About */
@@ -815,8 +815,8 @@ section{
   background:var(--section-updates-pro);
 }
 
-.page-updates .section-updates--person{
-  background:var(--section-updates-person);
+.page-updates .section-updates--life{
+  background:var(--section-updates-life);
 }
 
 /* Shared list */
@@ -1445,68 +1445,282 @@ section{
 }
 
 /* =====================================================
-   21) Extracurricular Section
-/* Extracurricular Buttons */
-/* Extracurricular grid layout */
-.extra-card-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+   21) Extracurricular (Updates page)
+   Icon tiles; the ones with a photo are buttons that open the photo dialog.
+===================================================== */
+.hobby-grid{
+  list-style:none;
+  margin:0 0 48px;
+  padding:0;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:12px;
 }
 
-/* Extra card tweaks (in addition to update-item styling) */
-.extra-card {
-  cursor: pointer;
-  text-align: center;
+.hobby-grid > li{
+  display:flex;
 }
 
-/* Image preview */
-.extra-image-box {
-  margin-top: 28px;
-  display: flex;
-  justify-content: center;
+.hobby-tile{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:22px 14px 20px;
+  background:var(--card);
+  border:1px solid transparent;
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm);
+  color:var(--ink);
+  font:inherit;
+  text-align:center;
 }
 
-.extra-image-box img {
-  width: 75%;
-  max-width: 700px;
-  border-radius: 16px;
-  border: 10px solid #fff;
-  outline: 1px solid rgba(10, 26, 59, 0.10);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-  display: none; /* hidden until clicked */
+.hobby-icon{
+  display:grid;
+  place-items:center;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:var(--ring);
+  color:var(--accent);
 }
+
+.hobby-icon svg,
+.photo-tag svg,
+.country--photo svg,
+.photo-dialog__close svg{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.75;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.hobby-icon svg{
+  width:28px;
+  height:28px;
+}
+
+.hobby-name{
+  font-family:linetoBold;
+  font-size:16px;
+}
+
+.photo-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-top:auto;
+  font-size:13px;
+  color:var(--accent);
+}
+
+.photo-tag svg{
+  width:15px;
+  height:15px;
+}
+
+.hobby-tile--photo{
+  cursor:pointer;
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.hobby-tile--photo:hover,
+.hobby-tile--photo:focus-visible{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+  border-color:#cfe0ff;
+}
+
+.hobby-tile--photo:focus-visible,
+.country--photo:focus-visible,
+.photo-dialog__close:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+
 /* =====================================================
-   22) Travelling Section
-/* Travelling Section Cards */
-.travel-card-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+   22) Travelling (Updates page)
+   Countries as chips, grouped by region.
+===================================================== */
+.travel-stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 28px;
+  margin:0 0 16px;
+  color:var(--ink-muted);
+  font-size:15px;
 }
 
-.travel-card {
-  cursor: pointer;
-  text-align: center;
+.travel-stats strong{
+  margin-right:4px;
+  font-family:linetoBold;
+  font-size:30px;
+  font-weight:normal;
+  line-height:1;
+  color:var(--ink);
 }
 
-/* Travel image preview */
-.travel-image-box {
-  margin-top: 28px;
-  display: flex;
-  justify-content: center;
+.travel-regions{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+  margin-bottom:24px;
 }
 
-.travel-image-box img {
-  width: 75%;
-  max-width: 700px;
-  border-radius: 16px;
-  border: 10px solid #fff;
-  outline: 1px solid rgba(10, 26, 59, 0.10);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-  display: none;
+.travel-region{
+  padding:18px 20px 20px;
+  background:var(--card);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm);
+}
+
+.travel-region--wide{
+  grid-column:1 / -1;
+}
+
+.travel-region__head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.travel-region__head h3{
+  margin:0;
+  font-family:linetoBold;
+  font-size:17px;
+  color:var(--ink);
+}
+
+.travel-region__count{
+  flex:none;
+  min-width:28px;
+  padding:2px 9px;
+  border-radius:999px;
+  background:var(--ring);
+  color:var(--accent);
+  font-size:13px;
+  text-align:center;
+}
+
+.country-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.country{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 13px;
+  border:1px solid #e3e8f0;
+  border-radius:999px;
+  background:#f7f9fc;
+  color:var(--ink);
+  font:inherit;
+  font-size:15px;
+  line-height:1.3;
+}
+
+.country--photo{
+  border-color:#cfe0ff;
+  background:var(--ring);
+  color:var(--accent);
+  cursor:pointer;
+  transition:background-color .18s ease, border-color .18s ease;
+}
+
+.country--photo:hover{
+  background:#dbe7ff;
+  border-color:#93b8ff;
+}
+
+.country--photo svg{
+  width:15px;
+  height:15px;
+}
+
+@media (max-width:760px){
+  .travel-regions{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =====================================================
+   23) Photo dialog (Updates page)
+===================================================== */
+.photo-dialog{
+  width:min(92vw, 760px);
+  max-height:92vh;
+  padding:0;
+  border:0;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 24px 60px rgba(10,22,56,.35);
+  overflow:hidden;
+}
+
+.photo-dialog::backdrop{
+  background:rgba(10,22,56,.72);
+  backdrop-filter:blur(3px);
+}
+
+.photo-dialog img{
+  display:block;
+  width:100%;
+  max-height:calc(92vh - 56px);
+  object-fit:contain;
+  background:#0a1638;
+}
+
+.photo-dialog__caption{
+  margin:0;
+  padding:14px 18px;
+  font-family:linetoBold;
+  font-size:16px;
+  color:var(--ink);
+}
+
+.photo-dialog__close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  display:grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.92);
+  color:var(--ink);
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+}
+
+.photo-dialog__close svg{
+  width:18px;
+  height:18px;
+  stroke-width:2;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hobby-tile--photo{
+    transition:box-shadow .22s ease, border-color .22s ease;
+  }
+
+  .hobby-tile--photo:hover,
+  .hobby-tile--photo:focus-visible{
+    transform:none;
+  }
 }
 
 

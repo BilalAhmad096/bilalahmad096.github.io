@@ -13,7 +13,9 @@ const PERSONAL_BOUNDARY = "That's where my personal-life briefing ends! Bilal wo
 const UNKNOWN_REPLY = "That didn't make it into my briefing. Want to ask Bilal directly?";
 
 function isPersonalQuestion(text) {
-  return /\b(personal life|private life|love life|relationship status|married|marriage|unmarried|wife|husband|spouse|girlfriend|boyfriend|dating|wedding|family|children|kids)\b|\b(is he|is bilal|he is|bilal is)\s+(single|taken)\b/i.test(text);
+  return /\b(personal life|private life|love life|relationship status|married|marriage|unmarried|wife|husband|spouse|girlfriend|boyfriend|dating|wedding|family|children|kids)\b|\b(is he|is bilal|he is|bilal is)\s+(single|taken)\b/i.test(text)
+    // "Personal" alone is too broad ("personal projects"), so only catch the open-ended asks.
+    || /\b(?:something|anything|a bit|more) (?:personal|private)\b|\b(?:personal|private) (?:detail|details|fact|facts|info|information|side|question|questions|stuff|thing|things)\b/i.test(text);
 }
 
 // Consent belongs to the immediately preceding offer, never to a loose "yes"
@@ -25,13 +27,17 @@ function acceptsPersonalOffer(messages) {
     .replace(/[’‘]/g, "'")
     .replace(/[.!?,;]+/g, " ")
     .replace(/\s+/g, " ").trim();
+  // Strip any run of affirmatives ("yes please", "ok sure") so only the request itself is left.
   const request = reply
-    .replace(/^(yes|yeah|yep|sure|okay|ok|please|absolutely|of course)(?:\s+|$)/, "")
-    .replace(/(?:^|\s+)please$/, "").trim();
+    .replace(/^(?:(?:yes|yeah|yep|yup|sure|okay|ok|please|absolutely|definitely|of course|alright|all right|oh)(?:\s+|$))+/, "")
+    .replace(/(?:^|\s+)(?:please|then|now)$/, "").trim();
   if (!request) return reply.length > 0;
+  const thing = "(?: (?:more|it|that|this|that one thing|the one thing|one thing|that detail|the detail|the personal detail))?";
   return [
-    /^(?:i insist|go on|go ahead|do tell|i'm listening|i am listening)$/,
-    /^(?:(?:can|could|would|will) you )?(?:tell me|share)(?: (?:more|it|that|that one thing|the one thing|one thing|that detail|the detail))?$/,
+    /^(?:i insist|go on|go ahead|go for it|do|do tell|do share|i'm listening|i am listening|let's hear it|spill(?: it)?|why not)$/,
+    new RegExp(`^(?:(?:can|could|would|will) you |please |do )?(?:tell me|share)${thing}(?: with me)?$`),
+    new RegExp(`^(?:i'd|i would) (?:love|like) to (?:know|hear)${thing}$`),
+    new RegExp(`^i (?:want to|wanna) (?:know|hear)${thing}$`),
     /^what(?: is|'s) (?:it|that|the one thing|that one thing|the thing|that thing|the detail|that detail)$/,
     /^which (?:thing|one|detail)$/
   ].some(pattern => pattern.test(request));

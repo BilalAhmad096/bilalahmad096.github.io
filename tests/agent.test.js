@@ -13,7 +13,10 @@ async function replyTo(messages) {
 }
 
 test("personal questions offer a reveal first, even when the first question insists", async () => {
-  for (const question of ["Tell me about his personal life", "Is Bilal married?", "Is he single?", "Who is his wife?", "I insist, tell me if he is married"]) {
+  for (const question of [
+    "Tell me about his personal life", "Is Bilal married?", "Is he single?", "Who is his wife?", "I insist, tell me if he is married",
+    "I want to know something personal about him", "Tell me anything private", "Any personal details?"
+  ]) {
     const reply = await replyTo([user(question)]);
     assert.equal(reply.text, personalOffer);
     assert.doesNotMatch(reply.text, /married|wife|spouse/i);
@@ -25,7 +28,9 @@ test("clear acceptance of the preceding offer reveals only the approved fact", a
   for (const acceptance of [
     "Go on!", "I insist.", "Yes, tell me.", "yes", "please", "Sure, tell me more!",
     "what is that?", "What's that?", "What’s that?", "What is it?", "What's the one thing?",
-    "Which thing?", "Go ahead", "Can you tell me?", "Could you share that detail, please?", "I'm listening."
+    "Which thing?", "Go ahead", "Can you tell me?", "Could you share that detail, please?", "I'm listening.",
+    "please do share", "Please do!", "Yes please", "Yes please, share it", "Sure, go for it", "Do share it with me",
+    "I'd love to know", "I want to know", "Let's hear it", "Ok then", "Why not?"
   ]) {
     const reply = await replyTo([user("Tell me about his personal life"), assistant(personalOffer), user(acceptance)]);
     assert.equal(reply.text, "He's happily married. That's where my personal-life briefing ends!");
@@ -51,12 +56,15 @@ test("declines, topic changes and an unrelated yes do not unlock the record", as
     [assistant(personalOffer), user("Don't tell me")],
     [assistant(personalOffer), user("What is that research about?")],
     [assistant(personalOffer), user("Yes, tell me about his research")],
+    [assistant(personalOffer), user("Please share his publications")],
+    [assistant(personalOffer), user("I want to know about his projects")],
+    [user("Tell me about his personal projects")],
     [assistant(personalOffer), user("What does he research?"), assistant("Would you like his publications?"), user("Yes")]
   ]) {
     const reply = await replyTo(messages);
     assert.doesNotMatch(reply.text, /happily married/);
   }
-  assert.equal(requests.filter(body => body.stream).length, 7);
+  assert.equal(requests.filter(body => body.stream).length, 10);
   for (const body of requests.filter(body => !body.tool_choice)) {
     // Includes both answer generation and suggested follow-up generation.
     assert.doesNotMatch(JSON.stringify(body.input), /personal-relationship-status|happily married/);

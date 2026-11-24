@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-11-21",
+  "lastVerified": "2026-11-24",
   "subject": "Bilal Ahmad",
   "publicOnly": true,
   "description": "Verified public-profile knowledge used by Ask Mintorian. Records are authored from the Mintorian website and the public CV included in this repository.",
@@ -17,6 +17,7 @@
     { "id": "publications", "label": "Publications", "url": "/publications/" },
     { "id": "updates", "label": "Updates", "url": "/updates/" },
     { "id": "tools", "label": "Market Explorer", "url": "/tools/" },
+    { "id": "games", "label": "Grid Balancer", "url": "/games/" },
     { "id": "contact", "label": "Email Bilal", "url": "mailto:connect@mintorian.com" }
   ],
   "categoryCoverage": {
@@ -285,6 +286,18 @@
       "details": ["DOI: 10.1109/i2ct45611.2019.9033670"],
       "keywords": ["publication", "paper", "review", "thyristor", "grid-tied inverter", "solar pv", "i2ct", "2019"],
       "source": { "label": "Publications, I2CT 2019", "url": "https://doi.org/10.1109/i2ct45611.2019.9033670" },
+      "status": "verified"
+    },
+    {
+      "id": "grid-balancer",
+      "category": "PROJECTS",
+      "crossListedIn": ["UPDATES"],
+      "announcementMonth": "2026-11",
+      "title": "Grid Balancer",
+      "summary": "The November 2026 professional update announced Grid Balancer, a browser game on the Games page in which the player runs a simplified power grid for a day and keeps the frequency close to 50 Hz.",
+      "details": ["Players dispatch gas power stations, pumped hydro and a gas peaker, and can curtail wind, while a battery responds to frequency automatically. The game is a simplification for teaching and fun, not a model of the real GB system."],
+      "keywords": ["grid balancer", "games page", "game", "play", "frequency", "50 hz", "power grid game", "professional update"],
+      "source": { "label": "Grid Balancer", "url": "/games/" },
       "status": "verified"
     },
     {

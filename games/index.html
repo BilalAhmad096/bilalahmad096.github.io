@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Games | Bilal Ahmad</title>
+  <meta name="description" content="Play Grid Balancer: run a power grid for a day, dispatching gas, pumped hydro and a peaker to keep the frequency at 50 Hz as wind, sun and demand change." />
+  <link rel="canonical" href="https://mintorian.com/games/" />
+
+  <!-- Favicon / App Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/image/web-app-manifest-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-96x96.png">
+  <link rel="manifest" href="/image/site.webmanifest">
+  <link rel="shortcut icon" href="/image/favicon.ico">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WJW7EH9XYS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-WJW7EH9XYS');
+  </script>
+
+  <link rel="stylesheet" href="/css/styles.css?v=20260903-1">
+  <link rel="stylesheet" href="/css/custom.css?v=20260917-1">
+  <link rel="stylesheet" href="/css/games.css?v=20261124-1">
+  <!-- AOS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bilal Ahmad" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:title" content="Games | Bilal Ahmad" />
+  <meta property="og:description" content="Play Grid Balancer: run a power grid for a day, dispatching gas, pumped hydro and a peaker to keep the frequency at 50 Hz as wind, sun and demand change." />
+  <meta property="og:url" content="https://mintorian.com/games/" />
+  <meta property="og:image" content="https://mintorian.com/image/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Bilal Ahmad, PhD researcher in power systems and machine learning at the University of Bath" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ahmadbilal096" />
+  <meta name="twitter:creator" content="@ahmadbilal096" />
+  <meta name="twitter:title" content="Games | Bilal Ahmad" />
+  <meta name="twitter:description" content="Play Grid Balancer: run a power grid for a day, dispatching gas, pumped hydro and a peaker to keep the frequency at 50 Hz as wind, sun and demand change." />
+  <meta name="twitter:image" content="https://mintorian.com/image/og-image.png" />
+  <meta name="twitter:image:alt" content="Bilal Ahmad, PhD researcher in power systems and machine learning at the University of Bath" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://mintorian.com/games/#webpage",
+        "url": "https://mintorian.com/games/",
+        "name": "Games | Bilal Ahmad",
+        "description": "Play Grid Balancer: run a power grid for a day, dispatching gas, pumped hydro and a peaker to keep the frequency at 50 Hz as wind, sun and demand change.",
+        "isPartOf": {
+          "@id": "https://mintorian.com/#website"
+        },
+        "about": {
+          "@id": "https://mintorian.com/#person"
+        },
+        "breadcrumb": {
+          "@id": "https://mintorian.com/games/#breadcrumb"
+        },
+        "inLanguage": "en-GB"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://mintorian.com/games/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://mintorian.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Games",
+            "item": "https://mintorian.com/games/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="page-games">
+
+  <div id="header">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <div class="container-wide">
+        <nav class="primary-nav" id="mainNav" aria-label="Primary">
+          <div class="nav-left">
+
+            <!-- Mobile Hamburger -->
+            <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu brandLogos">
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+
+          <ul class="nav-list" id="navMenu">
+          <li><a href="/" class="nav-link" data-nav="home">Home</a></li>
+          <li><a href="/experience/" class="nav-link" data-nav="experience">Experience</a></li>
+          <li><a href="/publications/" class="nav-link" data-nav="publications">Publications</a></li>
+          <li><a href="/research/" class="nav-link" data-nav="research">Research</a></li>
+          <li><a href="/updates/" class="nav-link" data-nav="updates">Updates</a></li>
+          </ul>
+
+          <ul class="brand-logos" id="brandLogos">
+          <li><a href="https://www.bath.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/bath-wordmark.png" alt="University of Bath"></a></li>
+          <li><a href="https://www.royalholloway.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/rhul.jpg" alt="Royal Holloway University of London"></a></li>
+          <li><a href="https://www.iitr.ac.in/" target="_blank" rel="noopener noreferrer"><img src="/image/iitr.png" alt="IIT Roorkee"></a></li>
+          <li><a href="https://www.rwth-aachen.de/" target="_blank" rel="noopener noreferrer"><img src="/image/rwth.png" alt="RWTH Aachen University"></a></li>
+          <li><a href="https://www.amu.ac.in/" target="_blank" rel="noopener noreferrer"><img src="/image/amu.jpg" alt="Aligarh Muslim University"></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  </div>
+
+  <main id="main-content">
+    <section class="section-games">
+      <div class="container">
+        <h1 class="section-title" data-aos="fade-up">Games</h1>
+
+        <article class="game-card" id="grid-balancer" data-state="steady">
+          <h2 class="game-card__title">Grid Balancer</h2>
+          <p class="game-card__lede">Run a power grid for a day. Demand rises and falls, the wind and the sun come and
+            go, and every moment the power going in has to match the power coming out. When it doesn't, the frequency
+            drifts away from 50 Hz. Keep it close and keep the lights on until midnight.</p>
+
+          <div class="gb-setup">
+            <fieldset class="gb-levels">
+              <legend class="gb-levels__legend">Weather</legend>
+              <label class="gb-level"><input type="radio" name="gb-level" value="calm" checked> <span>Calm</span></label>
+              <label class="gb-level"><input type="radio" name="gb-level" value="windy"> <span>Windy</span></label>
+              <label class="gb-level"><input type="radio" name="gb-level" value="storm"> <span>Storm</span></label>
+            </fieldset>
+            <div class="gb-setup__actions">
+              <button type="button" class="gb-button" id="gb-start">Start the day</button>
+              <button type="button" class="gb-button gb-button--ghost" id="gb-pause" aria-pressed="false">Pause</button>
+            </div>
+          </div>
+          <p class="gb-seed" id="gb-seed"></p>
+
+          <div class="gb-hud">
+            <div class="gb-hud__item">
+              <span class="gb-hud__label">Time</span>
+              <span class="gb-hud__value" id="gb-clock">00:00</span>
+            </div>
+            <div class="gb-hud__item gb-hud__item--freq">
+              <span class="gb-hud__label">Frequency</span>
+              <span class="gb-hud__value" id="gb-freq">50.00 Hz</span>
+              <span class="gb-hud__state" id="gb-state">Ready</span>
+            </div>
+            <div class="gb-hud__item">
+              <span class="gb-hud__label">Score</span>
+              <span class="gb-hud__value" id="gb-score">0</span>
+            </div>
+          </div>
+
+          <div class="gb-gauge" aria-hidden="true">
+            <div class="gb-gauge__track">
+              <span class="gb-gauge__marker" id="gb-marker"></span>
+            </div>
+            <div class="gb-gauge__scale"><span>49.0</span><span>49.5</span><span>50.0</span><span>50.5</span><span>51.0</span></div>
+          </div>
+          <canvas class="gb-trace" id="gb-trace" role="img" aria-label="Frequency over the last fifteen seconds"></canvas>
+
+          <div class="gb-balance">
+            <div><span class="gb-balance__label">Demand</span> <strong id="gb-demand">0.0 GW</strong></div>
+            <div><span class="gb-balance__label">Supply</span> <strong id="gb-supply">0.0 GW</strong></div>
+            <div><span class="gb-balance__label">Surplus</span> <strong id="gb-gap" data-sign="even">+0.0 GW</strong></div>
+          </div>
+
+          <div class="gb-controls">
+            <div class="gb-control">
+              <label class="gb-control__name" for="gb-gas">Gas power stations <kbd>Q</kbd> <kbd>A</kbd></label>
+              <input type="range" id="gb-gas" min="0" max="26" step="0.5" value="15">
+              <p class="gb-control__out" id="gb-gas-out"></p>
+              <p class="gb-control__hint">Big but slow: they take a few seconds to ramp, so start early.</p>
+            </div>
+            <div class="gb-control">
+              <label class="gb-control__name" for="gb-hydro">Pumped hydro <kbd>W</kbd> <kbd>S</kbd></label>
+              <input type="range" id="gb-hydro" min="-2" max="2" step="0.25" value="0">
+              <div class="gb-range-ends" aria-hidden="true"><span>Pump</span><span>Generate</span></div>
+              <p class="gb-control__out" id="gb-hydro-out"></p>
+              <span class="gb-meter gb-meter--storage" id="gb-reservoir" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label="Reservoir"></span>
+              <p class="gb-control__hint">Fast, both ways, but the reservoir runs dry.</p>
+            </div>
+            <div class="gb-control">
+              <span class="gb-control__name">Gas peaker <kbd>E</kbd></span>
+              <button type="button" class="gb-toggle" id="gb-peaker" aria-pressed="false">Peaker 2.5 GW</button>
+              <p class="gb-control__out" id="gb-peaker-out"></p>
+              <p class="gb-control__hint">Quick to start, and the dirtiest power on the grid.</p>
+            </div>
+            <div class="gb-control">
+              <label class="gb-control__name" for="gb-wind">Wind farms</label>
+              <input type="range" id="gb-wind" min="0" max="100" step="5" value="100">
+              <p class="gb-control__out" id="gb-wind-out"></p>
+              <p class="gb-control__hint">Turn them down only when there is more power than anyone needs.</p>
+            </div>
+            <div class="gb-control gb-control--auto">
+              <span class="gb-control__name">Battery <span class="gb-auto">automatic</span></span>
+              <span class="gb-meter gb-meter--battery" id="gb-battery" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label="Battery charge"></span>
+              <p class="gb-control__out" id="gb-battery-out"></p>
+              <p class="gb-control__hint">Answers the frequency by itself, up to 1 GW, until it runs out.</p>
+            </div>
+          </div>
+
+          <figure class="gb-chart">
+            <canvas id="gb-chart" role="img" aria-label="Demand and supply through the day, with the forecast for the hours ahead"></canvas>
+            <figcaption class="gb-legend">
+              <span><i style="--c:var(--fuel-nuclear)"></i>Nuclear</span>
+              <span><i style="--c:var(--fuel-wind)"></i>Wind</span>
+              <span><i style="--c:var(--fuel-solar)"></i>Solar</span>
+              <span><i style="--c:var(--fuel-gas)"></i>Gas</span>
+              <span><i style="--c:var(--fuel-other)"></i>Peaker</span>
+              <span><i style="--c:var(--fuel-imports)"></i>Hydro and battery</span>
+              <span><i class="gb-legend__line"></i>Demand</span>
+              <span><i class="gb-legend__line gb-legend__line--dashed"></i>Forecast demand</span>
+              <span><i class="gb-legend__line gb-legend__line--dashed gb-legend__line--wind"></i>Forecast nuclear, wind and solar</span>
+            </figcaption>
+          </figure>
+
+          <ol class="gb-log" id="gb-log" aria-label="Control room messages"></ol>
+          <p class="visually-hidden" id="gb-announce" aria-live="polite"></p>
+
+          <section class="gb-results" id="gb-results" aria-live="polite" hidden></section>
+
+          <details class="gb-howto">
+            <summary>How to play</summary>
+            <ul>
+              <li>A whole day runs in three minutes. Score comes from every second the frequency stays close to
+                50 Hz, and is highest within 0.05 Hz of it.</li>
+              <li>The gap between the two dashed lines on the chart is roughly what gas and hydro will need to cover.
+                Gas ramps slowly, so move it before that gap moves.</li>
+              <li>Use pumped hydro for the quick corrections, and pump water back up when there is spare power.</li>
+              <li>Past 49.5 or 50.5 Hz, protection acts on its own: it cuts customers off or trips generators, and costs
+                you points. If it has to act three times, or the frequency reaches 49 or 51 Hz, the grid blacks out.</li>
+              <li>Gas emissions are taken off your score at the end, so do not run more than you need.</li>
+              <li>Keys: <kbd>Q</kbd>/<kbd>A</kbd> gas up and down, <kbd>W</kbd>/<kbd>S</kbd> hydro, <kbd>E</kbd> peaker,
+                <kbd>P</kbd> pause.</li>
+            </ul>
+            <p>This is a game, much simpler than the real grid, but the ideas are the real ones: Great Britain's grid
+              runs at 50 Hz and must stay between 49.8 and 50.2 Hz in normal operation, and its control room really does
+              plan for the surge of kettles at half-time.</p>
+          </details>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer">
+    <footer class="site-footer">
+      <div class="container-wide">
+        <!-- Top row: collaborators' logos -->
+        <div class="footer-top">
+          <div class="footer-collab-row">
+            <span class="footer-label">Collaborators:</span>
+            <ul class=" footer-logos">
+              <li><a href="https://www.sandia.gov/" target="_blank" rel="noopener noreferrer"><img src="/image/Sandia.png" alt="Sandia National Laboratories"></a></li>
+              <li><a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/manchester.png" alt="University of Manchester"></a></li>
+              <li><a href="https://www.ed.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/Edinburgh.png" alt="University of Edinburgh"></a></li>
+              <li><a href="https://www.ukpowernetworks.co.uk/" target="_blank" rel="noopener noreferrer"><img src="/image/ukpn.png" alt="UK Power Networks"></a></li>
+              <li><a href="https://www.tneigroup.com/" target="_blank" rel="noopener noreferrer"><img src="/image/TNEI-logo.jpg" alt="TNEI Consultancy"></a></li>
+              <li><a href="https://www.psr-inc.com/" target="_blank" rel="noopener noreferrer"><img src="/image/psr-logo (2).jpeg" alt="PSR Inc."></a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- Bottom row: Social Profiles -->
+        <div class="footer-bottom">
+          <div class="footer-right">
+            <a class="social" href="https://www.linkedin.com/in/mintorian" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-linkedin.svg" alt="LinkedIn">
+            </a>
+            <a class="social" href="https://github.com/BilalAhmad096" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-github.svg" alt="GitHub">
+            </a>
+            <a class="social" href="https://scholar.google.com/citations?user=Y-ShcXcAAAAJ" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-scholar.svg" alt="Google Scholar">
+            </a>
+            <a class="social" href="https://x.com/ahmadbilal096" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-x.svg" alt="X (Twitter)">
+            </a>
+            <a class="social" href="https://www.instagram.com/thebilalgram/" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-instagram.svg" alt="Instagram">
+            </a>
+            <a class="social" href="https://leetcode.com/u/mailboxforbilal/" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-leetcode.svg" alt="LeetCode">
+            </a>
+            <a class="social" href="https://www.hackerrank.com/profile/mailboxforbilal" target="_blank" rel="noopener">
+              <img class="social-icon" src="/footer/icon-hackerrank.svg" alt="HackerRank">
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/header.js?v=20261124-1"></script>
+  <script src="/js/footer.js?v=20260806-1"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <script src="/js/aos-setup.js?v=20260827-2" defer></script>
+
+  <script type="module" src="/js/grid-balancer.js?v=20261124-1"></script>
+
+  <script src="/js/backtotop.js?v=20260829-1" defer></script>
+  <script src="/js/assistant-loader.js?v=20260915-1" defer></script>
+
+</body>
+</html>

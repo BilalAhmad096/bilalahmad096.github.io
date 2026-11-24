@@ -53,10 +53,11 @@ test("current jobs, professional news and the travel count answer visitor questi
   assert.deepEqual(new Set(jobs.results.map(r => r.id)), new Set(["experience-dystil", "experience-bath-gta", "experience-bath-ta"]));
   for (const query of ["What are his latest professional updates?", "latest news"]) {
     const news = searchKnowledgeBase({ query, limit: 3 });
-    assert.deepEqual(news.results.map(r => r.id), ["mintorian-python-package", "market-explorer", "partnership-psr-inc-2026"]);
+    assert.deepEqual(news.results.map(r => r.id), ["grid-balancer", "mintorian-python-package", "market-explorer"]);
   }
   assert.match(getProjectDetails({ project_name: "pip install mintorian" }).results[0].summary, /version 0\.1\.0/);
   assert.equal(getProjectDetails({ project_name: "Market Explorer" }).results[0].source.url, "/tools/");
+  assert.equal(getProjectDetails({ project_name: "Grid Balancer" }).results[0].source.url, "/games/");
   assert.match(searchKnowledgeBase({ query: "How many continents?", limit: 1 }).results[0].summary, /22 countries across four continents/);
 });
 
